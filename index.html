@@ -58,6 +58,10 @@
     padding: 12px 14px 10px;
     display: flex; align-items: center; gap: 10px;
   }
+  /* В APK (file://) WebView на Android 15 рисует под статус-баром:
+     опускаем шапку ниже часов/батареи — env() плюс гарантированный минимум */
+  body.native header.topbar { padding-top: calc(14px + max(env(safe-area-inset-top, 0px), 34px)); }
+  body.native { --native-top: 1; }
   .logo {
     width: 36px; height: 36px; border-radius: 10px;
     background: linear-gradient(135deg, var(--accent), #7c3aed);
@@ -70,7 +74,8 @@
   .langs { margin-inline-start: auto; display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
   .langs button {
     border: 0; background: transparent; color: var(--muted); cursor: pointer; font-family: inherit;
-    font-size: 11.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; letter-spacing: .3px;
+    font-size: 13.5px; font-weight: 700; padding: 9px 12px; border-radius: 999px; letter-spacing: .3px;
+    min-width: 44px; min-height: 40px; /* палец должен попадать */
   }
   .langs button.on { background: var(--accent); color: #fff; }
   main { flex: 1; padding: 16px 14px 24px; }
@@ -214,7 +219,7 @@
   .ad-place { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); border-top: 1px dashed var(--border); margin-top: 10px; padding-top: 7px; }
   .ad-place a { color: var(--accent); font-weight: 700; text-decoration: none; white-space: nowrap; }
 
-  .star-btn { border: 0; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 11px; font-weight: 800; padding: 6px 10px; border-radius: 999px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .star-btn { border: 0; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 12px; font-weight: 800; padding: 9px 12px; border-radius: 999px; cursor: pointer; font-family: inherit; white-space: nowrap; min-height: 40px; }
   .langs { margin-inline-start: 8px; }
   .topbar > div:nth-child(2) { margin-inline-end: auto; }
 
@@ -657,6 +662,9 @@
 
 <script src="i18n.js"></script>
 <script>
+// В APK страница грузится с file:// — включаем нативные отступы под статус-бар
+if (location.protocol === 'file:') document.body.classList.add('native');
+
 // ======= i18n =======
 let LANG = localStorage.getItem('heshbon_lang') || 'ru';
 if (!I18N[LANG]) LANG = 'ru';
