@@ -307,7 +307,8 @@
         </div>
       </div>
 
-      <div class="row3">
+      <label class="fld" style="font-size:13px;color:var(--text);margin-top:14px" data-i18n="prof.h"></label>
+      <div class="row2">
         <div>
           <label class="fld" data-i18n="prof.industry"></label>
           <select id="profIndustry">
@@ -323,9 +324,15 @@
           <label class="fld" data-i18n="prof.tenure"></label>
           <input type="number" id="profTenure" value="1" step="0.5" min="0" inputmode="decimal">
         </div>
+      </div>
+      <div class="row2">
         <div>
-          <label class="fld" data-i18n="prof.kids"></label>
-          <input type="number" id="profKids" value="0" step="1" min="0" inputmode="numeric">
+          <label class="fld" data-i18n="prof.kids0"></label>
+          <input type="number" id="profKids0" value="0" step="1" min="0" inputmode="numeric">
+        </div>
+        <div>
+          <label class="fld" data-i18n="prof.kids6"></label>
+          <input type="number" id="profKids6" value="0" step="1" min="0" inputmode="numeric">
         </div>
       </div>
       <div class="note" data-i18n="prof.hint"></div>
@@ -741,6 +748,11 @@ function updEmpPoints(keepManual) {
       info = tf('oleh.active', {m, b, base: pts - b, end: String(end.getMonth() + 1).padStart(2, '0') + '.' + end.getFullYear()});
     }
   } else if (st === 'b1' || st === 's25') pts = 0;
+  if (st === 'resident' || st === 'oleh') { // некудот за детей: до 6 — 4.5 каждому родителю; 6–17 — маме 2 / папе 1
+    const k0 = Math.max(0, +document.getElementById('profKids0').value || 0);
+    const k6 = Math.max(0, +document.getElementById('profKids6').value || 0);
+    pts += k0 * 4.5 + k6 * (g === 'f' ? 2 : 1);
+  }
   document.getElementById('olehInfo').innerHTML = info;
   if (ptsManual) {
     document.getElementById('nkAuto').textContent = t('nk.manual');
@@ -790,7 +802,7 @@ function saveProf() {
     localStorage.setItem(PROF_KEY, JSON.stringify({
       st: segVal('empStatus'), g: segVal('empGender'),
       am: aliyahM.value, ay: aliyahY.value,
-      ind: profIndustry.value, ten: profTenure.value, kids: profKids.value, gross: empGross.value
+      ind: profIndustry.value, ten: profTenure.value, k0: profKids0.value, k6: profKids6.value, gross: empGross.value
     }));
   } catch (e) {}
 }
@@ -808,7 +820,9 @@ function loadProf() {
     if (p.ay) aliyahY.value = p.ay;
     if (p.ind) profIndustry.value = p.ind;
     if (p.ten != null) { profTenure.value = p.ten; fTenure.value = p.ten; }
-    if (p.kids != null) profKids.value = p.kids;
+    if (p.k0 != null) profKids0.value = p.k0;
+    if (p.k6 != null) profKids6.value = p.k6;
+    else if (p.kids != null) profKids6.value = p.kids; // миграция со старого одиночного поля
     if (p.gross) { empGross.value = p.gross; fGross.value = p.gross; }
   } catch (e) {}
 }
@@ -817,7 +831,8 @@ profIndustry.addEventListener('change', () => {
   calcOT(); saveProf();
 });
 profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; calcFired(); saveProf(); });
-profKids.addEventListener('input', saveProf);
+profKids0.addEventListener('input', () => updEmpPoints());
+profKids6.addEventListener('input', () => updEmpPoints());
 ['empGross','empPoints','empPension'].forEach(id => document.getElementById(id).addEventListener('input', () => {
   if (id === 'empPoints') { ptsManual = true; document.getElementById('nkAuto').textContent = t('nk.manual'); }
   calcEmp();
