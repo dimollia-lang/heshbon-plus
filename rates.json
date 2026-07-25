@@ -14,6 +14,7 @@
   "vat": 0.18,
   "min_hour": 35.40,
   "min_month": 6443.85,
-  "havraa_day": 451.50,
+  "havraa_day": 418,
+  "havraa_pub": 511.6,
   "cleaning_hour": 38.03
 }

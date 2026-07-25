@@ -348,6 +348,15 @@
       <label class="fld" data-i18n="emp.fld.gross"></label>
       <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
 
+      <details class="exp">
+        <summary data-i18n="emp.ot.exp"></summary>
+        <div class="row2">
+          <div><label class="fld" data-i18n="ot.h125"></label><input type="number" id="ot125c" value="0" min="0" inputmode="decimal"></div>
+          <div><label class="fld" data-i18n="ot.h150"></label><input type="number" id="ot150c" value="0" min="0" inputmode="decimal"></div>
+        </div>
+        <div class="note" data-i18n="emp.ot.hint"></div>
+      </details>
+
       <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span></label>
       <div class="note" data-i18n-html="emp.chk.pension.hint"></div>
 
@@ -388,7 +397,6 @@
         <span class="lbl" data-i18n="ot.sum"></span>
         <span class="val" id="otSum" style="font-size:22px">—</span>
       </div>
-      <button class="btn ghost" onclick="otAddToGross()" data-i18n="ot.add"></button>
       <div class="note" data-i18n="ot.note"></div>
     </div>
 
@@ -466,6 +474,9 @@
       <details class="acc"><summary data-i18n="acc.fire.t"></summary><div class="body" data-i18n-html="acc.fire.body"></div></details>
       <details class="acc"><summary data-i18n="acc.family.t"></summary><div class="body" data-i18n-html="acc.family.body"></div></details>
       <details class="acc"><summary data-i18n="acc.sectors.t"></summary><div class="body" data-i18n-html="acc.sectors.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.maanak.t"></summary><div class="body" data-i18n-html="qa.maanak"></div></details>
+      <details class="acc"><summary data-i18n="acc.injury.t"></summary><div class="body" data-i18n-html="qa.injury"></div></details>
+      <details class="acc"><summary data-i18n="acc.harass.t"></summary><div class="body" data-i18n-html="qa.harass"></div></details>
       <details class="acc"><summary data-i18n="acc.complain.t"></summary><div class="body" data-i18n-html="acc.complain.body"></div></details>
     </div>
   </section>
@@ -684,7 +695,7 @@ let NI_EMP = [.0427, .1217];// работник-резидент: БЛ+брию�
 let NI_B1  = [.0004, .0087];// иностранный работник/2(а)5 (без мас бриют; ставки нерезидента)
 let NI_SELF = [.0610, .18]; // ацмаи 2026
 let PENSION_EMP = .06, PENSION_ER = .065, PITZUIM = .06, NI_ER = [.0451, .076]; // пицуим: мин. 6%, полное 8.33%
-let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 451.50, CLEAN_HOUR = 38.03;
+let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 418, HAVRAA_PUB = 511.6, CLEAN_HOUR = 38.03; // хавраа: частный 418 (451.5 после указа), гос./клининг/охрана 511.6
 let ratesVer = null;
 
 const fmt = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 0}).format(Math.round(n)) + ' ₪';
@@ -759,10 +770,12 @@ function updEmpPoints(keepManual) {
       info = tf('oleh.active', {m, b, base: pts - b, end: String(end.getMonth() + 1).padStart(2, '0') + '.' + end.getFullYear()});
     }
   } else if (st === 'b1' || st === 's25') pts = 0;
-  const hasPoints = st === 'resident' || st === 'oleh'; // у Б1/2(а)5 некудот не предусмотрены — скрываем поля, чтобы не путать
+  if (st === 'b1' && document.getElementById('profIndustry').value === 'care') pts = 2.25; // сиуд: иностранным работникам положены базовые некудот
+  const hasKids = st === 'resident' || st === 'oleh';
+  const hasPoints = hasKids || (st === 'b1' && document.getElementById('profIndustry').value === 'care');
   document.getElementById('pointsBox').style.display = hasPoints ? '' : 'none';
-  document.getElementById('kidsBox').style.display = hasPoints ? '' : 'none';
-  if (hasPoints) { // некудот за детей (живущих в Израиле): до 6 — 4.5 каждому родителю; 6–17 — маме 2 / папе 1
+  document.getElementById('kidsBox').style.display = hasKids ? '' : 'none';
+  if (hasKids) { // некудот за детей (живущих в Израиле): до 6 — 4.5 каждому родителю; 6–17 — маме 2 / папе 1
     const k0 = Math.max(0, +document.getElementById('profKids0').value || 0);
     const k6 = Math.max(0, +document.getElementById('profKids6').value || 0);
     pts += k0 * 4.5 + k6 * (g === 'f' ? 2 : 1);
@@ -787,15 +800,20 @@ function calcEmp() {
 
   const foreign = st === 'b1' || st === 's25';
   const hish = document.getElementById('profHish').checked;
-  const tax = incomeTax(gross, pts);
-  const ni = natIns(gross, foreign ? NI_B1 : NI_EMP);
+  const nn = v => Math.max(0, +v || 0);
+  // сверхурочные входят в облагаемое брутто; пенсия и иштальмут по закону — только от базы
+  const otPay = (gross / 182) * (1.25 * nn(document.getElementById('ot125c').value) + 1.5 * nn(document.getElementById('ot150c').value));
+  const taxable = gross + otPay;
+  const tax = incomeTax(taxable, pts);
+  const ni = natIns(taxable, foreign ? NI_B1 : NI_EMP);
   const pen = hasPen ? gross * PENSION_EMP : 0;
   const hishEmp = hish ? gross * 0.025 : 0;
-  const net = gross - tax - ni - pen - hishEmp;
+  const net = taxable - tax - ni - pen - hishEmp;
 
   document.getElementById('empNet').textContent = fmt(net);
   document.getElementById('empBreak').innerHTML =
     row(t('brk.gross'), fmt(gross)) +
+    (otPay > 0 ? row(t('brk.ot'), '+' + fmt(otPay), 'pos') + row(t('brk.taxbase'), fmt(taxable)) : '') +
     row(tf('brk.tax', {pts}), '−' + fmt(tax), 'neg') +
     row(foreign ? t('brk.niForeign') : t('brk.ni'), '−' + fmt(ni), 'neg') +
     (hasPen ? row(t('brk.pension'), '−' + fmt(pen), 'neg') : '') +
@@ -804,7 +822,7 @@ function calcEmp() {
     row(t('employer.pens'), '+' + fmt(gross * PENSION_ER), 'pos') +
     row(t('employer.pitz'), '+' + fmt(gross * PITZUIM), 'pos') +
     (hish ? row(t('employer.hish'), '+' + fmt(gross * 0.075), 'pos') : '') +
-    row(t('employer.ni'), '+' + fmt(natIns(gross, NI_ER)), 'pos') +
+    row(t('employer.ni'), '+' + fmt(natIns(taxable, NI_ER)), 'pos') +
     (st === 's25' ? '<div class="note warn" style="margin-top:8px">' + t('employer.s25note') + '</div>' : '');
   document.getElementById('empStatusNote').innerHTML = t('status.' + st);
 }
@@ -855,7 +873,7 @@ function updateHello() {
 profIndustry.addEventListener('change', () => {
   otRate.value = profIndustry.value === 'cleaning' ? CLEAN_HOUR : MIN_HOUR; // отраслевая ставка в сверхурочные
   if (['cleaning','security','construction'].includes(profIndustry.value)) profHish.checked = true; // иштальмут обязателен по цав архава
-  calcOT(); calcEmp(); saveProf();
+  calcOT(); calcFired(); updEmpPoints(); // updEmpPoints пересчитает и б1-сиуд некудот, и нетто, и сохранит профиль
 });
 profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; calcFired(); saveProf(); });
 profKids0.addEventListener('input', () => updEmpPoints());
@@ -888,7 +906,8 @@ function calcFired() {
   const pitz = gross * years;
   const notice = gross * nd / 30;
   const vac = nn(fVac.value) * gross / 21.67;
-  const hav = nn(fHav.value) * HAVRAA_DAY;
+  const havRate = ['cleaning','security'].includes(document.getElementById('profIndustry').value) ? HAVRAA_PUB : HAVRAA_DAY;
+  const hav = nn(fHav.value) * havRate; // клининг/охрана — хавраа по гос. тарифу
   fTotal.textContent = fmt(pitz + notice + vac + hav);
   fBreak.innerHTML =
     row(t('fired.res.pitz'), '+' + fmt(pitz), 'pos') +
@@ -905,14 +924,7 @@ function calcOT() {
   otSum.textContent = fmt(nn(otRate.value) * (1.25 * nn(ot125.value) + 1.5 * nn(ot150.value)));
 }
 ['otRate','ot125','ot150'].forEach(id => document.getElementById(id).addEventListener('input', calcOT));
-function otAddToGross() { // сверхурочные — часть облагаемого брутто: добавляем и пересчитываем налоги
-  const nn = v => Math.max(0, +v || 0);
-  const add = Math.round(nn(otRate.value) * (1.25 * nn(ot125.value) + 1.5 * nn(ot150.value)));
-  if (!add) return;
-  empGross.value = (+empGross.value || 0) + add;
-  empGross.dispatchEvent(new Event('input'));
-  window.scrollTo({top: 0, behavior: 'smooth'});
-}
+['ot125c','ot150c'].forEach(id => document.getElementById(id).addEventListener('input', calcEmp)); // часы OT в калькуляторе: обратимо, брутто не трогаем
 
 // ======= Чекап прав =======
 const QUIZ = [
@@ -986,7 +998,7 @@ document.querySelectorAll('.ai-chip').forEach(chip => chip.onclick = () => {
 const AI_TOPICS = [
   // FAQ-слой: прямые ответы на частые вопросы (prio 3 — выигрывают у общих тем)
   {kw: ['когда зарплат','когда должны платить','когда платят','когда выплач','когда дают зарплат','какого числа','до какого числа','when salary','when do i get paid','when is pay','מתי משכורת','מתי משלמים','מתי חייבים לשלם','מתי מקבלים','מועד תשלום','מתי מגיעה'], key: 'qa.paydate', prio: 3},
-  {kw: ['задерж','не заплатил','не выплат','не дали зарплат','не платят зарплат','зарплата приходит','платят поздно','после 9','после 10 числа','12 числа','13 числа','14 числа','15 числа','delay','late salary','paid late','didn', 'לא שילמו','הלנת','באיחור','халан'], key: 'qa.latepay', prio: 3},
+  {kw: ['задерж','не заплатил','не выплатили зарплат','не выплачивают зарплат','не дали зарплат','не платят зарплат','зарплата приходит','платят поздно','после 9','после 10 числа','12 числа','13 числа','14 числа','15 числа','delay','late salary','paid late','didn', 'לא שילמו','הלנת','באיחור','халан'], key: 'qa.latepay', prio: 3},
   {kw: ['перерыв','обед','перекур','break','lunch','הפסקה'], key: 'qa.breaks', prio: 3},
   {kw: ['ночн','night','לילה'], key: 'qa.night', prio: 3},
   {kw: ['испытат','стажир','обучен','бесплатн','trial','training','internship','unpaid','הדרכה','התלמדות','ניסיון','נסיון'], key: 'qa.trial', prio: 3},
@@ -1014,6 +1026,11 @@ const AI_TOPICS = [
   {kw: ['иштальмут','hishtalmut','השתלמות'], key: 'ai.t.ishtalmut', prio: 2},
   {kw: ['эсек патур в найм','наняли как самозанят','как осек патур','как эсек патур','через эсек патур','через хешбонит','по счетам работаю','фиктивн','hired as osek','freelance but','עצמאי אצל מעסיק','מועסק כעוסק','עוסק פטור אצל'], key: 'ai.t.fictive', prio: 2},
   {kw: ['степень','тоар','degree','תואר','алимент','мезонот','מזונות','инвалид','נכות','נכה','disab','перифери','פריפרי','ишувим','יישוב','доп некудот','ещё некудот','какие еще пункт','more points'], key: 'ai.t.morepoints', prio: 2},
+  {kw: ['маанак','мас шлили','שלילי','מענק עבודה','негативн','отрицательный налог','work grant','грант','доплата от государ'], key: 'qa.maanak', prio: 3},
+  {kw: ['травм','упал на работ','упала на работ','порез','ожог','injury','accident at work','נפצע','תאונת עבודה','пгия'], key: 'qa.injury', prio: 3},
+  {kw: ['безработ','абтал','автал','пособи','unemploy','אבטלה','биржа труд','лишкат'], key: 'qa.unemp', prio: 3},
+  {kw: ['глобальн','global overtime','גלובלי'], key: 'qa.globalot', prio: 3},
+  {kw: ['домогат','пристает','пристаёт','harass','הטרד'], key: 'qa.harass', prio: 3},
   {kw: ['условия труда','ходаа аль','terms of employment','תנאי עבודה','договор не дали'], key: 'ai.t.terms', prio: 1},
   {kw: ['шаббат','суббот','shabbat','saturday','שבת','праздник','holiday','חג','дмей хаг'], key: 'ai.t.shabbat', prio: 1},
   {kw: ['ходаа мукдемет','уведомлен','notice period','הודעה מוקדמת','предупрежд','отработать','отработк','сколько дней предупр','before quitting','להודיע לפני'], key: 'ai.t.notice', prio: 1},
@@ -1025,7 +1042,7 @@ const AI_TOPICS = [
   {kw: ['проезд','несиот','travel','נסיעות','транспорт','автобус','bus'], key: 'quiz.nesiot.bad'},
   {kw: ['хавраа','havra','הבראה','оздоров','convalescen'], key: 'quiz.hav.bad'},
   {kw: ['больничн','sick','מחלה','махала','болею','болезн'], key: 'quiz.sick.bad'},
-  {kw: ['отпуск','vacation','חופשה','хуфша'], key: 'quiz.vac.bad'},
+  {kw: ['отпуск','отпускн','пидьон','vacation','payout','חופשה','פדיון','хуфша'], key: 'quiz.vac.bad', prio: 1},
   {kw: ['пенси','pension','пицуим','severance','פנסי','פיצוי'], key: 'quiz.pens.bad', s25: 'quiz.pens.badS25'},
   {kw: ['страхов','insurance','ביטוח רפואי','полис'], key: 'quiz.ins.bad'},
   {kw: ['минимал','minimum','מינימום','почасов','wage'], key: 'quiz.minw.bad'},
@@ -1198,7 +1215,7 @@ function fetchRates(i) {
     POINT = d.point || POINT; NI_T = d.ni_t || NI_T; NI_CAP = d.ni_cap || NI_CAP;
     NI_EMP = d.ni_emp || NI_EMP; NI_B1 = d.ni_b1 || NI_B1; NI_SELF = d.ni_self || NI_SELF; NI_ER = d.ni_er || NI_ER;
     PENSION_EMP = d.pension_emp || PENSION_EMP; PENSION_ER = d.pension_er || PENSION_ER; PITZUIM = d.pitzuim || PITZUIM;
-    VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR;
+    VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; HAVRAA_PUB = d.havraa_pub || HAVRAA_PUB; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR;
     ratesVer = d.version;
     calcEmp(); calcSelf(); calcRev(); calcOT(); calcFired(); showRates();
   }).catch(() => fetchRates(i + 1)); // следующий источник; все недоступны — работаем на вшитых
