@@ -104,7 +104,8 @@ ru: {
 
  "ot.h":"Сверхурочные и проверка минималки","ot.hint":"Первые 2 сверхурочных часа в день — 125%, дальше — 150%. Минималка с <b>01.04.2026</b>: <b>6 443,85 ₪/мес</b> (35,40 ₪/час).",
  "ot.rate":"Ставка, ₪/час","ot.h125":"Часы ×125%","ot.h150":"Часы ×150%","ot.sum":"Доплата за сверхурочные",
- "ot.note":"Часовая ставка при полной занятости = брутто ÷ 182. Если твоя ставка ниже 35,40 ₪ — работодатель нарушает закон о минимальной зарплате.",
+ "ot.synced":"✅ <b>Эта доплата уже посчитана в «Нетто на руки» выше</b> — с неё удерживаются подоходный налог и битуах леуми (в разбивке появились строки «Сверхурочные» и «Облагаемое брутто»). Пенсия и керен иштальмут по закону считаются только от базовой зарплаты, поэтому не меняются.",
+ "ot.note":"Ставка подставляется автоматически: брутто ÷ 182, но не ниже минималки твоей отрасли. Впишешь свою — приложение запомнит её. Если твоя ставка ниже 35,40 ₪ (клининг — 38,03 ₪) — работодатель нарушает закон о минимальной зарплате.",
 
  "rights.h":"Разбор тлуша и права","rights.hint":"Что означают строки в зарплатной ведомости и что тебе положено по закону.",
  "acc.tlush.t":"📄 Главные строки тлуша",
@@ -303,7 +304,8 @@ en: {
 
  "ot.h":"Overtime & minimum wage check","ot.hint":"First 2 overtime hours a day — 125%, then 150%. Minimum wage since <b>01.04.2026</b>: <b>₪6,443.85/month</b> (₪35.40/hour).",
  "ot.rate":"Rate, ₪/hour","ot.h125":"Hours ×125%","ot.h150":"Hours ×150%","ot.sum":"Overtime pay due",
- "ot.note":"Full-time hourly rate = gross ÷ 182. If your rate is below ₪35.40, the employer is violating the Minimum Wage Law.",
+ "ot.synced":"✅ <b>This pay is already included in “Net in hand” above</b> — income tax and National Insurance are withheld from it (the breakdown now shows “Overtime” and “Taxable gross”). Pension and keren hishtalmut are legally computed on the base salary only, so they stay unchanged.",
+ "ot.note":"The rate is filled in automatically: gross ÷ 182, but never below your sector's minimum. Type your own and the app keeps it. If your rate is below ₪35.40 (cleaning — ₪38.03), the employer is violating the Minimum Wage Law.",
 
  "rights.h":"Payslip breakdown & rights","rights.hint":"What the lines in your payslip mean and what the law entitles you to.",
  "acc.tlush.t":"📄 Key payslip lines",
@@ -502,7 +504,8 @@ he: {
 
  "ot.h":"שעות נוספות ובדיקת שכר מינימום","ot.hint":"שעתיים נוספות ראשונות ביום — 125%, הלאה — 150%. שכר מינימום מ-<b>01.04.2026</b>: <b>6,443.85 ₪ לחודש</b> (35.40 ₪ לשעה).",
  "ot.rate":"תעריף, ₪ לשעה","ot.h125":"שעות ×125%","ot.h150":"שעות ×150%","ot.sum":"תוספת שעות נוספות",
- "ot.note":"תעריף שעתי במשרה מלאה = ברוטו ÷ 182. אם התעריף שלך נמוך מ-35.40 ₪ — המעסיק מפר את חוק שכר המינימום.",
+ "ot.synced":"✅ <b>התוספת הזו כבר נכללת ב«נטו ביד» למעלה</b> — מנוכים ממנה מס הכנסה וביטוח לאומי (בפירוט הופיעו שורות «שעות נוספות» ו«ברוטו חייב»). פנסיה וקרן השתלמות מחושבות לפי חוק מהשכר הבסיסי בלבד, ולכן לא משתנות.",
+ "ot.note":"התעריף מוזן אוטומטית: ברוטו ÷ 182, אך לא מתחת למינימום הענפי שלך. תכתוב תעריף משלך — האפליקציה תשמור אותו. אם התעריף שלך נמוך מ-35.40 ₪ (ניקיון — 38.03 ₪) — המעסיק מפר את חוק שכר המינימום.",
 
  "rights.h":"פענוח תלוש וזכויות","rights.hint":"מה אומרות השורות בתלוש ומה מגיע לך לפי חוק.",
  "acc.tlush.t":"📄 שורות מרכזיות בתלוש",

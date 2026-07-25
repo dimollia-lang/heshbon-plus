@@ -353,15 +353,6 @@
       <label class="fld" data-i18n="emp.fld.gross"></label>
       <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
 
-      <details class="exp">
-        <summary data-i18n="emp.ot.exp"></summary>
-        <div class="row2">
-          <div><label class="fld" data-i18n="ot.h125"></label><input type="number" id="ot125c" value="0" min="0" inputmode="decimal"></div>
-          <div><label class="fld" data-i18n="ot.h150"></label><input type="number" id="ot150c" value="0" min="0" inputmode="decimal"></div>
-        </div>
-        <div class="note" data-i18n="emp.ot.hint"></div>
-      </details>
-
       <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span></label>
       <div class="note" data-i18n-html="emp.chk.pension.hint"></div>
 
@@ -402,6 +393,7 @@
         <span class="lbl" data-i18n="ot.sum"></span>
         <span class="val" id="otSum" style="font-size:22px">—</span>
       </div>
+      <div class="note" id="otSynced" data-i18n-html="ot.synced"></div>
       <div class="note" data-i18n="ot.note"></div>
     </div>
 
@@ -809,8 +801,10 @@ function calcEmp() {
   const foreign = st === 'b1' || st === 's25';
   const hish = document.getElementById('profHish').checked;
   const nn = v => Math.max(0, +v || 0);
-  // сверхурочные входят в облагаемое брутто; пенсия и иштальмут по закону — только от базы
-  const otPay = (gross / 182) * (1.25 * nn(document.getElementById('ot125c').value) + 1.5 * nn(document.getElementById('ot150c').value));
+  // сверхурочные берутся из карточки «Сверхурочные» ниже: входят в облагаемое брутто,
+  // а пенсия и иштальмут по закону считаются только от базовой зарплаты
+  const otPay = nn(document.getElementById('otRate').value) *
+    (1.25 * nn(document.getElementById('ot125').value) + 1.5 * nn(document.getElementById('ot150').value));
   const taxable = gross + otPay;
   const tax = incomeTax(taxable, pts);
   const ni = natIns(taxable, foreign ? NI_B1 : NI_EMP);
@@ -879,7 +873,7 @@ function updateHello() {
   document.querySelector('.topbar .sub').textContent = n ? tf('hello', {name: n}) : t('sub');
 }
 profIndustry.addEventListener('change', () => {
-  otRate.value = profIndustry.value === 'cleaning' ? CLEAN_HOUR : MIN_HOUR; // отраслевая ставка в сверхурочные
+  syncOtRate(); // отраслевая минималка как нижняя граница ставки
   if (['cleaning','security','construction'].includes(profIndustry.value)) profHish.checked = true; // иштальмут обязателен по цав архава
   calcOT(); calcFired(); updEmpPoints(); // updEmpPoints пересчитает и б1-сиуд некудот, и нетто, и сохранит профиль
 });
@@ -891,6 +885,7 @@ profHish.addEventListener('change', () => { calcEmp(); saveProf(); });
 profName.addEventListener('input', () => { updateHello(); saveProf(); });
 ['empGross','empPoints','empPension'].forEach(id => document.getElementById(id).addEventListener('input', () => {
   if (id === 'empPoints') { ptsManual = true; document.getElementById('nkAuto').textContent = t('nk.manual'); }
+  if (id === 'empGross') { syncOtRate(); calcOT(); return; } // calcOT сам вызовет calcEmp
   calcEmp();
 }));
 
@@ -929,10 +924,21 @@ segInit('fpType', () => calcFired());
 // сверхурочные
 function calcOT() {
   const nn = v => Math.max(0, +v || 0); // отрицательные часы/ставка не имеют смысла
-  otSum.textContent = fmt(nn(otRate.value) * (1.25 * nn(ot125.value) + 1.5 * nn(ot150.value)));
+  const sum = nn(otRate.value) * (1.25 * nn(ot125.value) + 1.5 * nn(ot150.value));
+  otSum.textContent = fmt(sum);
+  document.getElementById('otSynced').style.display = sum > 0 ? '' : 'none';
+  calcEmp(); // доплата сразу уходит в расчёт нетто выше
 }
-['otRate','ot125','ot150'].forEach(id => document.getElementById(id).addEventListener('input', calcOT));
-['ot125c','ot150c'].forEach(id => document.getElementById(id).addEventListener('input', calcEmp)); // часы OT в калькуляторе: обратимо, брутто не трогаем
+// ставка по умолчанию = брутто ÷ 182, но не ниже отраслевой минималки; ручной ввод её фиксирует
+let otRateManual = false;
+function syncOtRate() {
+  if (otRateManual) return;
+  const floor = profIndustry.value === 'cleaning' ? CLEAN_HOUR : MIN_HOUR;
+  const own = (+empGross.value || 0) / 182;
+  otRate.value = Math.max(floor, Math.round(own * 100) / 100).toFixed(2);
+}
+otRate.addEventListener('input', () => { otRateManual = true; calcOT(); });
+['ot125','ot150'].forEach(id => document.getElementById(id).addEventListener('input', calcOT));
 
 // ======= Чекап прав =======
 const QUIZ = [
@@ -1234,6 +1240,7 @@ applyI18n();
 fillAliyahSelects();
 loadProf();
 updateHello();
+syncOtRate();
 updEmpPoints(); calcOT(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate();
 fetchRates();
 document.getElementById('empGross').addEventListener('input', saveProf);
