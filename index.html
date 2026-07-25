@@ -994,7 +994,8 @@ function aiAsk(inputId, targetId) {
   }
   const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   target.style.display = 'block';
-  target.innerHTML = '💬 <b>«' + esc(q) + '»</b><br>' + (ans || t('ai.nomatch'));
+  target.innerHTML = '💬 <b>«' + esc(q) + '»</b><br>' + (ans || t('ai.nomatch'))
+    + '<br><button class="btn ghost" style="margin-top:9px;padding:9px" data-q="' + esc(q).replace(/"/g, '&quot;') + '" data-target="' + targetId + '" onclick="aiOnline(this)">' + t('ai.online.btn') + '</button>';
   if (!ans) { // копилка неотвеченных → пополнение базы
     const l = unList(); l.push({q, lang: LANG, ts: Date.now()});
     try { localStorage.setItem(UN_KEY, JSON.stringify(l.slice(-50))); } catch (e) {}
@@ -1021,6 +1022,39 @@ document.getElementById('unClear').addEventListener('click', e => {
   e.preventDefault(); localStorage.removeItem(UN_KEY); unUpdate();
 });
 document.getElementById('aiEmpQ').addEventListener('keydown', e => { if (e.key === 'Enter') aiAsk('aiEmpQ','aiAnsEmp'); });
+
+// ======= Онлайн-AI: Cloudflare Worker → Claude (ключ на сервере, не в приложении) =======
+const AI_URL = 'https://heshbon-ai.heshbon.workers.dev';
+const AI_DAILY = 10; // дневной лимит на устройство — предсказуемый бюджет на этапе валидации
+function aiQuotaKey() { return 'heshbon_ai_' + new Date().toISOString().slice(0, 10); }
+function aiOnline(btn) {
+  const q = btn.dataset.q, targetId = btn.dataset.target;
+  const used = +localStorage.getItem(aiQuotaKey()) || 0;
+  if (used >= AI_DAILY) {
+    const n = document.createElement('div'); n.className = 'note warn';
+    n.textContent = tf('ai.online.limit', {n: AI_DAILY});
+    btn.replaceWith(n); return;
+  }
+  btn.disabled = true; btn.textContent = t('ai.online.wait');
+  fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ q, lang: LANG, status: segVal('empStatus') }) })
+    .then(r => r.ok ? r.json() : Promise.reject(0))
+    .then(d => {
+      if (!d.answer) throw 0;
+      try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
+      const div = document.createElement('div');
+      div.className = 'viol dk';
+      div.innerHTML = '<b>' + t('ai.online.tag') + '</b>' +
+        d.answer.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+      btn.replaceWith(div);
+    })
+    .catch(() => {
+      btn.disabled = false; btn.textContent = t('ai.online.btn');
+      const n = document.createElement('div'); n.className = 'note warn'; n.textContent = t('ai.online.err');
+      btn.after(n); setTimeout(() => n.remove(), 5000);
+    });
+}
 
 // ======= САМОЗАНЯТЫЙ =======
 function calcSelf() {
