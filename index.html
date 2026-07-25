@@ -1095,13 +1095,15 @@ document.querySelectorAll('nav.tabbar button').forEach(b => b.onclick = () => {
   window.scrollTo({top: 0});
 });
 
-// ======= Автообновление ставок: rates.json (same-origin; при появлении хостинга — https URL) =======
-const RATES_URL = 'rates.json';
+// ======= Автообновление ставок: сперва хостинг (GitHub Pages), затем локальный фолбэк =======
+const RATES_URLS = ['https://dimollia-lang.github.io/heshbon-plus/rates.json', 'rates.json'];
 function showRates() {
   if (ratesVer) document.getElementById('ratesInfo').textContent = tf('rates.online', {v: ratesVer});
 }
-function fetchRates() {
-  fetch(RATES_URL, {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => {
+function fetchRates(i) {
+  i = i || 0;
+  if (i >= RATES_URLS.length) return;
+  fetch(RATES_URLS[i], {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(0)).then(d => {
     if (!d || !d.version) return;
     if (d.brackets) BRACKETS = d.brackets.map(b => [b[0] == null ? Infinity : b[0], b[1]]); // JSON не знает Infinity
     POINT = d.point || POINT; NI_T = d.ni_t || NI_T; NI_CAP = d.ni_cap || NI_CAP;
@@ -1110,7 +1112,7 @@ function fetchRates() {
     VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR;
     ratesVer = d.version;
     calcEmp(); calcSelf(); calcRev(); calcOT(); calcFired(); showRates();
-  }).catch(() => {}); // офлайн/файл недоступен — работаем на вшитых
+  }).catch(() => fetchRates(i + 1)); // следующий источник; все недоступны — работаем на вшитых
 }
 
 // init
