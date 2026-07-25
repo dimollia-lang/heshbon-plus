@@ -341,6 +341,7 @@
       <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
 
       <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span></label>
+      <div class="note" data-i18n="emp.chk.pension.hint"></div>
 
       <div class="result-hero">
         <span class="lbl" data-i18n="emp.net.lbl"></span>
@@ -974,6 +975,7 @@ const AI_TOPICS = [
   {kw: ['по собственному','ухожу сам','увольняюсь','resign','quit','התפטר'], key: 'ai.t.resign', prio: 2},
   {kw: ['101','тофес','טופס'], key: 'ai.t.form101', prio: 2},
   {kw: ['иштальмут','hishtalmut','השתלמות'], key: 'ai.t.ishtalmut', prio: 2},
+  {kw: ['эсек патур в найм','наняли как самозанят','как осек патур','как эсек патур','через эсек патур','через хешбонит','по счетам работаю','фиктивн','hired as osek','freelance but','עצמאי אצל מעסיק','מועסק כעוסק','עוסק פטור אצל'], key: 'ai.t.fictive', prio: 2},
   {kw: ['условия труда','ходаа аль','terms of employment','תנאי עבודה','договор не дали'], key: 'ai.t.terms', prio: 1},
   {kw: ['шаббат','суббот','shabbat','saturday','שבת','праздник','holiday','חג','дмей хаг'], key: 'ai.t.shabbat', prio: 1},
   {kw: ['ходаа мукдемет','уведомлен','notice period','הודעה מוקדמת','предупрежд','отработать','отработк','сколько дней предупр','before quitting','להודיע לפני'], key: 'ai.t.notice', prio: 1},
