@@ -308,6 +308,8 @@
       </div>
 
       <label class="fld" style="font-size:13px;color:var(--text);margin-top:14px" data-i18n="prof.h"></label>
+      <label class="fld" data-i18n="prof.name"></label>
+      <input type="text" id="profName" maxlength="30" autocomplete="off">
       <div class="row2">
         <div>
           <label class="fld" data-i18n="prof.industry"></label>
@@ -325,7 +327,7 @@
           <input type="number" id="profTenure" value="1" step="0.5" min="0" inputmode="decimal">
         </div>
       </div>
-      <div class="row2">
+      <div class="row3">
         <div>
           <label class="fld" data-i18n="prof.kids0"></label>
           <input type="number" id="profKids0" value="0" step="1" min="0" inputmode="numeric">
@@ -334,7 +336,12 @@
           <label class="fld" data-i18n="prof.kids6"></label>
           <input type="number" id="profKids6" value="0" step="1" min="0" inputmode="numeric">
         </div>
+        <div>
+          <label class="fld" data-i18n="prof.extra"></label>
+          <input type="number" id="profExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
+        </div>
       </div>
+      <label class="check"><input type="checkbox" id="profHish"> <span data-i18n="prof.hish"></span></label>
       <div class="note" data-i18n="prof.hint"></div>
 
       <label class="fld" data-i18n="emp.fld.gross"></label>
@@ -357,6 +364,31 @@
       </details>
 
       <div class="note" id="empStatusNote"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="ot.h"></h3>
+      <div class="hint" data-i18n-html="ot.hint"></div>
+      <div class="row3">
+        <div>
+          <label class="fld" data-i18n="ot.rate"></label>
+          <input type="number" id="otRate" value="35.40" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="ot.h125"></label>
+          <input type="number" id="ot125" value="0" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="ot.h150"></label>
+          <input type="number" id="ot150" value="0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="result-hero" style="margin-top:12px">
+        <span class="lbl" data-i18n="ot.sum"></span>
+        <span class="val" id="otSum" style="font-size:22px">—</span>
+      </div>
+      <button class="btn ghost" onclick="otAddToGross()" data-i18n="ot.add"></button>
+      <div class="note" data-i18n="ot.note"></div>
     </div>
 
     <div class="card">
@@ -394,30 +426,6 @@
       <div class="note warn" id="unBox" style="display:none">
         <span id="unCount"></span> · <a href="#" id="unSend" style="color:inherit"></a> · <a href="#" id="unClear" style="color:inherit;font-weight:400"></a>
       </div>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="ot.h"></h3>
-      <div class="hint" data-i18n-html="ot.hint"></div>
-      <div class="row3">
-        <div>
-          <label class="fld" data-i18n="ot.rate"></label>
-          <input type="number" id="otRate" value="35.40" inputmode="decimal">
-        </div>
-        <div>
-          <label class="fld" data-i18n="ot.h125"></label>
-          <input type="number" id="ot125" value="0" inputmode="decimal">
-        </div>
-        <div>
-          <label class="fld" data-i18n="ot.h150"></label>
-          <input type="number" id="ot150" value="0" inputmode="decimal">
-        </div>
-      </div>
-      <div class="result-hero" style="margin-top:12px">
-        <span class="lbl" data-i18n="ot.sum"></span>
-        <span class="val" id="otSum" style="font-size:22px">—</span>
-      </div>
-      <div class="note" data-i18n="ot.note"></div>
     </div>
 
     <div class="card">
@@ -659,6 +667,7 @@ function setLang(l) {
   document.getElementById('aiAnsEmp').style.display = 'none';
   document.getElementById('aiAns').style.display = 'none';
   vatOut.innerHTML = '';
+  updateHello();
   updEmpPoints(true); calcOT(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates(); // true = не трогать ручные некудот
 }
 document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
@@ -754,6 +763,7 @@ function updEmpPoints(keepManual) {
     const k6 = Math.max(0, +document.getElementById('profKids6').value || 0);
     pts += k0 * 4.5 + k6 * (g === 'f' ? 2 : 1);
   }
+  pts += Math.max(0, +document.getElementById('profExtraPts').value || 0); // степень, алименты и др. — вручную
   document.getElementById('olehInfo').innerHTML = info;
   if (ptsManual) {
     document.getElementById('nkAuto').textContent = t('nk.manual');
@@ -772,21 +782,24 @@ function calcEmp() {
   const hasPen = document.getElementById('empPension').checked;
 
   const foreign = st === 'b1' || st === 's25';
+  const hish = document.getElementById('profHish').checked;
   const tax = incomeTax(gross, pts);
   const ni = natIns(gross, foreign ? NI_B1 : NI_EMP);
   const pen = hasPen ? gross * PENSION_EMP : 0;
-  const net = gross - tax - ni - pen;
+  const hishEmp = hish ? gross * 0.025 : 0;
+  const net = gross - tax - ni - pen - hishEmp;
 
   document.getElementById('empNet').textContent = fmt(net);
   document.getElementById('empBreak').innerHTML =
     row(t('brk.gross'), fmt(gross)) +
     row(tf('brk.tax', {pts}), '−' + fmt(tax), 'neg') +
     row(foreign ? t('brk.niForeign') : t('brk.ni'), '−' + fmt(ni), 'neg') +
-    (hasPen ? row(t('brk.pension'), '−' + fmt(pen), 'neg') : '');
+    (hasPen ? row(t('brk.pension'), '−' + fmt(pen), 'neg') : '') +
+    (hish ? row(t('brk.hish'), '−' + fmt(hishEmp), 'neg') : '');
   document.getElementById('empEmployer').innerHTML =
     row(t('employer.pens'), '+' + fmt(gross * PENSION_ER), 'pos') +
     row(t('employer.pitz'), '+' + fmt(gross * PITZUIM), 'pos') +
-    row(t('employer.nesiot'), t('employer.actual'), 'pos') +
+    (hish ? row(t('employer.hish'), '+' + fmt(gross * 0.075), 'pos') : '') +
     row(t('employer.ni'), '+' + fmt(natIns(gross, NI_ER)), 'pos') +
     (st === 's25' ? '<div class="note warn" style="margin-top:8px">' + t('employer.s25note') + '</div>' : '');
   document.getElementById('empStatusNote').innerHTML = t('status.' + st);
@@ -803,7 +816,8 @@ function saveProf() {
     localStorage.setItem(PROF_KEY, JSON.stringify({
       st: segVal('empStatus'), g: segVal('empGender'),
       am: aliyahM.value, ay: aliyahY.value,
-      ind: profIndustry.value, ten: profTenure.value, k0: profKids0.value, k6: profKids6.value, gross: empGross.value
+      ind: profIndustry.value, ten: profTenure.value, k0: profKids0.value, k6: profKids6.value, gross: empGross.value,
+      nm: profName.value, ex: profExtraPts.value, hish: profHish.checked
     }));
   } catch (e) {}
 }
@@ -825,15 +839,26 @@ function loadProf() {
     if (p.k6 != null) profKids6.value = p.k6;
     else if (p.kids != null) profKids6.value = p.kids; // миграция со старого одиночного поля
     if (p.gross) { empGross.value = p.gross; fGross.value = p.gross; }
+    if (p.nm) profName.value = p.nm;
+    if (p.ex != null) profExtraPts.value = p.ex;
+    if (p.hish != null) profHish.checked = !!p.hish;
   } catch (e) {}
+}
+function updateHello() {
+  const n = profName.value.trim();
+  document.querySelector('.topbar .sub').textContent = n ? tf('hello', {name: n}) : t('sub');
 }
 profIndustry.addEventListener('change', () => {
   otRate.value = profIndustry.value === 'cleaning' ? CLEAN_HOUR : MIN_HOUR; // отраслевая ставка в сверхурочные
-  calcOT(); saveProf();
+  if (['cleaning','security','construction'].includes(profIndustry.value)) profHish.checked = true; // иштальмут обязателен по цав архава
+  calcOT(); calcEmp(); saveProf();
 });
 profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; calcFired(); saveProf(); });
 profKids0.addEventListener('input', () => updEmpPoints());
 profKids6.addEventListener('input', () => updEmpPoints());
+profExtraPts.addEventListener('input', () => updEmpPoints());
+profHish.addEventListener('change', () => { calcEmp(); saveProf(); });
+profName.addEventListener('input', () => { updateHello(); saveProf(); });
 ['empGross','empPoints','empPension'].forEach(id => document.getElementById(id).addEventListener('input', () => {
   if (id === 'empPoints') { ptsManual = true; document.getElementById('nkAuto').textContent = t('nk.manual'); }
   calcEmp();
@@ -876,6 +901,14 @@ function calcOT() {
   otSum.textContent = fmt(nn(otRate.value) * (1.25 * nn(ot125.value) + 1.5 * nn(ot150.value)));
 }
 ['otRate','ot125','ot150'].forEach(id => document.getElementById(id).addEventListener('input', calcOT));
+function otAddToGross() { // сверхурочные — часть облагаемого брутто: добавляем и пересчитываем налоги
+  const nn = v => Math.max(0, +v || 0);
+  const add = Math.round(nn(otRate.value) * (1.25 * nn(ot125.value) + 1.5 * nn(ot150.value)));
+  if (!add) return;
+  empGross.value = (+empGross.value || 0) + add;
+  empGross.dispatchEvent(new Event('input'));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
 
 // ======= Чекап прав =======
 const QUIZ = [
@@ -976,6 +1009,7 @@ const AI_TOPICS = [
   {kw: ['101','тофес','טופס'], key: 'ai.t.form101', prio: 2},
   {kw: ['иштальмут','hishtalmut','השתלמות'], key: 'ai.t.ishtalmut', prio: 2},
   {kw: ['эсек патур в найм','наняли как самозанят','как осек патур','как эсек патур','через эсек патур','через хешбонит','по счетам работаю','фиктивн','hired as osek','freelance but','עצמאי אצל מעסיק','מועסק כעוסק','עוסק פטור אצל'], key: 'ai.t.fictive', prio: 2},
+  {kw: ['степень','тоар','degree','תואר','алимент','мезонот','מזונות','инвалид','נכות','נכה','disab','перифери','פריפרי','ишувим','יישוב','доп некудот','ещё некудот','какие еще пункт','more points'], key: 'ai.t.morepoints', prio: 2},
   {kw: ['условия труда','ходаа аль','terms of employment','תנאי עבודה','договор не дали'], key: 'ai.t.terms', prio: 1},
   {kw: ['шаббат','суббот','shabbat','saturday','שבת','праздник','holiday','חג','дмей хаг'], key: 'ai.t.shabbat', prio: 1},
   {kw: ['ходаа мукдемет','уведомлен','notice period','הודעה מוקדמת','предупрежд','отработать','отработк','сколько дней предупр','before quitting','להודיע לפני'], key: 'ai.t.notice', prio: 1},
@@ -1170,6 +1204,7 @@ function fetchRates(i) {
 applyI18n();
 fillAliyahSelects();
 loadProf();
+updateHello();
 updEmpPoints(); calcOT(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate();
 fetchRates();
 document.getElementById('empGross').addEventListener('input', saveProf);
