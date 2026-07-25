@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Хешбон+ — бухгалтерия Израиля в кармане</title>
+<style>
+  :root {
+    --bg: #f2f5fa;
+    --card: #ffffff;
+    --text: #1a2333;
+    --muted: #64748b;
+    --accent: #1a56db;
+    --accent-soft: #e8effc;
+    --green: #0e9f6e;
+    --green-soft: #e6f6f0;
+    --red: #d94b4b;
+    --amber: #b45309;
+    --amber-soft: #fdf3e3;
+    --border: #e2e8f0;
+    --shadow: 0 1px 3px rgba(15,23,42,.06), 0 4px 14px rgba(15,23,42,.05);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e131d;
+      --card: #171f2e;
+      --text: #e6ecf5;
+      --muted: #8b98ab;
+      --accent: #6c9bff;
+      --accent-soft: #1b2a4a;
+      --green: #34d399;
+      --green-soft: #10302a;
+      --red: #f87171;
+      --amber: #fbbf24;
+      --amber-soft: #33281180;
+      --border: #263143;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh;
+  }
+  .app {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    display: flex; flex-direction: column;
+    background: var(--bg);
+    padding-bottom: 76px;
+  }
+  header.topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 14px 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    color: #fff; font-weight: 800; font-size: 19px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .topbar h1 { font-size: 17px; font-weight: 700; letter-spacing: -.2px; }
+  .topbar .sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  .langs { margin-inline-start: auto; display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
+  .langs button {
+    border: 0; background: transparent; color: var(--muted); cursor: pointer; font-family: inherit;
+    font-size: 11.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; letter-spacing: .3px;
+  }
+  .langs button.on { background: var(--accent); color: #fff; }
+  main { flex: 1; padding: 16px 14px 24px; }
+  .page { display: none; }
+  .page.active { display: block; animation: fadein .18s ease; }
+  @keyframes fadein { from { opacity:0; transform: translateY(4px);} to { opacity:1; transform:none;} }
+
+  .page-title { font-size: 20px; font-weight: 800; letter-spacing: -.3px; margin: 4px 2px 2px; }
+  .page-desc { font-size: 13px; color: var(--muted); margin: 0 2px 14px; line-height: 1.45; }
+
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    padding: 16px; margin-bottom: 14px;
+  }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; display:flex; align-items:center; gap:7px; flex-wrap: wrap; }
+  .card .hint { font-size: 12px; color: var(--muted); line-height: 1.45; margin-bottom: 12px; }
+
+  label.fld { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin: 10px 0 5px; }
+  input[type=number], input[type=text], input[type=month], select, textarea {
+    width: 100%; padding: 11px 12px; font-size: 16px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    background: var(--bg); color: var(--text); outline: none;
+    transition: border-color .15s;
+    font-family: inherit;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .seg { display: flex; background: var(--bg); border-radius: 10px; padding: 3px; gap: 3px; border: 1px solid var(--border); }
+  .seg button {
+    flex: 1; border: 0; background: transparent; color: var(--muted);
+    font-size: 12px; font-weight: 600; padding: 8px 2px; border-radius: 8px;
+    cursor: pointer; font-family: inherit; line-height: 1.25;
+  }
+  .seg button.on { background: var(--card); color: var(--accent); box-shadow: 0 1px 4px rgba(15,23,42,.12); }
+
+  .check { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13.5px; font-weight: 500; cursor: pointer; }
+  .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+  .result-hero {
+    margin-top: 14px; padding: 14px 16px; border-radius: 12px;
+    background: var(--green-soft); border: 1px solid color-mix(in srgb, var(--green) 30%, transparent);
+    display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+  }
+  .result-hero .lbl { font-size: 13px; font-weight: 700; color: var(--green); }
+  .result-hero .val { font-size: 26px; font-weight: 800; color: var(--green); letter-spacing: -.5px; }
+  .breakdown { margin-top: 10px; }
+  .b-row { display: flex; justify-content: space-between; gap: 10px; padding: 7px 2px; font-size: 13.5px; border-bottom: 1px dashed var(--border); }
+  .b-row:last-child { border-bottom: 0; }
+  .b-row .n { color: var(--muted); }
+  .b-row .v { font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
+  .result-hero .val, .deadline .day { direction: ltr; unicode-bidi: isolate; }
+  .b-row .v.neg { color: var(--red); }
+  .b-row .v.pos { color: var(--green); }
+
+  details.exp { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
+  details.exp summary { font-size: 13px; font-weight: 600; color: var(--accent); cursor: pointer; padding: 4px 0; list-style: none; }
+  details.exp summary::before { content: "▸ "; }
+  details.exp[open] summary::before { content: "▾ "; }
+
+  .note {
+    font-size: 11.5px; color: var(--muted); line-height: 1.5;
+    background: var(--bg); border-radius: 9px; padding: 9px 11px; margin-top: 10px;
+  }
+  .note b { color: var(--text); }
+  .note.warn { background: var(--amber-soft); color: var(--amber); }
+
+  .acc { border: 1px solid var(--border); border-radius: 11px; margin-bottom: 8px; overflow: hidden; background: var(--card); }
+  .acc summary {
+    padding: 12px 14px; font-size: 14px; font-weight: 600; cursor: pointer;
+    list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .acc summary::-webkit-details-marker { display: none; }
+  .acc summary::after { content: "+"; font-size: 18px; color: var(--muted); font-weight: 400; }
+  .acc[open] summary::after { content: "–"; }
+  .acc .body { padding: 0 14px 13px; font-size: 13.5px; line-height: 1.55; color: var(--text); }
+  .acc .body p { margin-bottom: 8px; }
+  .acc .body ul { padding-inline-start: 18px; margin-bottom: 8px; }
+  .acc .body li { margin-bottom: 4px; }
+
+  table.rates { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.rates th { text-align: start; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  table.rates td { padding: 7px 8px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  table.rates tr:last-child td { border-bottom: 0; }
+  table.rates td.r, table.rates th.r { text-align: end; }
+
+  .pill { display:inline-block; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); vertical-align: 1px; }
+
+  .deadline { display: flex; gap: 12px; align-items: flex-start; padding: 10px 2px; border-bottom: 1px dashed var(--border); }
+  .deadline:last-child { border-bottom: 0; }
+  .deadline .day {
+    min-width: 44px; text-align: center; background: var(--accent-soft); color: var(--accent);
+    border-radius: 9px; padding: 5px 4px; font-weight: 800; font-size: 15px; line-height: 1.1;
+  }
+  .deadline .day small { display: block; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .deadline .info { font-size: 13px; line-height: 1.4; }
+  .deadline .info b { display: block; font-size: 13.5px; }
+  .deadline .info span { color: var(--muted); font-size: 12px; }
+
+  .btn {
+    display: block; width: 100%; padding: 13px; margin-top: 12px;
+    background: var(--accent); color: #fff; border: 0; border-radius: 11px;
+    font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+  .btn.ghost { background: var(--accent-soft); color: var(--accent); }
+
+  .ai-chip { display: inline-block; margin: 3px 4px 3px 0; padding: 7px 11px; font-size: 12.5px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; color: var(--text); cursor: pointer; }
+  .ai-answer { margin-top: 10px; font-size: 13px; background: var(--accent-soft); border-radius: 10px; padding: 11px 13px; line-height: 1.55; display: none; }
+  .ai-ask { display: flex; gap: 8px; margin-top: 10px; }
+  .ai-ask input { flex: 1; }
+  .ai-ask button { flex-shrink: 0; padding: 0 16px; background: var(--accent); color: #fff; border: 0; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+  .q-item { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+  .q-item:last-child { border-bottom: 0; }
+  .q-item .q-t { font-size: 13.5px; font-weight: 600; margin-bottom: 7px; line-height: 1.4; }
+  .q-opts { display: flex; gap: 6px; }
+  .q-opts button { flex: 1; padding: 7px 4px; font-size: 12px; font-weight: 600; border: 1.5px solid var(--border); background: var(--bg); color: var(--muted); border-radius: 8px; cursor: pointer; font-family: inherit; }
+  .q-opts button.sel-yes { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+  .q-opts button.sel-no { background: color-mix(in srgb, var(--red) 12%, transparent); border-color: var(--red); color: var(--red); }
+  .q-opts button.sel-dk { background: var(--amber-soft); border-color: var(--amber); color: var(--amber); }
+  .viol { margin-top: 8px; padding: 10px 12px; border-radius: 10px; font-size: 12.5px; line-height: 1.5; }
+  .viol.bad { background: color-mix(in srgb, var(--red) 10%, transparent); border: 1px solid color-mix(in srgb, var(--red) 35%, transparent); }
+  .viol.dk { background: var(--amber-soft); border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent); }
+  .viol b { display: block; margin-bottom: 3px; }
+
+  .links a { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 11px 2px; font-size: 14px; color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--border); }
+  .links a:last-child { border-bottom: 0; }
+  .links a small { color: var(--muted); font-size: 11.5px; }
+  .links a::after { content: "↗"; color: var(--accent); }
+
+  footer.disclaimer { padding: 4px 18px 18px; font-size: 10.5px; color: var(--muted); line-height: 1.55; text-align: center; }
+
+  .ad-card { position: relative; border: 1.5px dashed color-mix(in srgb, var(--accent) 45%, transparent); border-radius: var(--radius); padding: 15px 16px 11px; margin-bottom: 14px; background: color-mix(in srgb, var(--accent-soft) 50%, transparent); }
+  .ad-card .ad-badge { position: absolute; top: -8px; inset-inline-end: 12px; font-size: 9.5px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; background: var(--card); color: var(--muted); border: 1px solid var(--border); padding: 2px 7px; border-radius: 999px; }
+  .ad-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .ad-card p { font-size: 12.5px; color: var(--muted); line-height: 1.45; margin-bottom: 9px; }
+  .ad-card .ad-cta { display: inline-block; font-size: 12.5px; font-weight: 700; color: var(--accent); text-decoration: none; padding: 6px 13px; border: 1.5px solid var(--accent); border-radius: 999px; }
+  .ad-card .ad-demo { display: inline-block; font-size: 10px; color: var(--muted); margin-inline-start: 8px; }
+  .ad-place { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); border-top: 1px dashed var(--border); margin-top: 10px; padding-top: 7px; }
+  .ad-place a { color: var(--accent); font-weight: 700; text-decoration: none; white-space: nowrap; }
+
+  .star-btn { border: 0; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 11px; font-weight: 800; padding: 6px 10px; border-radius: 999px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .langs { margin-inline-start: 8px; }
+  .topbar > div:nth-child(2) { margin-inline-end: auto; }
+
+  .modal { display: none; position: fixed; inset: 0; z-index: 50; background: rgba(8,12,20,.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); align-items: flex-end; justify-content: center; }
+  .modal .sheet { position: relative; width: 100%; max-width: 480px; max-height: 88vh; overflow-y: auto; background: var(--bg); border-radius: 20px 20px 0 0; padding: 20px 16px calc(16px + env(safe-area-inset-bottom)); }
+  .sheet h2 { font-size: 18px; font-weight: 800; }
+  .sheet .sub { font-size: 12.5px; color: var(--muted); margin: 3px 0 14px; line-height: 1.45; }
+  .plan { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; position: relative; }
+  .plan.hot { border-color: var(--accent); box-shadow: 0 4px 18px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .plan .hot-badge { position: absolute; top: -9px; inset-inline-start: 14px; font-size: 9.5px; font-weight: 800; background: var(--accent); color: #fff; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .5px; }
+  .plan .p-name { font-weight: 800; font-size: 15px; }
+  .plan .p-price { font-weight: 800; font-size: 17px; color: var(--accent); margin: 2px 0 8px; direction: ltr; unicode-bidi: isolate; text-align: start; }
+  .plan ul { padding-inline-start: 18px; font-size: 12.5px; line-height: 1.6; margin-bottom: 11px; }
+  .plan .btn { margin-top: 0; padding: 11px; font-size: 14px; }
+
+  nav.tabbar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px; z-index: 30;
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    display: flex; padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+  }
+  nav.tabbar button {
+    flex: 1; border: 0; background: transparent; cursor: pointer; font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 7px 2px; border-radius: 12px; color: var(--muted);
+  }
+  nav.tabbar button .ico { font-size: 21px; line-height: 1; }
+  nav.tabbar button .t { font-size: 10.5px; font-weight: 700; letter-spacing: .1px; }
+  nav.tabbar button.on { color: var(--accent); background: var(--accent-soft); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="logo">₪</div>
+    <div>
+      <h1>Хешбон+</h1>
+      <div class="sub" data-i18n="sub"></div>
+    </div>
+    <button class="star-btn" onclick="document.getElementById('premModal').style.display='flex'" data-i18n="prem.btn"></button>
+    <div class="langs" id="langs">
+      <button data-l="ru">RU</button>
+      <button data-l="en">EN</button>
+      <button data-l="he">עב</button>
+    </div>
+  </header>
+
+  <main>
+
+  <!-- ================= РАБОТНИК ================= -->
+  <section class="page active" id="page-emp">
+    <div class="page-title" data-i18n="emp.title"></div>
+    <p class="page-desc" data-i18n="emp.desc"></p>
+
+    <div class="card">
+      <h3 data-i18n="emp.calc.h"></h3>
+      <div class="hint" data-i18n="emp.calc.hint"></div>
+
+      <label class="fld" data-i18n="emp.fld.status"></label>
+      <div class="seg" id="empStatus">
+        <button data-v="resident" class="on" data-i18n="st.resident"></button>
+        <button data-v="oleh" data-i18n="st.oleh"></button>
+        <button data-v="b1" data-i18n="st.b1"></button>
+        <button data-v="s25" data-i18n="st.s25"></button>
+      </div>
+
+      <div id="olehBlock" style="display:none">
+        <label class="fld" data-i18n="emp.fld.aliyah"></label>
+        <div class="row2">
+          <select id="aliyahM"></select>
+          <select id="aliyahY"></select>
+        </div>
+        <div class="note" id="olehInfo"></div>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label class="fld" data-i18n="emp.fld.gender"></label>
+          <div class="seg" id="empGender">
+            <button data-v="m" class="on" data-i18n="g.m"></button>
+            <button data-v="f" data-i18n="g.f"></button>
+          </div>
+        </div>
+        <div>
+          <label class="fld"><span data-i18n="emp.fld.points"></span> <span class="pill" id="nkAuto"></span></label>
+          <input type="number" id="empPoints" step="0.25" value="2.25" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="row3">
+        <div>
+          <label class="fld" data-i18n="prof.industry"></label>
+          <select id="profIndustry">
+            <option value="general" data-i18n="prof.ind.general"></option>
+            <option value="cleaning" data-i18n="prof.ind.cleaning"></option>
+            <option value="security" data-i18n="prof.ind.security"></option>
+            <option value="construction" data-i18n="prof.ind.construction"></option>
+            <option value="catering" data-i18n="prof.ind.catering"></option>
+            <option value="care" data-i18n="prof.ind.care"></option>
+          </select>
+        </div>
+        <div>
+          <label class="fld" data-i18n="prof.tenure"></label>
+          <input type="number" id="profTenure" value="1" step="0.5" min="0" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="prof.kids"></label>
+          <input type="number" id="profKids" value="0" step="1" min="0" inputmode="numeric">
+        </div>
+      </div>
+      <div class="note" data-i18n="prof.hint"></div>
+
+      <label class="fld" data-i18n="emp.fld.gross"></label>
+      <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
+
+      <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span></label>
+
+      <div class="result-hero">
+        <span class="lbl" data-i18n="emp.net.lbl"></span>
+        <span class="val" id="empNet">—</span>
+      </div>
+
+      <div class="breakdown" id="empBreak"></div>
+
+      <details class="exp">
+        <summary data-i18n="emp.exp.employer"></summary>
+        <div class="breakdown" id="empEmployer"></div>
+        <div class="note" data-i18n="emp.employer.note"></div>
+      </details>
+
+      <div class="note" id="empStatusNote"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="quiz.h"></h3>
+      <div class="hint" data-i18n="quiz.hint"></div>
+      <div id="rightsQuiz"></div>
+      <button class="btn" onclick="quizResultShow()" data-i18n="quiz.btn"></button>
+      <div id="quizResult"></div>
+    </div>
+
+    <div class="ad-card">
+      <span class="ad-badge" data-i18n="ads.badge"></span>
+      <h4 data-i18n="ads.slot1.t"></h4>
+      <p data-i18n="ads.slot1.x"></p>
+      <a class="ad-cta" href="#" onclick="return false" data-i18n="ads.cta"></a><span class="ad-demo" data-i18n="ads.demo"></span>
+      <div class="ad-place"><span data-i18n="ads.place"></span><a href="mailto:dimollia@gmail.com?subject=Heshbon%2B%20Ads" data-i18n="ads.placeCta"></a></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n-html="ai.emp.h"></h3>
+      <div class="hint" data-i18n="ai.emp.hint"></div>
+      <div>
+        <span class="ai-chip" data-ai="ai.emp.a1" data-i18n="ai.emp.c1"></span>
+        <span class="ai-chip" data-ai="ai.emp.a2" data-i18n="ai.emp.c2"></span>
+        <span class="ai-chip" data-ai="ai.emp.a3" data-i18n="ai.emp.c3"></span>
+        <span class="ai-chip" data-ai="ai.emp.a4" data-i18n="ai.emp.c4"></span>
+        <span class="ai-chip" data-ai="ai.emp.a5" data-i18n="ai.emp.c5"></span>
+      </div>
+      <div class="ai-ask">
+        <input type="text" id="aiEmpQ" data-i18n-ph="ai.free.ph">
+        <button onclick="aiAsk('aiEmpQ','aiAnsEmp')" data-i18n="ai.free.btn"></button>
+      </div>
+      <div class="ai-answer" id="aiAnsEmp"></div>
+      <div class="note" data-i18n="ai.note"></div>
+      <div class="note warn" id="unBox" style="display:none">
+        <span id="unCount"></span> · <a href="#" id="unSend" style="color:inherit"></a> · <a href="#" id="unClear" style="color:inherit;font-weight:400"></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="ot.h"></h3>
+      <div class="hint" data-i18n-html="ot.hint"></div>
+      <div class="row3">
+        <div>
+          <label class="fld" data-i18n="ot.rate"></label>
+          <input type="number" id="otRate" value="35.40" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="ot.h125"></label>
+          <input type="number" id="ot125" value="0" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="ot.h150"></label>
+          <input type="number" id="ot150" value="0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="result-hero" style="margin-top:12px">
+        <span class="lbl" data-i18n="ot.sum"></span>
+        <span class="val" id="otSum" style="font-size:22px">—</span>
+      </div>
+      <div class="note" data-i18n="ot.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="fired.h"></h3>
+      <div class="hint" data-i18n="fired.hint"></div>
+      <label class="fld" data-i18n="fired.paytype"></label>
+      <div class="seg" id="fpType">
+        <button data-v="m" class="on" data-i18n="fired.monthly"></button>
+        <button data-v="h" data-i18n="fired.hourlyp"></button>
+      </div>
+      <div class="row2">
+        <div><label class="fld" data-i18n="fired.gross"></label><input type="number" id="fGross" value="9500" inputmode="decimal"></div>
+        <div><label class="fld" data-i18n="fired.tenure"></label><input type="number" id="fTenure" value="1" step="0.5" min="0" inputmode="decimal"></div>
+      </div>
+      <div class="row2">
+        <div><label class="fld" data-i18n="fired.vacdays"></label><input type="number" id="fVac" value="0" min="0" inputmode="decimal"></div>
+        <div><label class="fld" data-i18n="fired.havdays"></label><input type="number" id="fHav" value="0" min="0" inputmode="decimal"></div>
+      </div>
+      <div class="result-hero">
+        <span class="lbl" data-i18n="fired.total"></span>
+        <span class="val" id="fTotal">—</span>
+      </div>
+      <div class="breakdown" id="fBreak"></div>
+      <div class="note" data-i18n="fired.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="rights.h"></h3>
+      <div class="hint" data-i18n="rights.hint"></div>
+      <details class="acc"><summary data-i18n="acc.tlush.t"></summary><div class="body" data-i18n-html="acc.tlush.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.vac.t"></summary><div class="body" data-i18n-html="acc.vac.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.hav.t"></summary><div class="body" data-i18n-html="acc.hav.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.sick.t"></summary><div class="body" data-i18n-html="acc.sick.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.b1.t"></summary><div class="body" data-i18n-html="acc.b1.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.s25.t"></summary><div class="body" data-i18n-html="acc.s25.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.nesiot.t"></summary><div class="body" data-i18n-html="acc.nesiot.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.fire.t"></summary><div class="body" data-i18n-html="acc.fire.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.family.t"></summary><div class="body" data-i18n-html="acc.family.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.sectors.t"></summary><div class="body" data-i18n-html="acc.sectors.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.complain.t"></summary><div class="body" data-i18n-html="acc.complain.body"></div></details>
+    </div>
+  </section>
+
+  <!-- ================= САМОЗАНЯТЫЙ ================= -->
+  <section class="page" id="page-self">
+    <div class="page-title" data-i18n="self.title"></div>
+    <p class="page-desc" data-i18n="self.desc"></p>
+
+    <div class="card">
+      <h3 data-i18n="self.save.h"></h3>
+      <div class="hint" data-i18n="self.save.hint"></div>
+      <div class="row2">
+        <div>
+          <label class="fld" data-i18n="self.fld.income"></label>
+          <input type="number" id="seIncome" value="12000" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="self.fld.points"></label>
+          <input type="number" id="sePoints" step="0.25" value="2.25" inputmode="decimal">
+        </div>
+      </div>
+      <div class="result-hero">
+        <span class="lbl" data-i18n="self.save.lbl"></span>
+        <span class="val" id="seSetAside">—</span>
+      </div>
+      <div class="breakdown" id="seBreak"></div>
+      <div class="note" data-i18n-html="self.save.note"></div>
+    </div>
+
+    <div class="ad-card">
+      <span class="ad-badge" data-i18n="ads.badge"></span>
+      <h4 data-i18n="ads.slot2.t"></h4>
+      <p data-i18n="ads.slot2.x"></p>
+      <a class="ad-cta" href="#" onclick="return false" data-i18n="ads.cta"></a><span class="ad-demo" data-i18n="ads.demo"></span>
+      <div class="ad-place"><span data-i18n="ads.place"></span><a href="mailto:dimollia@gmail.com?subject=Heshbon%2B%20Ads" data-i18n="ads.placeCta"></a></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="vat.h"></h3>
+      <div class="row2">
+        <div>
+          <label class="fld" data-i18n="vat.fld.net"></label>
+          <input type="number" id="vatNet" placeholder="1000" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="vat.fld.gross"></label>
+          <input type="number" id="vatGross" placeholder="1180" inputmode="decimal">
+        </div>
+      </div>
+      <div class="breakdown" id="vatOut" style="margin-top:8px"></div>
+      <div class="note" data-i18n-html="vat.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="cmp.h"></h3>
+      <div data-i18n-html="cmp.table"></div>
+      <div class="note" data-i18n="cmp.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="dl.h"></h3>
+      <div id="seDeadlines"></div>
+      <div class="note" data-i18n="dl.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="exp.h"></h3>
+      <details class="acc"><summary data-i18n="exp.home.t"></summary><div class="body" data-i18n-html="exp.home.body"></div></details>
+      <details class="acc"><summary data-i18n="exp.car.t"></summary><div class="body" data-i18n-html="exp.car.body"></div></details>
+      <details class="acc"><summary data-i18n="exp.phone.t"></summary><div class="body" data-i18n-html="exp.phone.body"></div></details>
+      <details class="acc"><summary data-i18n="exp.edu.t"></summary><div class="body" data-i18n-html="exp.edu.body"></div></details>
+      <div class="note warn" data-i18n="exp.warn"></div>
+    </div>
+  </section>
+
+  <!-- ================= БУХГАЛТЕР ================= -->
+  <section class="page" id="page-acct">
+    <div class="page-title" data-i18n="acct.title"></div>
+    <p class="page-desc" data-i18n="acct.desc"></p>
+
+    <div class="card">
+      <h3 data-i18n-html="acct.rates.h"></h3>
+      <div data-i18n-html="acct.rates.table1"></div>
+      <div class="note" data-i18n="acct.rates.note"></div>
+      <details class="exp"><summary data-i18n="acct.rates.exp"></summary>
+        <div data-i18n-html="acct.rates.table2"></div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="rev.h"></h3>
+      <div class="hint" data-i18n="rev.hint"></div>
+      <div class="row2">
+        <div>
+          <label class="fld" data-i18n="rev.fld.net"></label>
+          <input type="number" id="revNet" value="10000" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="rev.fld.points"></label>
+          <input type="number" id="revPoints" step="0.25" value="2.25" inputmode="decimal">
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="revPension" checked> <span data-i18n="rev.chk"></span></label>
+      <div class="result-hero">
+        <span class="lbl" data-i18n="rev.lbl"></span>
+        <span class="val" id="revGross">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n-html="ai.acct.h"></h3>
+      <div class="hint" data-i18n="ai.acct.hint"></div>
+      <div>
+        <span class="ai-chip" data-ai="ai.acct.a1" data-i18n="ai.acct.c1"></span>
+        <span class="ai-chip" data-ai="ai.acct.a2" data-i18n="ai.acct.c2"></span>
+        <span class="ai-chip" data-ai="ai.acct.a3" data-i18n="ai.acct.c3"></span>
+        <span class="ai-chip" data-ai="ai.acct.a4" data-i18n="ai.acct.c4"></span>
+      </div>
+      <div class="ai-answer" id="aiAns"></div>
+      <div class="note" data-i18n="ai.note"></div>
+    </div>
+
+    <div class="ad-card">
+      <span class="ad-badge" data-i18n="ads.badge"></span>
+      <h4 data-i18n="ads.slot3.t"></h4>
+      <p data-i18n="ads.slot3.x"></p>
+      <a class="ad-cta" href="#" onclick="return false" data-i18n="ads.cta"></a><span class="ad-demo" data-i18n="ads.demo"></span>
+      <div class="ad-place"><span data-i18n="ads.place"></span><a href="mailto:dimollia@gmail.com?subject=Heshbon%2B%20Ads" data-i18n="ads.placeCta"></a></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="links.h"></h3>
+      <div class="links" data-i18n-html="links.body"></div>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="disclaimer" data-i18n-html="disclaimer"></footer>
+  <div class="disclaimer" id="ratesInfo" style="padding-top:0"></div>
+
+  <div class="modal" id="premModal" onclick="if(event.target===this)this.style.display='none'">
+    <div class="sheet">
+      <h2 data-i18n="prem.title"></h2>
+      <div class="sub" data-i18n="prem.sub"></div>
+      <div class="plan">
+        <div class="p-name" data-i18n="prem.free.n"></div>
+        <div class="p-price" data-i18n="prem.free.p"></div>
+        <ul data-i18n-html="prem.free.f"></ul>
+        <button class="btn ghost" disabled data-i18n="prem.current"></button>
+      </div>
+      <div class="plan hot">
+        <span class="hot-badge" data-i18n="prem.popular"></span>
+        <div class="p-name" data-i18n="prem.prem.n"></div>
+        <div class="p-price" data-i18n="prem.prem.p"></div>
+        <ul data-i18n-html="prem.prem.f"></ul>
+        <button class="btn" onclick="joinWait('premium', this)" data-i18n="prem.cta"></button>
+      </div>
+      <div class="plan">
+        <div class="p-name" data-i18n="prem.pro.n"></div>
+        <div class="p-price" data-i18n="prem.pro.p"></div>
+        <ul data-i18n-html="prem.pro.f"></ul>
+        <button class="btn" onclick="joinWait('pro', this)" data-i18n="prem.cta"></button>
+      </div>
+      <div class="note" data-i18n="prem.note"></div>
+      <button class="btn ghost" onclick="document.getElementById('premModal').style.display='none'" data-i18n="prem.close"></button>
+    </div>
+  </div>
+
+  <nav class="tabbar">
+    <button class="on" data-page="page-emp"><span class="ico">👷</span><span class="t" data-i18n="tab.emp"></span></button>
+    <button data-page="page-self"><span class="ico">💼</span><span class="t" data-i18n="tab.self"></span></button>
+    <button data-page="page-acct"><span class="ico">🧮</span><span class="t" data-i18n="tab.acct"></span></button>
+  </nav>
+
+</div>
+
+<script src="i18n.js"></script>
+<script>
+// ======= i18n =======
+let LANG = localStorage.getItem('heshbon_lang') || 'ru';
+if (!I18N[LANG]) LANG = 'ru';
+const t = k => (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ru[k] !== undefined ? I18N.ru[k] : k);
+const tf = (k, vars) => { let s = t(k); for (const v in vars) s = s.split('{' + v + '}').join(vars[v]); return s; };
+
+function applyI18n() {
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = t('dir');
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-html]').forEach(el => el.innerHTML = t(el.dataset.i18nHtml));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.dataset.i18nPh));
+  document.querySelectorAll('#langs button').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
+}
+function setLang(l) {
+  LANG = l; localStorage.setItem('heshbon_lang', l);
+  applyI18n();
+  fillAliyahSelects();
+  document.getElementById('aiAnsEmp').style.display = 'none';
+  document.getElementById('aiAns').style.display = 'none';
+  vatOut.innerHTML = '';
+  updEmpPoints(true); calcOT(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates(); // true = не трогать ручные некудот
+}
+document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
+
+// ======= Константы 2026 (вшитый фолбэк; при старте обновляются из rates.json) =======
+let BRACKETS = [ // месячные ступени подоходного налога 2026 (20%/31% расширены законом с 01.2026)
+  [7010, .10], [10060, .14], [19000, .20], [25100, .31], [46690, .35], [60130, .47], [Infinity, .50]
+];
+let POINT = 242;            // некудат зикуй ₪/мес (заморожена 2025–2027)
+let NI_T = 7703;            // порог 60% средней з/п (2026)
+let NI_CAP = 51910;         // потолок битуах леуми (2026)
+let NI_EMP = [.0427, .1217];// работник-резидент: БЛ+бриют, реформа 2025–26
+let NI_B1  = [.0004, .0087];// иностранный работник/2(а)5 (без мас бриют; ставки нерезидента)
+let NI_SELF = [.0610, .18]; // ацмаи 2026
+let PENSION_EMP = .06, PENSION_ER = .065, PITZUIM = .06, NI_ER = [.0451, .076]; // пицуим: мин. 6%, полное 8.33%
+let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 451.50, CLEAN_HOUR = 38.03;
+let ratesVer = null;
+
+const fmt = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 0}).format(Math.round(n)) + ' ₪';
+
+function incomeTax(gross, points) {
+  let tax = 0, prev = 0;
+  for (const [cap, rate] of BRACKETS) {
+    if (gross > prev) tax += (Math.min(gross, cap) - prev) * rate; else break;
+    prev = cap;
+  }
+  return Math.max(0, tax - points * POINT);
+}
+function natIns(gross, rates) {
+  const base = Math.min(gross, NI_CAP);
+  return Math.min(base, NI_T) * rates[0] + Math.max(0, base - NI_T) * rates[1];
+}
+
+function segInit(id, onChange) {
+  const seg = document.getElementById(id);
+  seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+    seg.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    onChange(b.dataset.v);
+  });
+}
+const segVal = id => document.getElementById(id).querySelector('.on').dataset.v;
+const row = (n, v, cls) => `<div class="b-row"><span class="n">${n}</span><span class="v ${cls||''}">${v}</span></div>`;
+
+// ======= РАБОТНИК =======
+const POINTS_BASE = { m: 2.25, f: 2.75 };
+// Некудот олим: мес 1-12 → +1, 13-30 → +3, 31-42 → +2, 43-54 → +1, дальше 0
+function olehBonus(m) {
+  if (m < 1) return 0;
+  if (m <= 12) return 1;
+  if (m <= 30) return 3;
+  if (m <= 42) return 2;
+  if (m <= 54) return 1;
+  return 0;
+}
+// два select вместо input type=month — Android WebView календарь месяца не поддерживает
+function fillAliyahSelects() {
+  const selM = document.getElementById('aliyahM'), selY = document.getElementById('aliyahY');
+  const keepM = selM.value || '1', keepY = selY.value || '2025';
+  const MON = t('months');
+  selM.innerHTML = MON.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
+  const nowY = new Date().getFullYear();
+  let ys = '';
+  for (let y = nowY; y >= 1990; y--) ys += `<option value="${y}">${y}</option>`;
+  selY.innerHTML = ys;
+  selM.value = keepM; selY.value = keepY;
+}
+function monthsSinceAliyah() {
+  const y = +document.getElementById('aliyahY').value, mo = +document.getElementById('aliyahM').value;
+  if (!y || !mo) return -1;
+  const now = new Date();
+  return (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - mo) + 1; // месяц алии = месяц 1
+}
+let ptsManual = false; // некудот исправлены руками → не перетирать при смене языка
+function updEmpPoints(keepManual) {
+  const st = segVal('empStatus'), g = segVal('empGender');
+  if (!keepManual) ptsManual = false; // смена статуса/пола/даты сбрасывает ручной режим
+  let pts = POINTS_BASE[g], info = '';
+  document.getElementById('olehBlock').style.display = st === 'oleh' ? 'block' : 'none';
+  if (st === 'oleh') {
+    const m = monthsSinceAliyah(), b = olehBonus(m);
+    pts += b;
+    if (m < 1) info = t('oleh.ask');
+    else if (m > 54) info = tf('oleh.expired', {m});
+    else {
+      const y = +document.getElementById('aliyahY').value, mo = +document.getElementById('aliyahM').value;
+      const end = new Date(y, mo - 1 + 53, 1); // 54-й льготный месяц
+      info = tf('oleh.active', {m, b, base: pts - b, end: String(end.getMonth() + 1).padStart(2, '0') + '.' + end.getFullYear()});
+    }
+  } else if (st === 'b1' || st === 's25') pts = 0;
+  document.getElementById('olehInfo').innerHTML = info;
+  if (ptsManual) {
+    document.getElementById('nkAuto').textContent = t('nk.manual');
+  } else {
+    document.getElementById('empPoints').value = pts;
+    document.getElementById('nkAuto').textContent = t('nk.auto');
+  }
+  renderQuiz();
+  calcEmp();
+  if (typeof profIndustry !== 'undefined') saveProf();
+}
+function calcEmp() {
+  const st = segVal('empStatus');
+  const gross = +document.getElementById('empGross').value || 0;
+  const pts = +document.getElementById('empPoints').value || 0;
+  const hasPen = document.getElementById('empPension').checked;
+
+  const foreign = st === 'b1' || st === 's25';
+  const tax = incomeTax(gross, pts);
+  const ni = natIns(gross, foreign ? NI_B1 : NI_EMP);
+  const pen = hasPen ? gross * PENSION_EMP : 0;
+  const net = gross - tax - ni - pen;
+
+  document.getElementById('empNet').textContent = fmt(net);
+  document.getElementById('empBreak').innerHTML =
+    row(t('brk.gross'), fmt(gross)) +
+    row(tf('brk.tax', {pts}), '−' + fmt(tax), 'neg') +
+    row(foreign ? t('brk.niForeign') : t('brk.ni'), '−' + fmt(ni), 'neg') +
+    (hasPen ? row(t('brk.pension'), '−' + fmt(pen), 'neg') : '');
+  document.getElementById('empEmployer').innerHTML =
+    row(t('employer.pens'), '+' + fmt(gross * PENSION_ER), 'pos') +
+    row(t('employer.pitz'), '+' + fmt(gross * PITZUIM), 'pos') +
+    row(t('employer.nesiot'), t('employer.actual'), 'pos') +
+    row(t('employer.ni'), '+' + fmt(natIns(gross, NI_ER)), 'pos') +
+    (st === 's25' ? '<div class="note warn" style="margin-top:8px">' + t('employer.s25note') + '</div>' : '');
+  document.getElementById('empStatusNote').innerHTML = t('status.' + st);
+}
+segInit('empStatus', () => updEmpPoints());   // без аргументов: смена статуса/пола/даты
+segInit('empGender', () => updEmpPoints());   // сбрасывает ручной режим некудот
+document.getElementById('aliyahM').addEventListener('change', () => updEmpPoints());
+document.getElementById('aliyahY').addEventListener('change', () => updEmpPoints());
+
+// ======= Профиль: сохраняется на устройстве, восстанавливается при запуске =======
+const PROF_KEY = 'heshbon_profile';
+function saveProf() {
+  try {
+    localStorage.setItem(PROF_KEY, JSON.stringify({
+      st: segVal('empStatus'), g: segVal('empGender'),
+      am: aliyahM.value, ay: aliyahY.value,
+      ind: profIndustry.value, ten: profTenure.value, kids: profKids.value, gross: empGross.value
+    }));
+  } catch (e) {}
+}
+function loadProf() {
+  try {
+    const p = JSON.parse(localStorage.getItem(PROF_KEY) || 'null');
+    if (!p) return;
+    const setSeg = (id, v) => {
+      const b = document.querySelector('#' + id + ' button[data-v="' + v + '"]');
+      if (b) { document.querySelectorAll('#' + id + ' button').forEach(x => x.classList.remove('on')); b.classList.add('on'); }
+    };
+    if (p.st) setSeg('empStatus', p.st);
+    if (p.g) setSeg('empGender', p.g);
+    if (p.am) aliyahM.value = p.am;
+    if (p.ay) aliyahY.value = p.ay;
+    if (p.ind) profIndustry.value = p.ind;
+    if (p.ten != null) { profTenure.value = p.ten; fTenure.value = p.ten; }
+    if (p.kids != null) profKids.value = p.kids;
+    if (p.gross) { empGross.value = p.gross; fGross.value = p.gross; }
+  } catch (e) {}
+}
+profIndustry.addEventListener('change', () => {
+  otRate.value = profIndustry.value === 'cleaning' ? CLEAN_HOUR : MIN_HOUR; // отраслевая ставка в сверхурочные
+  calcOT(); saveProf();
+});
+profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; calcFired(); saveProf(); });
+profKids.addEventListener('input', saveProf);
+['empGross','empPoints','empPension'].forEach(id => document.getElementById(id).addEventListener('input', () => {
+  if (id === 'empPoints') { ptsManual = true; document.getElementById('nkAuto').textContent = t('nk.manual'); }
+  calcEmp();
+}));
+
+// ======= Калькулятор увольнения (минимум по закону) =======
+function noticeDays(months, hourly) {
+  if (!hourly) { // месячная оплата
+    if (months < 6) return months;                 // 1 день за месяц
+    if (months < 12) return 6 + 2.5 * (months - 6);
+    return 30;
+  }
+  if (months < 12) return Math.min(12, months);    // почасовая: 1 день/мес в 1-й год
+  if (months < 24) return 14;
+  if (months < 36) return 21;
+  return 30;
+}
+function calcFired() {
+  const nn = v => Math.max(0, +v || 0);
+  const gross = nn(fGross.value), years = nn(fTenure.value);
+  const hourly = segVal('fpType') === 'h';
+  const nd = noticeDays(years * 12, hourly);
+  const pitz = gross * years;
+  const notice = gross * nd / 30;
+  const vac = nn(fVac.value) * gross / 21.67;
+  const hav = nn(fHav.value) * HAVRAA_DAY;
+  fTotal.textContent = fmt(pitz + notice + vac + hav);
+  fBreak.innerHTML =
+    row(t('fired.res.pitz'), '+' + fmt(pitz), 'pos') +
+    row(t('fired.res.notice') + ' (' + Math.round(nd) + ')', '+' + fmt(notice), 'pos') +
+    row(t('fired.res.vac'), '+' + fmt(vac), 'pos') +
+    row(t('fired.res.hav'), '+' + fmt(hav), 'pos');
+}
+segInit('fpType', () => calcFired());
+['fGross','fTenure','fVac','fHav'].forEach(id => document.getElementById(id).addEventListener('input', calcFired));
+
+// сверхурочные
+function calcOT() {
+  const nn = v => Math.max(0, +v || 0); // отрицательные часы/ставка не имеют смысла
+  otSum.textContent = fmt(nn(otRate.value) * (1.25 * nn(ot125.value) + 1.5 * nn(ot150.value)));
+}
+['otRate','ot125','ot150'].forEach(id => document.getElementById(id).addEventListener('input', calcOT));
+
+// ======= Чекап прав =======
+const QUIZ = [
+  {id:'tlush'}, {id:'minw'}, {id:'ot'}, {id:'pens', s25:true}, {id:'nesiot'},
+  {id:'vac'}, {id:'hav'}, {id:'sick'},
+  {id:'pass', who:'foreign'}, {id:'ins', who:'foreign'}, {id:'dep', who:'b1'},
+];
+let quizAns = {};
+function quizItems() {
+  const st = segVal('empStatus');
+  const foreign = st === 'b1' || st === 's25';
+  return QUIZ.filter(q => !q.who || (q.who === 'foreign' && foreign) || (q.who === 'b1' && st === 'b1'));
+}
+function quizBad(q) {
+  return (segVal('empStatus') === 's25' && q.s25) ? t('quiz.' + q.id + '.badS25') : t('quiz.' + q.id + '.bad');
+}
+function renderQuiz() {
+  const items = quizItems();
+  document.getElementById('rightsQuiz').innerHTML = items.map(q => `
+    <div class="q-item"><div class="q-t">${t('quiz.' + q.id + '.q')}</div>
+      <div class="q-opts" data-q="${q.id}">
+        <button onclick="quizSet('${q.id}','yes',this)">${t('quiz.yes')}</button>
+        <button onclick="quizSet('${q.id}','no',this)">${t('quiz.no')}</button>
+        <button onclick="quizSet('${q.id}','dk',this)">${t('quiz.dk')}</button>
+      </div></div>`).join('');
+  items.forEach(q => {
+    const v = quizAns[q.id];
+    if (v) document.querySelector(`.q-opts[data-q="${q.id}"]`).children[{yes:0,no:1,dk:2}[v]].classList.add('sel-' + v);
+  });
+  document.getElementById('quizResult').innerHTML = '';
+}
+function quizSet(id, v, btn) {
+  quizAns[id] = v;
+  [...btn.parentElement.children].forEach(b => b.className = '');
+  btn.classList.add('sel-' + v);
+}
+function quizResultShow() {
+  const items = quizItems();
+  const answered = items.filter(q => quizAns[q.id]);
+  const bad = items.filter(q => quizAns[q.id] === 'no');
+  const dk = items.filter(q => quizAns[q.id] === 'dk');
+  let html = '';
+  if (!answered.length) html = '<div class="note warn" style="margin-top:10px">' + t('quizres.empty') + '</div>';
+  else {
+    if (!bad.length && !dk.length) html = '<div class="note" style="margin-top:10px">' + t('quizres.ok') + '</div>';
+    if (bad.length) html += '<div class="note warn" style="margin-top:10px"><b>' + tf('quizres.found', {n: bad.length}) + '</div>' + bad.map(q => `<div class="viol bad"><b>⚠️ ${t('quiz.' + q.id + '.q')}</b>${quizBad(q)}</div>`).join('');
+    if (dk.length) html += dk.map(q => `<div class="viol dk"><b>${t('quizres.check')}${t('quiz.' + q.id + '.q')}</b>${quizBad(q)}</div>`).join('');
+    if (bad.length || dk.length) html += '<div class="viol dk"><b>' + t('quizres.where') + '</b>' + t('quizres.whereText') + '</div>';
+    html += '<button class="btn ghost" onclick="shareQuiz(' + bad.length + ', this)">' + t('share.btn') + '</button>';
+  }
+  document.getElementById('quizResult').innerHTML = html;
+}
+function shareQuiz(n, btn) {
+  const text = tf('share.text', {n});
+  if (navigator.share) { navigator.share({text}).catch(() => {}); return; }
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); btn.textContent = t('share.copied'); } catch (e) {}
+  ta.remove();
+}
+
+// ======= AI (офлайн-база; полный Claude API — в релизе) =======
+document.querySelectorAll('.ai-chip').forEach(chip => chip.onclick = () => {
+  const target = chip.closest('.card').querySelector('.ai-answer');
+  target.style.display = 'block';
+  target.innerHTML = '💬 <b>«' + chip.textContent + '»</b><br>' + t(chip.dataset.ai);
+  target.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+});
+// свободный вопрос: скоринг тем по ключевым словам (3 языка). prio — бонус специфичным
+// темам, чтобы «минимальная почасовая для подростка» выигрывал youth, а не общая минималка
+const AI_TOPICS = [
+  // FAQ-слой: прямые ответы на частые вопросы (prio 3 — выигрывают у общих тем)
+  {kw: ['когда зарплат','когда должны платить','когда платят','когда выплач','когда дают зарплат','какого числа','до какого числа','when salary','when do i get paid','when is pay','מתי משכורת','מתי משלמים','מתי חייבים לשלם','מתי מקבלים','מועד תשלום','מתי מגיעה'], key: 'qa.paydate', prio: 3},
+  {kw: ['задерж','не заплатил','не выплат','не дали зарплат','не платят зарплат','зарплата приходит','платят поздно','после 9','после 10 числа','12 числа','13 числа','14 числа','15 числа','delay','late salary','paid late','didn', 'לא שילמו','הלנת','באיחור','халан'], key: 'qa.latepay', prio: 3},
+  {kw: ['перерыв','обед','перекур','break','lunch','הפסקה'], key: 'qa.breaks', prio: 3},
+  {kw: ['ночн','night','לילה'], key: 'qa.night', prio: 3},
+  {kw: ['испытат','стажир','обучен','бесплатн','trial','training','internship','unpaid','הדרכה','התלמדות','ניסיון','נסיון'], key: 'qa.trial', prio: 3},
+  {kw: ['чаев','типим','tip','טיפ'], key: 'qa.tips', prio: 3},
+  {kw: ['вычл','вычет','вычит','штраф','удерж','deduct','fine','קנס','ניכוי'], key: 'qa.deduct', prio: 3},
+  {kw: ['увол','fired','dismiss','פיטור','больничн','sick','מחלה'], key: 'qa.sickfire', prio: 3, min: 2},
+  {kw: ['каблан','подрядчик','contractor','קבלן'], key: 'qa.contractor', prio: 3},
+  {kw: ['сколько в час','в час платят','сколько за час','сколько стоит час','per hour','an hour','לשעה','сколько платят в'], key: 'qa.hourly', prio: 3},
+  {kw: ['11 часов','12 часов','10 часов','13 часов','по 11','по 12','сколько часов можно','сколько часов в день','12 hours','11 hours','many hours a day','כמה שעות מותר','12 שעות','11 שעות'], key: 'qa.maxhours', prio: 3},
+  {kw: ['наличным','черная зарплат','чёрная зарплат','без оформлени','не оформ','мимо кассы','без тлуша','במזומן','בלי תלוש','cash','off the books'], key: 'qa.cash', prio: 3},
+  {kw: ['сократил час','сократили час','урезал','урезали','понизил','понизили','снизил ставк','снизили ставк','полставки','reduce my pay','cut my hours','הפחיתו','קיצצו','הורידו לי'], key: 'qa.cutpay', prio: 3},
+  {kw: ['милуим','резервист','резерв','сборы','reserve duty','miluim','מילואים'], key: 'qa.miluim', prio: 3},
+  {kw: ['халат','без содержания','неоплачиваемый отпуск','unpaid leave','חל"ת','חלת','חופשה ללא תשלום'], key: 'qa.halat', prio: 3},
+  {kw: ['между сменами','выходн','день отдыха','36 час','8 часов отдых','и открываю','смены подряд','двойная смена','утром снова','weekly rest','double shift','back to back','מנוחה שבועית','מנוחה בין','משמרות ברצף'], key: 'qa.rest', prio: 3},
+  {kw: ['репатриант','репатриа','оле хадаш','олим','new immigrant','עולה','aliyah','алия'], key: 'ai.acct.a3', prio: 2},
+  // специфичные темы
+  {kw: ['подрост','ноар','נוער','youth','teen','16','17'], key: 'ai.t.youth', prio: 2},
+  {kw: ['клининг','уборщ','уборк','cleaning','ניקיון','никайон'], key: 'ai.t.cleaning', prio: 2},
+  {kw: ['охран','security','שמירה','אבטחה','шмира','автаха'], key: 'ai.t.security', prio: 2},
+  {kw: ['сиуд','сиделк','caregiv','סיעוד','общепит','ресторан','restaurant','הסעדה','стройк','строител','construction','בניין','цав архава','extension order','צו הרחבה','гостиниц','hotel'], key: 'ai.t.sector', prio: 2},
+  {kw: ['беремен','декрет','pregnan','matern','הריון','לידה','кормлен','הנקה','שעת הורות','родительств'], key: 'ai.t.preg', prio: 2},
+  {kw: ['шимуа','слушан','hearing','שימוע'], key: 'ai.t.shimua', prio: 2},
+  {kw: ['по собственному','ухожу сам','увольняюсь','resign','quit','התפטר'], key: 'ai.t.resign', prio: 2},
+  {kw: ['101','тофес','טופס'], key: 'ai.t.form101', prio: 2},
+  {kw: ['иштальмут','hishtalmut','השתלמות'], key: 'ai.t.ishtalmut', prio: 2},
+  {kw: ['условия труда','ходаа аль','terms of employment','תנאי עבודה','договор не дали'], key: 'ai.t.terms', prio: 1},
+  {kw: ['шаббат','суббот','shabbat','saturday','שבת','праздник','holiday','חג','дмей хаг'], key: 'ai.t.shabbat', prio: 1},
+  {kw: ['ходаа мукдемет','уведомлен','notice period','הודעה מוקדמת','предупрежд','отработать','отработк','сколько дней предупр','before quitting','להודיע לפני'], key: 'ai.t.notice', prio: 1},
+  {kw: ['сверхурочн','overtime','נוספות','125','150'], key: 'ai.emp.a2'},
+  {kw: ['паспорт','passport','דרכון'], key: 'ai.emp.a3'},
+  {kw: ['увольн','уволил','fired','dismiss','terminat','פיטור','מפטרים'], key: 'ai.emp.a4'},
+  {kw: ['доказ','учет часов','учёт часов','рабочие часы','טענת שעות','רישום שעות','табел','timesheet','prove'], key: 'ai.emp.a5'},
+  {kw: ['пикадон','депозит','deposit','פיקדון'], key: 'quiz.dep.bad'},
+  {kw: ['проезд','несиот','travel','נסיעות','транспорт','автобус','bus'], key: 'quiz.nesiot.bad'},
+  {kw: ['хавраа','havra','הבראה','оздоров','convalescen'], key: 'quiz.hav.bad'},
+  {kw: ['больничн','sick','מחלה','махала','болею','болезн'], key: 'quiz.sick.bad'},
+  {kw: ['отпуск','vacation','חופשה','хуфша'], key: 'quiz.vac.bad'},
+  {kw: ['пенси','pension','пицуим','severance','פנסי','פיצוי'], key: 'quiz.pens.bad', s25: 'quiz.pens.badS25'},
+  {kw: ['страхов','insurance','ביטוח רפואי','полис'], key: 'quiz.ins.bad'},
+  {kw: ['минимал','minimum','מינימום','почасов','wage'], key: 'quiz.minw.bad'},
+  {kw: ['тлуш','расчетн','расчётн','payslip','tlush','תלוש'], key: 'ai.emp.a1'},
+];
+function aiAsk(inputId, targetId) {
+  const q = document.getElementById(inputId).value.trim();
+  const target = document.getElementById(targetId);
+  if (!q) return;
+  const low = q.toLowerCase();
+  const scored = AI_TOPICS.map((tp, i) => {
+    let hits = 0;
+    for (const w of tp.kw) if (low.includes(w)) hits++;
+    const ok = hits >= (tp.min || 1); // min: тема требует несколько совпадений (напр. «увол»+«больничн»)
+    return { tp, i, score: ok ? hits + (tp.prio || 0) : 0 };
+  }).filter(s => s.score > 0).sort((a, b) => b.score - a.score || a.i - b.i);
+  let ans = null;
+  if (scored.length) {
+    const best = scored.filter(s => s.score === scored[0].score).slice(0, 2); // при равном счёте — до двух тем
+    ans = best.map(s => (s.tp.s25 && segVal('empStatus') === 's25') ? t(s.tp.s25) : t(s.tp.key)).join('<hr style="border:0;border-top:1px dashed var(--border);margin:9px 0">');
+  }
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  target.style.display = 'block';
+  target.innerHTML = '💬 <b>«' + esc(q) + '»</b><br>' + (ans || t('ai.nomatch'));
+  if (!ans) { // копилка неотвеченных → пополнение базы
+    const l = unList(); l.push({q, lang: LANG, ts: Date.now()});
+    try { localStorage.setItem(UN_KEY, JSON.stringify(l.slice(-50))); } catch (e) {}
+    unUpdate();
+  }
+}
+// ======= Копилка неотвеченных вопросов =======
+const UN_KEY = 'heshbon_unanswered';
+function unList() { try { return JSON.parse(localStorage.getItem(UN_KEY) || '[]'); } catch (e) { return []; } }
+function unUpdate() {
+  const l = unList(), box = document.getElementById('unBox');
+  if (!l.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  document.getElementById('unCount').textContent = tf('un.count', {n: l.length});
+  document.getElementById('unSend').textContent = t('un.send');
+  document.getElementById('unClear').textContent = t('un.clear');
+}
+document.getElementById('unSend').addEventListener('click', e => {
+  e.preventDefault();
+  location.href = 'mailto:dimollia@gmail.com?subject=' + encodeURIComponent('Heshbon+ unanswered questions')
+    + '&body=' + encodeURIComponent(unList().map(x => '[' + x.lang + '] ' + x.q).join('\n'));
+});
+document.getElementById('unClear').addEventListener('click', e => {
+  e.preventDefault(); localStorage.removeItem(UN_KEY); unUpdate();
+});
+document.getElementById('aiEmpQ').addEventListener('keydown', e => { if (e.key === 'Enter') aiAsk('aiEmpQ','aiAnsEmp'); });
+
+// ======= САМОЗАНЯТЫЙ =======
+function calcSelf() {
+  const m = +seIncome.value || 0, pts = +sePoints.value || 0;
+  const tax = incomeTax(m, pts);
+  const ni = natIns(m, NI_SELF);
+  const total = tax + ni;
+  seSetAside.textContent = fmt(total) + (m > 0 ? ' (' + Math.round(total / m * 100) + '%)' : '');
+  seBreak.innerHTML =
+    row(t('self.brk.tax'), '−' + fmt(tax), 'neg') +
+    row(t('self.brk.ni'), '−' + fmt(ni), 'neg') +
+    row(t('self.brk.left'), fmt(m - total), 'pos');
+}
+['seIncome','sePoints'].forEach(id => document.getElementById(id).addEventListener('input', calcSelf));
+
+let vatLock = false;
+vatNet.addEventListener('input', () => { if (vatLock) return; vatLock = true;
+  const n = +vatNet.value || 0; vatGross.value = n ? (n * (1 + VAT)).toFixed(2) : '';
+  vatOut.innerHTML = row(t('vat.line.vat'), fmt(n * VAT)) + row(t('vat.line.total'), fmt(n * (1 + VAT)));
+  vatLock = false; });
+vatGross.addEventListener('input', () => { if (vatLock) return; vatLock = true;
+  const g = +vatGross.value || 0; const n = g / (1 + VAT); vatNet.value = g ? n.toFixed(2) : '';
+  vatOut.innerHTML = row(t('vat.line.net'), fmt(n)) + row(t('vat.line.incl'), fmt(g - n));
+  vatLock = false; });
+
+function renderDeadlines() {
+  const now = new Date();
+  const mk = (d, m, y) => new Date(y, m, d);
+  const nextDay = day => {
+    let d = mk(day, now.getMonth(), now.getFullYear());
+    if (d < now) d = mk(day, now.getMonth() + 1, now.getFullYear());
+    return d;
+  };
+  const items = [
+    { d: nextDay(15), tt: t('dl.vat.t'), s: t('dl.vat.s') },
+    { d: nextDay(15), tt: t('dl.mik.t'), s: t('dl.mik.s') },
+    { d: nextDay(15), tt: t('dl.btl.t'), s: t('dl.btl.s') },
+    { d: mk(31, 4, now.getMonth() > 4 ? now.getFullYear() + 1 : now.getFullYear()), tt: t('dl.year.t'), s: t('dl.year.s') },
+  ].sort((a, b) => a.d - b.d);
+  const MON = t('months');
+  seDeadlines.innerHTML = items.map(i =>
+    `<div class="deadline"><div class="day">${i.d.getDate()}<small>${MON[i.d.getMonth()]}</small></div>
+     <div class="info"><b>${i.tt}</b><span>${i.s}</span></div></div>`).join('');
+}
+
+// ======= БУХГАЛТЕР =======
+function netOf(gross, pts, pen) {
+  return gross - incomeTax(gross, pts) - natIns(gross, NI_EMP) - (pen ? gross * PENSION_EMP : 0);
+}
+function calcRev() {
+  const target = +revNet.value || 0, pts = +revPoints.value || 0, pen = revPension.checked;
+  if (!target) { revGross.textContent = '—'; return; }
+  let lo = 0, hi = 300000;
+  for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; (netOf(mid, pts, pen) < target) ? lo = mid : hi = mid; }
+  revGross.textContent = fmt(hi);
+}
+['revNet','revPoints','revPension'].forEach(id => document.getElementById(id).addEventListener('input', calcRev));
+
+// ======= Premium: запись в ранний доступ (fake-door; биллинг сторов — при релизе) =======
+function joinWait(plan, btn) {
+  localStorage.setItem('heshbon_wait_' + plan, new Date().toISOString());
+  btn.textContent = t('prem.joined');
+  btn.disabled = true;
+}
+
+// ======= Табы =======
+document.querySelectorAll('nav.tabbar button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav.tabbar button').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  b.classList.add('on');
+  document.getElementById(b.dataset.page).classList.add('active');
+  window.scrollTo({top: 0});
+});
+
+// ======= Автообновление ставок: rates.json (same-origin; при появлении хостинга — https URL) =======
+const RATES_URL = 'rates.json';
+function showRates() {
+  if (ratesVer) document.getElementById('ratesInfo').textContent = tf('rates.online', {v: ratesVer});
+}
+function fetchRates() {
+  fetch(RATES_URL, {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => {
+    if (!d || !d.version) return;
+    if (d.brackets) BRACKETS = d.brackets.map(b => [b[0] == null ? Infinity : b[0], b[1]]); // JSON не знает Infinity
+    POINT = d.point || POINT; NI_T = d.ni_t || NI_T; NI_CAP = d.ni_cap || NI_CAP;
+    NI_EMP = d.ni_emp || NI_EMP; NI_B1 = d.ni_b1 || NI_B1; NI_SELF = d.ni_self || NI_SELF; NI_ER = d.ni_er || NI_ER;
+    PENSION_EMP = d.pension_emp || PENSION_EMP; PENSION_ER = d.pension_er || PENSION_ER; PITZUIM = d.pitzuim || PITZUIM;
+    VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR;
+    ratesVer = d.version;
+    calcEmp(); calcSelf(); calcRev(); calcOT(); calcFired(); showRates();
+  }).catch(() => {}); // офлайн/файл недоступен — работаем на вшитых
+}
+
+// init
+applyI18n();
+fillAliyahSelects();
+loadProf();
+updEmpPoints(); calcOT(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate();
+fetchRates();
+document.getElementById('empGross').addEventListener('input', saveProf);
+</script>
+</body>
+</html>
