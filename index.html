@@ -21,8 +21,9 @@
     --shadow: 0 1px 3px rgba(15,23,42,.06), 0 4px 14px rgba(15,23,42,.05);
     --radius: 14px;
   }
+  /* Тема: системная — через media; ручной выбор — data-theme на <html> перекрывает */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #0e131d;
       --card: #171f2e;
       --text: #e6ecf5;
@@ -37,6 +38,21 @@
       --border: #263143;
       --shadow: 0 1px 3px rgba(0,0,0,.4);
     }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e131d;
+    --card: #171f2e;
+    --text: #e6ecf5;
+    --muted: #8b98ab;
+    --accent: #6c9bff;
+    --accent-soft: #1b2a4a;
+    --green: #34d399;
+    --green-soft: #10302a;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --amber-soft: #33281180;
+    --border: #263143;
+    --shadow: 0 1px 3px rgba(0,0,0,.4);
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -220,6 +236,11 @@
   .ad-place a { color: var(--accent); font-weight: 700; text-decoration: none; white-space: nowrap; }
 
   .star-btn { border: 0; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 12px; font-weight: 800; padding: 9px 12px; border-radius: 999px; cursor: pointer; font-family: inherit; white-space: nowrap; min-height: 40px; }
+  .gear-btn { border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 17px; min-width: 42px; min-height: 40px; border-radius: 999px; cursor: pointer; font-family: inherit; padding: 0 10px; }
+  /* «?» — пояснение по клику, вместо простыни текста */
+  .qmark { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent); background: transparent; font-size: 12.5px; font-weight: 800; cursor: pointer; flex-shrink: 0; padding: 0; font-family: inherit; vertical-align: middle; margin-inline-start: 6px; }
+  .qnote { display: none; }
+  .qnote.open { display: block; }
   .langs { margin-inline-start: 8px; }
   .topbar > div:nth-child(2) { margin-inline-end: auto; }
 
@@ -268,6 +289,7 @@
       <button data-l="en">EN</button>
       <button data-l="he">עב</button>
     </div>
+    <button class="gear-btn" onclick="openSettings()" aria-label="Settings">⚙️</button>
   </header>
 
   <main>
@@ -276,6 +298,8 @@
   <section class="page active" id="page-emp">
     <div class="page-title" data-i18n="emp.title"></div>
     <p class="page-desc" data-i18n="emp.desc"></p>
+
+    <div class="note warn" id="visaBanner" style="display:none;margin-bottom:12px;font-size:12.5px"></div>
 
     <div class="card">
       <h3 data-i18n="emp.calc.h"></h3>
@@ -311,10 +335,13 @@
           <input type="number" id="empPoints" step="0.25" value="2.25" inputmode="decimal">
         </div>
       </div>
+      <div class="note" id="nkBreak" style="display:none"></div>
+      <details class="exp" id="ptsHelp">
+        <summary data-i18n="emp.pts.help.t"></summary>
+        <div class="note" data-i18n-html="ai.t.morepoints" style="margin-top:8px"></div>
+      </details>
 
       <label class="fld" style="font-size:13px;color:var(--text);margin-top:14px" data-i18n="prof.h"></label>
-      <label class="fld" data-i18n="prof.name"></label>
-      <input type="text" id="profName" maxlength="30" autocomplete="off">
       <div class="row2">
         <div>
           <label class="fld" data-i18n="prof.industry"></label>
@@ -346,15 +373,16 @@
           <input type="number" id="profExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
         </div>
       </div>
-      <label class="check"><input type="checkbox" id="profHish"> <span data-i18n="prof.hish"></span></label>
-      <div class="note" data-i18n-html="prof.hish.hint"></div>
+      <label class="check"><input type="checkbox" id="profHish"> <span data-i18n="prof.hish"></span> <button type="button" class="qmark" data-note="hishHintNote">?</button></label>
+      <div class="note qnote" id="hishHintNote" data-i18n-html="prof.hish.hint"></div>
+      <div class="note warn" id="hishGateNote" style="display:none"></div>
       <div class="note" data-i18n="prof.hint"></div>
 
       <label class="fld" data-i18n="emp.fld.gross"></label>
       <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
 
-      <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span></label>
-      <div class="note" data-i18n-html="emp.chk.pension.hint"></div>
+      <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span> <button type="button" class="qmark" data-note="pensHintNote">?</button></label>
+      <div class="note qnote" id="pensHintNote" data-i18n-html="emp.chk.pension.hint"></div>
 
       <div class="result-hero">
         <span class="lbl" data-i18n="emp.net.lbl"></span>
@@ -370,6 +398,18 @@
       </details>
 
       <div class="note" id="empStatusNote"></div>
+    </div>
+
+    <div class="card" id="docsCard" style="display:none">
+      <h3 data-i18n="docs.h"></h3>
+      <div class="hint" data-i18n="docs.hint"></div>
+      <div class="row3">
+        <div><label class="fld" data-i18n="visa.day"></label><select id="visaD"></select></div>
+        <div><label class="fld" data-i18n="visa.mon"></label><select id="visaM"></select></div>
+        <div><label class="fld" data-i18n="visa.year"></label><select id="visaY"></select></div>
+      </div>
+      <div class="note" id="visaStatus" style="display:none"></div>
+      <button class="btn ghost" id="visaClearBtn" style="display:none" onclick="clearVisa()" data-i18n="visa.clear"></button>
     </div>
 
     <div class="card">
@@ -435,6 +475,15 @@
     </div>
 
     <div class="card">
+      <h3><span data-i18n="contract.h"></span> <span class="pill">β</span></h3>
+      <div class="hint" data-i18n="contract.hint"></div>
+      <textarea id="ctText" rows="6" data-i18n-ph="contract.ph" style="resize:vertical;min-height:110px"></textarea>
+      <button class="btn" id="ctBtn" onclick="aiContract()" data-i18n="contract.btn"></button>
+      <div class="ai-answer" id="ctAns"></div>
+      <div class="note" data-i18n="contract.note"></div>
+    </div>
+
+    <div class="card">
       <h3 data-i18n="fired.h"></h3>
       <div class="hint" data-i18n="fired.hint"></div>
       <label class="fld" data-i18n="fired.paytype"></label>
@@ -455,7 +504,9 @@
         <span class="val" id="fTotal">—</span>
       </div>
       <div class="breakdown" id="fBreak"></div>
-      <div class="note" data-i18n="fired.note"></div>
+      <div class="note warn" id="fPitzNote" style="display:none" data-i18n-html="fired.pitz.under1"></div>
+      <div class="note" data-i18n-html="fired.note"></div>
+      <div class="note warn" data-i18n-html="fired.unemp"></div>
     </div>
 
     <div class="card">
@@ -532,6 +583,15 @@
       <h3 data-i18n="cmp.h"></h3>
       <div data-i18n-html="cmp.table"></div>
       <div class="note" data-i18n="cmp.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="esek.h"></h3>
+      <div class="hint" data-i18n="esek.hint"></div>
+      <details class="acc"><summary data-i18n="esek.cit.t"></summary><div class="body" data-i18n-html="esek.cit.body"></div></details>
+      <details class="acc"><summary data-i18n="esek.oleh.t"></summary><div class="body" data-i18n-html="esek.oleh.body"></div></details>
+      <details class="acc"><summary data-i18n="esek.b1.t"></summary><div class="body" data-i18n-html="esek.b1.body"></div></details>
+      <details class="acc"><summary data-i18n="esek.s25.t"></summary><div class="body" data-i18n-html="esek.s25.body"></div></details>
     </div>
 
     <div class="card">
@@ -644,6 +704,31 @@
     </div>
   </div>
 
+  <div class="modal" id="setModal" onclick="if(event.target===this)this.style.display='none'">
+    <div class="sheet">
+      <h2 data-i18n="set.h"></h2>
+      <label class="fld" data-i18n="set.name"></label>
+      <input type="text" id="profName" maxlength="30" autocomplete="off">
+      <label class="fld" data-i18n="set.theme"></label>
+      <div class="seg" id="setTheme">
+        <button data-v="system" class="on" data-i18n="set.theme.sys"></button>
+        <button data-v="light" data-i18n="set.theme.light"></button>
+        <button data-v="dark" data-i18n="set.theme.dark"></button>
+      </div>
+      <label class="fld" data-i18n="set.font"></label>
+      <div class="seg" id="setFont">
+        <button data-v="1" class="on" data-i18n="set.font.n"></button>
+        <button data-v="1.12" data-i18n="set.font.l"></button>
+        <button data-v="1.25" data-i18n="set.font.xl"></button>
+      </div>
+      <label class="fld" data-i18n="set.remind"></label>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="remind10"> <span data-i18n="set.remind.chk"></span></label>
+      <div class="note" data-i18n="set.remind.hint"></div>
+      <div class="note warn" id="setNativeNote" data-i18n="set.native.only"></div>
+      <button class="btn" onclick="document.getElementById('setModal').style.display='none'" data-i18n="set.close"></button>
+    </div>
+  </div>
+
   <nav class="tabbar">
     <button class="on" data-page="page-emp"><span class="ico">👷</span><span class="t" data-i18n="tab.emp"></span></button>
     <button data-page="page-self"><span class="ico">💼</span><span class="t" data-i18n="tab.self"></span></button>
@@ -674,8 +759,10 @@ function applyI18n() {
 }
 function setLang(l) {
   LANG = l; localStorage.setItem('heshbon_lang', l);
+  if (window.HeshbonNative && window.HeshbonNative.setLang) try { window.HeshbonNative.setLang(l); } catch (e) {} // язык пушей
   applyI18n();
   fillAliyahSelects();
+  fillVisaSelects();
   document.getElementById('aiAnsEmp').style.display = 'none';
   document.getElementById('aiAns').style.display = 'none';
   vatOut.innerHTML = '';
@@ -757,37 +844,51 @@ let ptsManual = false; // некудот исправлены руками → �
 function updEmpPoints(keepManual) {
   const st = segVal('empStatus'), g = segVal('empGender');
   if (!keepManual) ptsManual = false; // смена статуса/пола/даты сбрасывает ручной режим
-  let pts = POINTS_BASE[g], info = '';
+  let base = POINTS_BASE[g], olehPts = 0, kidsPts = 0, extraPts = 0, info = '';
   document.getElementById('olehBlock').style.display = st === 'oleh' ? 'block' : 'none';
   if (st === 'oleh') {
     const m = monthsSinceAliyah(), b = olehBonus(m);
-    pts += b;
+    olehPts = b;
     if (m < 1) info = t('oleh.ask');
     else if (m > 54) info = tf('oleh.expired', {m});
     else {
       const y = +document.getElementById('aliyahY').value, mo = +document.getElementById('aliyahM').value;
       const end = new Date(y, mo - 1 + 53, 1); // 54-й льготный месяц
-      info = tf('oleh.active', {m, b, base: pts - b, end: String(end.getMonth() + 1).padStart(2, '0') + '.' + end.getFullYear()});
+      info = tf('oleh.active', {m, b, base, end: String(end.getMonth() + 1).padStart(2, '0') + '.' + end.getFullYear()});
     }
-  } else if (st === 'b1' || st === 's25') pts = 0;
-  if (st === 'b1' && document.getElementById('profIndustry').value === 'care') pts = 2.25; // сиуд: иностранным работникам положены базовые некудот
+  } else if (st === 'b1' || st === 's25') base = 0;
+  if (st === 'b1' && document.getElementById('profIndustry').value === 'care') base = 2.25; // сиуд: иностранным работникам положены базовые некудот
   const hasKids = st === 'resident' || st === 'oleh';
   const hasPoints = hasKids || (st === 'b1' && document.getElementById('profIndustry').value === 'care');
   document.getElementById('pointsBox').style.display = hasPoints ? '' : 'none';
+  document.getElementById('ptsHelp').style.display = hasKids ? '' : 'none';
   document.getElementById('kidsBox').style.display = hasKids ? '' : 'none';
   if (hasKids) { // некудот за детей (живущих в Израиле): до 6 — 4.5 каждому родителю; 6–17 — маме 2 / папе 1
     const k0 = Math.max(0, +document.getElementById('profKids0').value || 0);
     const k6 = Math.max(0, +document.getElementById('profKids6').value || 0);
-    pts += k0 * 4.5 + k6 * (g === 'f' ? 2 : 1);
-    pts += Math.max(0, +document.getElementById('profExtraPts').value || 0); // степень, алименты и др. — вручную
+    kidsPts = k0 * 4.5 + k6 * (g === 'f' ? 2 : 1);
+    extraPts = Math.max(0, +document.getElementById('profExtraPts').value || 0); // солдат, степень, алименты и др. — вручную
   }
+  const pts = base + olehPts + kidsPts + extraPts;
   document.getElementById('olehInfo').innerHTML = info;
+  // видимая разбивка пунктов — чтобы было видно, что дети/доп. учтены (фидбек 26.07)
+  const nb = document.getElementById('nkBreak');
+  if (hasPoints && !ptsManual) {
+    const parts = [base + ' ' + t('nk.base')];
+    if (olehPts) parts.push(olehPts + ' ' + t('nk.oleh'));
+    if (kidsPts) parts.push(kidsPts + ' ' + t('nk.kids'));
+    if (extraPts) parts.push(extraPts + ' ' + t('nk.extra'));
+    nb.style.display = '';
+    nb.innerHTML = parts.join(' + ') + ' = <b>' + pts + '</b> · ' + t('nk.each');
+  } else nb.style.display = 'none';
   if (ptsManual) {
     document.getElementById('nkAuto').textContent = t('nk.manual');
   } else {
     document.getElementById('empPoints').value = pts;
     document.getElementById('nkAuto').textContent = t('nk.auto');
   }
+  updateHishGate();
+  renderVisaUI();
   renderQuiz();
   calcEmp();
   if (typeof profIndustry !== 'undefined') saveProf();
@@ -828,7 +929,7 @@ function calcEmp() {
     (st === 's25' ? '<div class="note warn" style="margin-top:8px">' + t('employer.s25note') + '</div>' : '');
   document.getElementById('empStatusNote').innerHTML = t('status.' + st);
 }
-segInit('empStatus', () => updEmpPoints());   // без аргументов: смена статуса/пола/даты
+segInit('empStatus', () => { autoHish(); updEmpPoints(); });   // статус влияет и на гейт иштальмута (иностранец в стройке)
 segInit('empGender', () => updEmpPoints());   // сбрасывает ручной режим некудот
 document.getElementById('aliyahM').addEventListener('change', () => updEmpPoints());
 document.getElementById('aliyahY').addEventListener('change', () => updEmpPoints());
@@ -872,12 +973,31 @@ function updateHello() {
   const n = profName.value.trim();
   document.querySelector('.topbar .sub').textContent = n ? tf('hello', {name: n}) : t('sub');
 }
+// Иштальмут-гейт (фидбек 26.07): клининг/охрана — с 1-го дня; стройка — рабочим после
+// 3 лет ОТРАСЛЕВОГО стажа; иностранцам (Б1/2а5) в стройке фонд не открывают — халаф деньгами
+function hishGateState() {
+  const st = segVal('empStatus'), ind = profIndustry.value;
+  if (ind !== 'construction') return '';
+  if (st === 'b1' || st === 's25') return 'foreign';
+  if ((+profTenure.value || 0) < 3) return 'constr';
+  return '';
+}
+function autoHish() {
+  const ind = profIndustry.value;
+  if (['cleaning','security'].includes(ind)) profHish.checked = true;
+  else if (ind === 'construction') profHish.checked = !hishGateState();
+}
+function updateHishGate() {
+  const gate = hishGateState(), n = document.getElementById('hishGateNote');
+  if (gate) { n.style.display = ''; n.innerHTML = t(gate === 'foreign' ? 'hish.gate.foreign' : 'hish.gate.constr'); }
+  else n.style.display = 'none';
+}
 profIndustry.addEventListener('change', () => {
   syncOtRate(); // отраслевая минималка как нижняя граница ставки
-  if (['cleaning','security','construction'].includes(profIndustry.value)) profHish.checked = true; // иштальмут обязателен по цав архава
-  calcOT(); calcFired(); updEmpPoints(); // updEmpPoints пересчитает и б1-сиуд некудот, и нетто, и сохранит профиль
+  autoHish();
+  calcOT(); calcFired(); updEmpPoints(); // updEmpPoints пересчитает и б1-сиуд некудот, и гейт, и нетто, и сохранит профиль
 });
-profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; calcFired(); saveProf(); });
+profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; autoHish(); updateHishGate(); calcFired(); calcEmp(); saveProf(); });
 profKids0.addEventListener('input', () => updEmpPoints());
 profKids6.addEventListener('input', () => updEmpPoints());
 profExtraPts.addEventListener('input', () => updEmpPoints());
@@ -906,7 +1026,8 @@ function calcFired() {
   const gross = nn(fGross.value), years = nn(fTenure.value);
   const hourly = segVal('fpType') === 'h';
   const nd = noticeDays(years * 12, hourly);
-  const pitz = gross * years;
+  const pitz = years >= 1 ? gross * years : 0; // пицуим — только после полного года стажа (фидбек 26.07)
+  document.getElementById('fPitzNote').style.display = (years > 0 && years < 1) ? '' : 'none';
   const notice = gross * nd / 30;
   const vac = nn(fVac.value) * gross / 21.67;
   const havRate = ['cleaning','security'].includes(document.getElementById('profIndustry').value) ? HAVRAA_PUB : HAVRAA_DAY;
@@ -1035,7 +1156,7 @@ const AI_TOPICS = [
   {kw: ['сиуд','сиделк','caregiv','סיעוד','общепит','ресторан','restaurant','הסעדה','стройк','строител','construction','בניין','цав архава','extension order','צו הרחבה','гостиниц','hotel'], key: 'ai.t.sector', prio: 2},
   {kw: ['беремен','декрет','pregnan','matern','הריון','לידה','кормлен','הנקה','שעת הורות','родительств'], key: 'ai.t.preg', prio: 2},
   {kw: ['шимуа','слушан','hearing','שימוע'], key: 'ai.t.shimua', prio: 2},
-  {kw: ['по собственному','ухожу сам','увольняюсь','resign','quit','התפטר'], key: 'ai.t.resign', prio: 2},
+  {kw: ['по собственному','ухожу сам','увольняюсь','переезд','переезж','переех','40 км','resign','quit','relocat','moving away','התפטר','העתקת מגורים','עוברת דירה','עובר דירה'], key: 'ai.t.resign', prio: 2},
   {kw: ['101','тофес','טופס'], key: 'ai.t.form101', prio: 2},
   {kw: ['иштальмут','hishtalmut','השתלמות'], key: 'ai.t.ishtalmut', prio: 2},
   {kw: ['эсек патур в найм','наняли как самозанят','как осек патур','как эсек патур','через эсек патур','через хешбонит','по счетам работаю','фиктивн','hired as osek','freelance but','עצמאי אצל מעסיק','מועסק כעוסק','עוסק פטור אצל'], key: 'ai.t.fictive', prio: 2},
@@ -1142,6 +1263,130 @@ function aiOnline(btn) {
     });
 }
 
+// ======= Анализ трудового договора (β): текст → воркер (mode=contract) =======
+function aiContract() {
+  const txt = document.getElementById('ctText').value.trim();
+  const target = document.getElementById('ctAns');
+  if (txt.length < 200) { target.style.display = 'block'; target.textContent = t('contract.short'); return; }
+  const used = +localStorage.getItem(aiQuotaKey()) || 0;
+  if (used >= AI_DAILY) { target.style.display = 'block'; target.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
+  const btn = document.getElementById('ctBtn');
+  btn.disabled = true; btn.textContent = t('ai.online.wait');
+  fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ mode: 'contract', q: txt.slice(0, 6000), lang: LANG, status: segVal('empStatus') }) })
+    .then(r => r.ok ? r.json() : Promise.reject(0))
+    .then(d => {
+      if (!d.answer) throw 0;
+      try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
+      target.style.display = 'block';
+      target.innerHTML = '<b>' + t('ai.online.tag') + '</b><br>' +
+        d.answer.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+      btn.disabled = false; btn.textContent = t('contract.btn');
+    })
+    .catch(() => {
+      btn.disabled = false; btn.textContent = t('contract.btn');
+      target.style.display = 'block'; target.textContent = t('ai.online.err');
+    });
+}
+
+// ======= Виза: дата окончания + баннер; пуши — через Android-мост в APK =======
+const NB = window.HeshbonNative || null; // мост из MainActivity; в вебе null
+const VISA_KEY = 'heshbon_visa';
+function fillVisaSelects() {
+  const d = document.getElementById('visaD'), m = document.getElementById('visaM'), y = document.getElementById('visaY');
+  const keep = [d.value, m.value, y.value];
+  const MON = t('months');
+  let ds = '<option value=""></option>';
+  for (let i = 1; i <= 31; i++) ds += '<option value="' + i + '">' + i + '</option>';
+  d.innerHTML = ds;
+  m.innerHTML = '<option value=""></option>' + MON.map((x, i) => '<option value="' + (i + 1) + '">' + x + '</option>').join('');
+  const nowY = new Date().getFullYear();
+  let ys = '<option value=""></option>';
+  for (let yy = nowY - 1; yy <= nowY + 10; yy++) ys += '<option value="' + yy + '">' + yy + '</option>';
+  y.innerHTML = ys;
+  d.value = keep[0]; m.value = keep[1]; y.value = keep[2];
+}
+function visaDate() {
+  const v = localStorage.getItem(VISA_KEY);
+  if (!v) return null;
+  const p = v.split('-');
+  if (p.length !== 3) return null;
+  const dt = new Date(+p[0], +p[1] - 1, +p[2]);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+function saveVisaFromSelects() {
+  const d = +visaD.value, m = +visaM.value, y = +visaY.value;
+  if (!d || !m || !y) return;
+  const iso = y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+  try { localStorage.setItem(VISA_KEY, iso); } catch (e) {}
+  if (NB && NB.setVisaDate) try { NB.setVisaDate(iso); } catch (e) {}
+  renderVisaUI();
+}
+function clearVisa() {
+  localStorage.removeItem(VISA_KEY);
+  if (NB && NB.setVisaDate) try { NB.setVisaDate(''); } catch (e) {}
+  visaD.value = ''; visaM.value = ''; visaY.value = '';
+  renderVisaUI();
+}
+const fmtDate = dt => String(dt.getDate()).padStart(2, '0') + '.' + String(dt.getMonth() + 1).padStart(2, '0') + '.' + dt.getFullYear();
+function renderVisaUI() {
+  const st = segVal('empStatus');
+  const foreign = st === 'b1' || st === 's25';
+  document.getElementById('docsCard').style.display = foreign ? '' : 'none';
+  const dt = visaDate(), status = document.getElementById('visaStatus'),
+        clearB = document.getElementById('visaClearBtn'), banner = document.getElementById('visaBanner');
+  if (!foreign || !dt) { banner.style.display = 'none'; status.style.display = 'none'; clearB.style.display = 'none'; return; }
+  visaD.value = dt.getDate(); visaM.value = dt.getMonth() + 1; visaY.value = dt.getFullYear(); // восстановление после смены языка
+  status.style.display = ''; status.textContent = t('visa.saved');
+  clearB.style.display = '';
+  const now = new Date();
+  const days = Math.round((new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+  if (days < 0) { banner.style.display = ''; banner.innerHTML = tf('visa.expired', {d: fmtDate(dt), n: -days}); }
+  else if (days === 0) { banner.style.display = ''; banner.innerHTML = tf('visa.today', {d: fmtDate(dt)}); }
+  else if (days <= 30) { banner.style.display = ''; banner.innerHTML = tf('visa.banner', {d: fmtDate(dt), n: days}); }
+  else banner.style.display = 'none';
+}
+['visaD','visaM','visaY'].forEach(id => document.getElementById(id).addEventListener('change', saveVisaFromSelects));
+
+// ======= Настройки: тема / размер текста / имя / напоминание 10-го =======
+function applyTheme(v) {
+  if (v === 'light' || v === 'dark') document.documentElement.dataset.theme = v;
+  else delete document.documentElement.dataset.theme;
+}
+function applyFont(v) { document.body.style.zoom = (v === '1' || !v) ? '' : v; }
+function openSettings() { document.getElementById('setModal').style.display = 'flex'; }
+segInit('setTheme', v => { localStorage.setItem('heshbon_theme', v); applyTheme(v); });
+segInit('setFont', v => { localStorage.setItem('heshbon_font', v); applyFont(v); });
+const remind10El = document.getElementById('remind10');
+remind10El.addEventListener('change', () => {
+  localStorage.setItem('heshbon_remind10', remind10El.checked ? '1' : '');
+  if (NB && NB.setMonthly) try { NB.setMonthly(remind10El.checked); } catch (e) {}
+});
+function loadSettings() {
+  const th = localStorage.getItem('heshbon_theme') || 'system';
+  const fo = localStorage.getItem('heshbon_font') || '1';
+  const setSeg = (id, v) => {
+    const b = document.querySelector('#' + id + ' button[data-v="' + v + '"]');
+    if (b) { document.querySelectorAll('#' + id + ' button').forEach(x => x.classList.remove('on')); b.classList.add('on'); }
+  };
+  setSeg('setTheme', th); setSeg('setFont', fo);
+  applyTheme(th); applyFont(fo);
+  remind10El.checked = localStorage.getItem('heshbon_remind10') === '1';
+  document.getElementById('setNativeNote').style.display = NB ? 'none' : '';
+  if (NB) { // переотправка состояния в мост — после обновления APK будильники живы
+    const v = localStorage.getItem(VISA_KEY);
+    if (v && NB.setVisaDate) try { NB.setVisaDate(v); } catch (e) {}
+    if (NB.setMonthly) try { NB.setMonthly(remind10El.checked); } catch (e) {}
+    if (NB.setLang) try { NB.setLang(LANG); } catch (e) {}
+  }
+}
+// «?» — раскрытие пояснений; preventDefault, чтобы клик не щёлкал чекбокс внутри label
+document.querySelectorAll('.qmark').forEach(b => b.addEventListener('click', e => {
+  e.preventDefault(); e.stopPropagation();
+  document.getElementById(b.dataset.note).classList.toggle('open');
+}));
+
 // ======= САМОЗАНЯТЫЙ =======
 function calcSelf() {
   const m = +seIncome.value || 0, pts = +sePoints.value || 0;
@@ -1238,7 +1483,9 @@ function fetchRates(i) {
 // init
 applyI18n();
 fillAliyahSelects();
+fillVisaSelects();
 loadProf();
+loadSettings();
 updateHello();
 syncOtRate();
 updEmpPoints(); calcOT(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate();
