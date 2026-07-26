@@ -148,6 +148,9 @@
   .result-hero .val, .deadline .day { direction: ltr; unicode-bidi: isolate; }
   .b-row .v.neg { color: var(--red); }
   .b-row .v.pos { color: var(--green); }
+  .ct-pg { display: inline-flex; align-items: center; gap: 7px; margin: 4px 6px 2px 0; padding: 5px 9px; border: 1px solid var(--border); border-radius: 10px; font-size: 12.5px; cursor: pointer; vertical-align: top; }
+  .ct-pg img { height: 46px; border-radius: 6px; display: block; }
+  .ct-pg .x { color: var(--red); font-weight: 700; }
 
   details.exp { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
   details.exp summary { font-size: 13px; font-weight: 600; color: var(--accent); cursor: pointer; padding: 4px 0; list-style: none; }
@@ -478,7 +481,10 @@
       <h3><span data-i18n="contract.h"></span> <span class="pill">β</span></h3>
       <div class="hint" data-i18n="contract.hint"></div>
       <textarea id="ctText" rows="6" data-i18n-ph="contract.ph" style="resize:vertical;min-height:110px"></textarea>
-      <button class="btn" id="ctBtn" onclick="aiContract()" data-i18n="contract.btn"></button>
+      <input type="file" id="ctFiles" accept="image/*,application/pdf" multiple style="display:none">
+      <button class="btn ghost" onclick="document.getElementById('ctFiles').click()" data-i18n="ct.photo"></button>
+      <div id="ctThumbs" style="display:none;margin-top:8px"></div>
+      <button class="btn" id="ctBtn" onclick="aiContract()" data-i18n="contract.btn" style="margin-top:10px"></button>
       <div class="ai-answer" id="ctAns"></div>
       <div class="note" data-i18n="contract.note"></div>
     </div>
@@ -1274,17 +1280,70 @@ function aiOnline(btn) {
     });
 }
 
-// ======= Анализ трудового договора (β): текст → воркер (mode=contract) =======
+// ======= Анализ трудового договора (β): текст ИЛИ фото листов → mode=contract =======
+const CT_MAXPAGES = 6;
+let ctPages = []; // [{b64, media, du|name}] — листы по порядку
+document.getElementById('ctFiles').addEventListener('change', function () {
+  const files = Array.from(this.files || []);
+  this.value = '';
+  if (!files.length) return;
+  const pdf = files.find(f => f.type === 'application/pdf');
+  if (pdf) { // PDF идёт один и заменяет выбранные фото
+    if (pdf.size > 2500000) { ctPhotoNote(t('tlush.toobig')); return; }
+    const fr = new FileReader();
+    fr.onerror = () => ctPhotoNote(t('tlush.badfile'));
+    fr.onload = () => {
+      ctPages = [{ b64: String(fr.result).slice(String(fr.result).indexOf(',') + 1), media: 'application/pdf', name: pdf.name }];
+      ctThumbs();
+    };
+    fr.readAsDataURL(pdf);
+    return;
+  }
+  const room = CT_MAXPAGES - ctPages.filter(p => p.media !== 'application/pdf').length;
+  if (files.length > room) { ctPhotoNote(tf('ct.maxpages', {n: CT_MAXPAGES})); return; }
+  const res = new Array(files.length); let done = 0, bad = 0;
+  files.forEach((f, i) => compressPhoto(f,
+    (b64, media, du) => { res[i] = {b64, media, du}; if (++done === files.length) fin(); },
+    () => { bad++; if (++done === files.length) fin(); }));
+  function fin() { // порядок листов сохраняем по индексу выбора
+    ctPages = ctPages.filter(p => p.media !== 'application/pdf').concat(res.filter(Boolean));
+    ctThumbs();
+    if (bad) ctPhotoNote(t('tlush.badfile'));
+  }
+});
+function ctThumbs() {
+  const box = document.getElementById('ctThumbs');
+  if (!ctPages.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'block';
+  box.innerHTML = ctPages.map((p, i) => '<span class="ct-pg" onclick="ctPageDel(' + i + ')">'
+    + (p.media === 'application/pdf' ? '📄 ' + escT(p.name) : '<img src="' + p.du + '" alt=""><i>' + (i + 1) + '</i>')
+    + '<span class="x">✕</span></span>').join('')
+    + '<div class="hint" style="margin-top:5px">' + tf('ct.pages', {n: ctPages.length}) + '</div>';
+}
+function ctPageDel(i) { ctPages.splice(i, 1); ctThumbs(); }
+function ctPhotoNote(msg) {
+  const box = document.getElementById('ctThumbs');
+  box.style.display = 'block';
+  const n = document.createElement('div'); n.className = 'note warn'; n.textContent = msg;
+  box.appendChild(n); setTimeout(() => n.remove(), 5000);
+}
+
 function aiContract() {
   const txt = document.getElementById('ctText').value.trim();
   const target = document.getElementById('ctAns');
-  if (txt.length < 200) { target.style.display = 'block'; target.textContent = t('contract.short'); return; }
+  // без фото нужен текст; с фото текст не обязателен (уйдёт как примечание работника)
+  if (!ctPages.length && txt.length < 200) { target.style.display = 'block'; target.textContent = t('contract.short'); return; }
   const used = +localStorage.getItem(aiQuotaKey()) || 0;
   if (used >= AI_DAILY) { target.style.display = 'block'; target.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
   const btn = document.getElementById('ctBtn');
   btn.disabled = true; btn.textContent = t('ai.online.wait');
+  const req = { mode: 'contract', lang: LANG, status: segVal('empStatus') };
+  if (ctPages.length) {
+    req.imgs = ctPages.map(p => ({img: p.b64, media: p.media}));
+    if (txt) req.q = txt.slice(0, 1500);
+  } else req.q = txt.slice(0, 6000);
   fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ mode: 'contract', q: txt.slice(0, 6000), lang: LANG, status: segVal('empStatus') }) })
+    body: JSON.stringify(req) })
     .then(r => r.ok ? r.json() : Promise.reject(0))
     .then(d => {
       if (!d.answer) throw 0;
@@ -1310,6 +1369,29 @@ const fmt2 = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 2})
 function tlMonthKey() { return 'heshbon_tlush_m_' + new Date().toISOString().slice(0, 7); }
 function tlStore() { try { return JSON.parse(localStorage.getItem(TL_KEY) || '{}'); } catch (e) { return {}; } }
 let tlSel = null; // выбранный файл: {b64, media}
+
+// Общее сжатие фото для сканов (тлуш + листы договора): 1568px, JPEG, белый фон
+function compressPhoto(file, onDone, onErr) {
+  const fr = new FileReader();
+  fr.onerror = () => onErr();
+  fr.onload = () => {
+    const img = new Image();
+    img.onerror = () => onErr(); // HEIC и прочая экзотика не декодируется
+    img.onload = () => {
+      const MAX = 1568, k = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); // прозрачный PNG → белый фон
+      ctx.drawImage(img, 0, 0, w, h);
+      let q = 0.85, du = c.toDataURL('image/jpeg', q);
+      while (du.length > 2800000 && q > 0.4) { q -= 0.15; du = c.toDataURL('image/jpeg', q); }
+      onDone(du.slice(du.indexOf(',') + 1), 'image/jpeg', du);
+    };
+    img.src = fr.result;
+  };
+  fr.readAsDataURL(file);
+}
 
 document.getElementById('tlFile').addEventListener('change', function () {
   const f = this.files && this.files[0];
