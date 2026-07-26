@@ -1281,7 +1281,7 @@ function aiOnline(btn) {
 }
 
 // ======= Анализ трудового договора (β): текст ИЛИ фото листов → mode=contract =======
-const CT_MAXPAGES = 6;
+const CT_MAXPAGES = 12;
 let ctPages = []; // [{b64, media, du|name}] — листы по порядку
 document.getElementById('ctFiles').addEventListener('change', function () {
   const files = Array.from(this.files || []);
@@ -1299,12 +1299,14 @@ document.getElementById('ctFiles').addEventListener('change', function () {
     fr.readAsDataURL(pdf);
     return;
   }
-  const room = CT_MAXPAGES - ctPages.filter(p => p.media !== 'application/pdf').length;
-  if (files.length > room) { ctPhotoNote(tf('ct.maxpages', {n: CT_MAXPAGES})); return; }
+  const have = ctPages.filter(p => p.media !== 'application/pdf').length;
+  if (files.length > CT_MAXPAGES - have) { ctPhotoNote(tf('ct.maxpages', {n: CT_MAXPAGES})); return; }
+  // 5+ листов — жмём до 1280px, чтобы весь договор уложился в один запрос
+  const targetDim = (have + files.length) > 4 ? 1280 : 1568;
   const res = new Array(files.length); let done = 0, bad = 0;
   files.forEach((f, i) => compressPhoto(f,
     (b64, media, du) => { res[i] = {b64, media, du}; if (++done === files.length) fin(); },
-    () => { bad++; if (++done === files.length) fin(); }));
+    () => { bad++; if (++done === files.length) fin(); }, targetDim));
   function fin() { // порядок листов сохраняем по индексу выбора
     ctPages = ctPages.filter(p => p.media !== 'application/pdf').concat(res.filter(Boolean));
     ctThumbs();
@@ -1333,6 +1335,9 @@ function aiContract() {
   const target = document.getElementById('ctAns');
   // без фото нужен текст; с фото текст не обязателен (уйдёт как примечание работника)
   if (!ctPages.length && txt.length < 200) { target.style.display = 'block'; target.textContent = t('contract.short'); return; }
+  if (ctPages.length && ctPages.reduce((s, p) => s + p.b64.length, 0) > 8000000) {
+    target.style.display = 'block'; target.textContent = t('ct.toobig'); return;
+  }
   const used = +localStorage.getItem(aiQuotaKey()) || 0;
   if (used >= AI_DAILY) { target.style.display = 'block'; target.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
   const btn = document.getElementById('ctBtn');
@@ -1370,15 +1375,17 @@ function tlMonthKey() { return 'heshbon_tlush_m_' + new Date().toISOString().sli
 function tlStore() { try { return JSON.parse(localStorage.getItem(TL_KEY) || '{}'); } catch (e) { return {}; } }
 let tlSel = null; // выбранный файл: {b64, media}
 
-// Общее сжатие фото для сканов (тлуш + листы договора): 1568px, JPEG, белый фон
-function compressPhoto(file, onDone, onErr) {
+// Общее сжатие фото для сканов (тлуш + листы договора): JPEG, белый фон.
+// maxDim: тлуш и короткие договоры — 1568px; многостраничные договоры — 1280px,
+// чтобы 10-12 листов уложились в лимит запроса (печатный текст читается и так).
+function compressPhoto(file, onDone, onErr, maxDim) {
   const fr = new FileReader();
   fr.onerror = () => onErr();
   fr.onload = () => {
     const img = new Image();
     img.onerror = () => onErr(); // HEIC и прочая экзотика не декодируется
     img.onload = () => {
-      const MAX = 1568, k = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+      const MAX = maxDim || 1568, k = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
       const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
       const c = document.createElement('canvas'); c.width = w; c.height = h;
       const ctx = c.getContext('2d');
