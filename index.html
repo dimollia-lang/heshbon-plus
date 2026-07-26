@@ -484,6 +484,17 @@
     </div>
 
     <div class="card">
+      <h3><span data-i18n="tlush.h"></span> <span class="pill">β</span></h3>
+      <div class="hint" data-i18n="tlush.hint"></div>
+      <input type="file" id="tlFile" accept="image/*,application/pdf" style="display:none">
+      <button class="btn ghost" onclick="document.getElementById('tlFile').click()" data-i18n="tlush.pick"></button>
+      <div id="tlPrev" style="display:none;margin-top:10px;text-align:center"></div>
+      <button class="btn" id="tlBtn" onclick="tlushScan()" style="display:none;margin-top:10px" data-i18n="tlush.btn"></button>
+      <div class="ai-answer" id="tlAns"></div>
+      <div class="note" data-i18n="tlush.note"></div>
+    </div>
+
+    <div class="card">
       <h3 data-i18n="fired.h"></h3>
       <div class="hint" data-i18n="fired.hint"></div>
       <label class="fld" data-i18n="fired.paytype"></label>
@@ -1288,6 +1299,133 @@ function aiContract() {
       btn.disabled = false; btn.textContent = t('contract.btn');
       target.style.display = 'block'; target.textContent = t('ai.online.err');
     });
+}
+
+// ======= Скан тлуша (β): фото/PDF → воркер (mode=tlush) → строки + анализ =======
+// Распознанные цифры остаются в localStorage — следующий скан сравнивается с ними.
+const TL_KEY = 'heshbon_tlush';
+const TL_FREE = 2; // бесплатных сканов в месяц; дальше — Premium
+const escT = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const fmt2 = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 2}).format(+n) + ' ₪';
+function tlMonthKey() { return 'heshbon_tlush_m_' + new Date().toISOString().slice(0, 7); }
+function tlStore() { try { return JSON.parse(localStorage.getItem(TL_KEY) || '{}'); } catch (e) { return {}; } }
+let tlSel = null; // выбранный файл: {b64, media}
+
+document.getElementById('tlFile').addEventListener('change', function () {
+  const f = this.files && this.files[0];
+  this.value = ''; // чтобы повторный выбор того же файла снова дал change
+  if (!f) return;
+  const prev = document.getElementById('tlPrev'), ans = document.getElementById('tlAns');
+  ans.style.display = 'none'; tlSel = null;
+  document.getElementById('tlBtn').style.display = 'none';
+  if (f.type === 'application/pdf') {
+    if (f.size > 2500000) { tlErr(t('tlush.toobig')); return; }
+    const fr = new FileReader();
+    fr.onerror = () => tlErr(t('tlush.badfile'));
+    fr.onload = () => {
+      tlSel = { b64: String(fr.result).slice(String(fr.result).indexOf(',') + 1), media: 'application/pdf' };
+      prev.style.display = 'block';
+      prev.innerHTML = '📄 ' + escT(f.name) + ' · ' + Math.round(f.size / 1024) + ' KB';
+      document.getElementById('tlBtn').style.display = '';
+    };
+    fr.readAsDataURL(f);
+    return;
+  }
+  // фото: жмём канвасом до 1568px по длинной стороне — больше модель всё равно ужмёт
+  const fr = new FileReader();
+  fr.onerror = () => tlErr(t('tlush.badfile'));
+  fr.onload = () => {
+    const img = new Image();
+    img.onerror = () => tlErr(t('tlush.badfile')); // HEIC и прочая экзотика не декодируется
+    img.onload = () => {
+      const MAX = 1568, k = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); // прозрачный PNG → белый фон
+      ctx.drawImage(img, 0, 0, w, h);
+      let q = 0.85, du = c.toDataURL('image/jpeg', q);
+      while (du.length > 2800000 && q > 0.4) { q -= 0.15; du = c.toDataURL('image/jpeg', q); }
+      tlSel = { b64: du.slice(du.indexOf(',') + 1), media: 'image/jpeg' };
+      prev.style.display = 'block';
+      prev.innerHTML = '<img src="' + du + '" alt="" style="max-width:100%;max-height:220px;border-radius:10px;border:1px solid var(--border)">';
+      document.getElementById('tlBtn').style.display = '';
+    };
+    img.src = fr.result;
+  };
+  fr.readAsDataURL(f);
+});
+function tlErr(msg) {
+  const p = document.getElementById('tlPrev');
+  p.style.display = 'block'; p.textContent = msg;
+}
+
+function tlushScan() {
+  if (!tlSel) return;
+  const ans = document.getElementById('tlAns'), btn = document.getElementById('tlBtn');
+  const mUsed = +localStorage.getItem(tlMonthKey()) || 0;
+  if (mUsed >= TL_FREE) { // месячный лимит → питч Premium (fake-door до биллинга)
+    ans.style.display = 'block';
+    ans.innerHTML = escT(tf('tlush.limit', {n: TL_FREE}))
+      + '<br><button class="btn ghost" style="margin-top:9px;padding:9px" onclick="document.getElementById(\'premModal\').style.display=\'flex\'">' + t('tlush.prem') + '</button>';
+    return;
+  }
+  const used = +localStorage.getItem(aiQuotaKey()) || 0; // общий дневной лимит с онлайн-AI
+  if (used >= AI_DAILY) { ans.style.display = 'block'; ans.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
+  btn.disabled = true; btn.textContent = t('tlush.wait');
+  const st = tlStore();
+  fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ mode: 'tlush', img: tlSel.b64, media: tlSel.media,
+      prev: st.last ? st.last.f : null, lang: LANG, status: segVal('empStatus') }) })
+    .then(r => r.ok ? r.json() : Promise.reject(0))
+    .then(d => {
+      if (!d.data || typeof d.data.analysis !== 'string') throw 0;
+      try { localStorage.setItem(aiQuotaKey(), used + 1); localStorage.setItem(tlMonthKey(), mUsed + 1); } catch (e) {}
+      btn.disabled = false; btn.textContent = t('tlush.btn');
+      tlRender(d.data);
+      tlSave(d.data);
+    })
+    .catch(() => {
+      btn.disabled = false; btn.textContent = t('tlush.btn');
+      ans.style.display = 'block'; ans.textContent = t('ai.online.err');
+    });
+}
+
+// поля результата: 0 = текст, 1 = деньги (₪), 2 = число (часы/дни/пункты)
+const TL_FIELDS = [
+  ['month', 0], ['employer', 0],
+  ['gross', 1], ['net', 1], ['tax', 1], ['bituach_leumi', 1],
+  ['pension_employee', 1], ['pension_employer', 1], ['pitzuim', 1], ['hishtalmut', 1],
+  ['nesiot', 1], ['overtime_pay', 1],
+  ['hours', 2], ['hourly_rate', 1], ['vacation_balance', 2], ['sick_balance', 2], ['credit_points', 2],
+];
+function tlRender(d) {
+  const ans = document.getElementById('tlAns');
+  let rows = '';
+  if (d.is_tlush) {
+    TL_FIELDS.forEach(pair => {
+      const v = d[pair[0]];
+      if (v === null || v === undefined || v === '') return;
+      const val = pair[1] === 1 ? fmt2(v) : pair[1] === 2 ? String(v) : escT(String(v));
+      rows += row(t('tlush.f.' + pair[0]), val);
+    });
+    if (rows) rows = '<div style="margin:10px 0 2px;font-weight:650">' + t('tlush.found') + '</div>' + rows;
+  }
+  ans.style.display = 'block';
+  ans.innerHTML = '<b>' + t('tlush.tag') + '</b><br>' + escT(d.analysis).replace(/\n/g, '<br>') + rows
+    + (d.is_tlush && d.month ? '<div class="note" style="margin-top:8px">' + t('tlush.saved') + '</div>' : '');
+}
+function tlSave(d) {
+  if (!d.is_tlush || !d.month) return;
+  const f = {};
+  TL_FIELDS.forEach(pair => { f[pair[0]] = (d[pair[0]] === undefined || d[pair[0]] === '') ? null : d[pair[0]]; });
+  const st = tlStore();
+  st.hist = st.hist || {};
+  st.hist[d.month] = { ts: Date.now(), f };
+  const keys = Object.keys(st.hist); // держим максимум 14 месяцев
+  if (keys.length > 14) keys.sort((a, b) => st.hist[a].ts - st.hist[b].ts).slice(0, keys.length - 14).forEach(k => delete st.hist[k]);
+  st.last = { month: d.month, ts: Date.now(), f };
+  try { localStorage.setItem(TL_KEY, JSON.stringify(st)); } catch (e) {}
 }
 
 // ======= Виза: дата окончания + баннер; пуши — через Android-мост в APK =======
