@@ -622,6 +622,8 @@
       <details class="acc"><summary data-i18n="acc.s25.t"></summary><div class="body" data-i18n-html="acc.s25.body"></div></details>
       <details class="acc"><summary data-i18n="acc.nesiot.t"></summary><div class="body" data-i18n-html="acc.nesiot.body"></div></details>
       <details class="acc"><summary data-i18n="acc.fire.t"></summary><div class="body" data-i18n-html="acc.fire.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.shimua.t"></summary><div class="body" data-i18n-html="acc.shimua.body"></div></details>
+      <details class="acc"><summary data-i18n="acc.pension.t"></summary><div class="body" data-i18n-html="acc.pension.body"></div></details>
       <details class="acc"><summary data-i18n="acc.family.t"></summary><div class="body" data-i18n-html="acc.family.body"></div></details>
       <details class="acc"><summary data-i18n="acc.sectors.t"></summary><div class="body" data-i18n-html="acc.sectors.body"></div></details>
       <details class="acc"><summary data-i18n="acc.maanak.t"></summary><div class="body" data-i18n-html="qa.maanak"></div></details>
@@ -844,7 +846,7 @@
 
 </div>
 
-<script src="i18n.js?v=160"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=170"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -866,7 +868,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.6.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.7.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -904,7 +906,7 @@ let NI_EMP = [.0427, .1217];// работник-резидент: БЛ+брию�
 let NI_B1  = [.0004, .0087];// иностранный работник/2(а)5 (без мас бриют; ставки нерезидента)
 let NI_SELF = [.0610, .18]; // ацмаи 2026
 let PENSION_EMP = .06, PENSION_ER = .065, PITZUIM = .06, NI_ER = [.0451, .076]; // пицуим: мин. 6%, полное 8.33%
-let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 418, HAVRAA_PUB = 511.6, CLEAN_HOUR = 38.03; // хавраа: частный 418 (451.5 после указа), гос./клининг/охрана 511.6
+let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 418, HAVRAA_PUB = 511.6, CLEAN_HOUR = 39.11, SEC_HOUR = 39.11; // хавраа: частный 418 (451.5 после указа), гос./клининг/охрана 511.6
 let ratesVer = null;
 
 const fmt = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 0}).format(Math.round(n)) + ' ₪';
@@ -1192,7 +1194,8 @@ function calcOT() {
 let otRateManual = false;
 function syncOtRate() {
   if (otRateManual) return;
-  const floor = profIndustry.value === 'cleaning' ? CLEAN_HOUR : MIN_HOUR;
+  const floor = profIndustry.value === 'cleaning' ? CLEAN_HOUR
+              : profIndustry.value === 'security' ? SEC_HOUR : MIN_HOUR;
   const own = (+empGross.value || 0) / 182;
   otRate.value = Math.max(floor, Math.round(own * 100) / 100).toFixed(2);
 }
@@ -2103,7 +2106,7 @@ function fetchRates(i) {
     POINT = d.point || POINT; NI_T = d.ni_t || NI_T; NI_CAP = d.ni_cap || NI_CAP;
     NI_EMP = d.ni_emp || NI_EMP; NI_B1 = d.ni_b1 || NI_B1; NI_SELF = d.ni_self || NI_SELF; NI_ER = d.ni_er || NI_ER;
     PENSION_EMP = d.pension_emp || PENSION_EMP; PENSION_ER = d.pension_er || PENSION_ER; PITZUIM = d.pitzuim || PITZUIM;
-    VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; HAVRAA_PUB = d.havraa_pub || HAVRAA_PUB; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR;
+    VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; HAVRAA_PUB = d.havraa_pub || HAVRAA_PUB; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR; SEC_HOUR = d.security_hour || SEC_HOUR;
     ratesVer = d.version;
     calcEmp(); calcSelf(); calcRev(); calcOT(); calcFired(); showRates();
   }).catch(() => fetchRates(i + 1)); // следующий источник; все недоступны — работаем на вшитых
