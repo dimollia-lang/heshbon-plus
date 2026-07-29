@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -241,7 +241,7 @@
   .star-btn { border: 0; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 12px; font-weight: 800; padding: 9px 12px; border-radius: 999px; cursor: pointer; font-family: inherit; white-space: nowrap; min-height: 40px; }
   .gear-btn { border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 17px; min-width: 42px; min-height: 40px; border-radius: 999px; cursor: pointer; font-family: inherit; padding: 0 10px; }
   /* «?» — пояснение по клику, вместо простыни текста */
-  .qmark { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent); background: transparent; font-size: 12.5px; font-weight: 800; cursor: pointer; flex-shrink: 0; padding: 0; font-family: inherit; vertical-align: middle; margin-inline-start: 6px; }
+  .qmark { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--red); color: var(--red); background: transparent; font-size: 12.5px; font-weight: 800; cursor: pointer; flex-shrink: 0; padding: 0; font-family: inherit; vertical-align: middle; margin-inline-start: 6px; }
   .qnote { display: none; }
   .qnote.open { display: block; }
   .langs { margin-inline-start: 8px; }
@@ -334,17 +334,13 @@
           </div>
         </div>
         <div id="pointsBox">
-          <label class="fld"><span data-i18n="emp.fld.points"></span> <span class="pill" id="nkAuto"></span></label>
+          <label class="fld"><span data-i18n="emp.fld.points"></span> <span class="pill" id="nkAuto"></span> <button type="button" class="qmark" id="ptsHelp" data-note="ptsHelpNote">?</button></label>
           <input type="number" id="empPoints" step="0.25" value="2.25" inputmode="decimal">
         </div>
       </div>
       <div class="note" id="nkBreak" style="display:none"></div>
-      <details class="exp" id="ptsHelp">
-        <summary data-i18n="emp.pts.help.t"></summary>
-        <div class="note" data-i18n-html="ai.t.morepoints" style="margin-top:8px"></div>
-      </details>
+      <div class="note qnote" id="ptsHelpNote" data-i18n-html="ai.t.morepoints"></div>
 
-      <label class="fld" style="font-size:13px;color:var(--text);margin-top:14px" data-i18n="prof.h"></label>
       <div class="row2">
         <div>
           <label class="fld" data-i18n="prof.industry"></label>
@@ -362,24 +358,43 @@
           <input type="number" id="profTenure" value="1" step="0.5" min="0" inputmode="decimal">
         </div>
       </div>
-      <div class="row3" id="kidsBox">
-        <div>
-          <label class="fld" data-i18n="prof.kids0"></label>
-          <input type="number" id="profKids0" value="0" step="1" min="0" inputmode="numeric">
+      <div id="kidsBox">
+        <div class="fld" data-i18n="prof.kids.h"></div>
+        <div class="row3">
+          <div>
+            <label class="fld" data-i18n="prof.kidsB"></label>
+            <input type="number" id="profKidsB" value="0" step="1" min="0" inputmode="numeric">
+          </div>
+          <div>
+            <label class="fld" data-i18n="prof.kids12"></label>
+            <input type="number" id="profKids12" value="0" step="1" min="0" inputmode="numeric">
+          </div>
+          <div>
+            <label class="fld" data-i18n="prof.kids3"></label>
+            <input type="number" id="profKids3" value="0" step="1" min="0" inputmode="numeric">
+          </div>
         </div>
-        <div>
-          <label class="fld" data-i18n="prof.kids6"></label>
-          <input type="number" id="profKids6" value="0" step="1" min="0" inputmode="numeric">
+        <div class="row3">
+          <div>
+            <label class="fld" data-i18n="prof.kids45"></label>
+            <input type="number" id="profKids45" value="0" step="1" min="0" inputmode="numeric">
+          </div>
+          <div>
+            <label class="fld" data-i18n="prof.kids617"></label>
+            <input type="number" id="profKids617" value="0" step="1" min="0" inputmode="numeric">
+          </div>
+          <div>
+            <label class="fld" data-i18n="prof.kids18"></label>
+            <input type="number" id="profKids18" value="0" step="1" min="0" inputmode="numeric">
+          </div>
         </div>
-        <div>
-          <label class="fld" data-i18n="prof.extra"></label>
-          <input type="number" id="profExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
-        </div>
+        <div class="note" id="kidsMigrateNote" style="display:none" data-i18n="prof.kids.migrate"></div>
       </div>
+      <label class="fld" data-i18n="prof.extra"></label>
+      <input type="number" id="profExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
       <label class="check"><input type="checkbox" id="profHish"> <span data-i18n="prof.hish"></span> <button type="button" class="qmark" data-note="hishHintNote">?</button></label>
       <div class="note qnote" id="hishHintNote" data-i18n-html="prof.hish.hint"></div>
       <div class="note warn" id="hishGateNote" style="display:none"></div>
-      <div class="note" data-i18n="prof.hint"></div>
 
       <label class="fld" data-i18n="emp.fld.gross"></label>
       <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
@@ -437,7 +452,43 @@
         <span class="val" id="otSum" style="font-size:22px">—</span>
       </div>
       <div class="note" id="otSynced" data-i18n-html="ot.synced"></div>
-      <div class="note" data-i18n="ot.note"></div>
+      <div class="note" data-i18n-html="ot.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="wh.h"></h3>
+      <div class="hint" data-i18n="wh.hint"></div>
+      <div class="row2">
+        <div>
+          <label class="fld" data-i18n="wh.days"></label>
+          <select id="whDays">
+            <option value="5" data-i18n="wh.days5"></option>
+            <option value="6" data-i18n="wh.days6"></option>
+          </select>
+        </div>
+        <div>
+          <label class="fld" data-i18n="wh.kind"></label>
+          <select id="whKind">
+            <option value="office" data-i18n="wh.kind.office"></option>
+            <option value="manual" data-i18n="wh.kind.manual"></option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label class="fld" data-i18n="wh.shift"></label>
+          <input type="number" id="whShift" value="12" step="0.5" min="0" max="24" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="wh.per"></label>
+          <input type="number" id="whPer" value="5" step="1" min="0" max="7" inputmode="numeric">
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="whStay"> <span data-i18n="wh.stay"></span> <button type="button" class="qmark" data-note="whStayNote">?</button></label>
+      <div class="note qnote" id="whStayNote" data-i18n-html="wh.stay.hint"></div>
+      <label class="check"><input type="checkbox" id="whNight"> <span data-i18n="wh.night"></span></label>
+      <label class="check"><input type="checkbox" id="whEve"> <span data-i18n="wh.eve"></span></label>
+      <div id="whOut"></div>
     </div>
 
     <div class="card">
@@ -742,6 +793,11 @@
       <label class="check" style="margin-top:6px"><input type="checkbox" id="remind10"> <span data-i18n="set.remind.chk"></span></label>
       <div class="note" data-i18n="set.remind.hint"></div>
       <div class="note warn" id="setNativeNote" data-i18n="set.native.only"></div>
+      <label class="fld" style="margin-top:16px" data-i18n="set.about"></label>
+      <div class="note">
+        <a href="https://dimollia-lang.github.io/heshbon-plus/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a>
+        · <span id="setVersion"></span>
+      </div>
       <button class="btn" onclick="document.getElementById('setModal').style.display='none'" data-i18n="set.close"></button>
     </div>
   </div>
@@ -754,7 +810,7 @@
 
 </div>
 
-<script src="i18n.js"></script>
+<script src="i18n.js?v=142"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -764,6 +820,19 @@ let LANG = localStorage.getItem('heshbon_lang') || 'ru';
 if (!I18N[LANG]) LANG = 'ru';
 const t = k => (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ru[k] !== undefined ? I18N.ru[k] : k);
 const tf = (k, vars) => { let s = t(k); for (const v in vars) s = s.split('{' + v + '}').join(vars[v]); return s; };
+// Склонение по числу. В словаре формы через «|»: для 1 | для 2–4 | для 5+.
+// Дробные в русском всегда идут в род. п. ед. ч. (2,25 пункта) — это форма №2.
+function plural(n, key) {
+  const f = t(key).split('|');
+  if (LANG !== 'ru') return f[Math.abs(n) === 1 ? 0 : 1] || f[0];
+  if (!Number.isInteger(n)) return f[1] || f[0];
+  const a = Math.abs(n), d = a % 10, c = a % 100;
+  if (d === 1 && c !== 11) return f[0];
+  if (d >= 2 && d <= 4 && (c < 12 || c > 14)) return f[1] || f[0];
+  return f[2] || f[1] || f[0];
+}
+const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
+const APP_VERSION = '1.4.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -773,6 +842,8 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n-html]').forEach(el => el.innerHTML = t(el.dataset.i18nHtml));
   document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.dataset.i18nPh));
   document.querySelectorAll('#langs button').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
+  const ver = document.getElementById('setVersion');
+  if (ver) ver.textContent = 'v' + APP_VERSION;
 }
 function setLang(l) {
   LANG = l; localStorage.setItem('heshbon_lang', l);
@@ -784,7 +855,7 @@ function setLang(l) {
   document.getElementById('aiAns').style.display = 'none';
   vatOut.innerHTML = '';
   updateHello();
-  updEmpPoints(true); calcOT(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates(); // true = не трогать ручные некудот
+  updEmpPoints(true); calcOT(); whCalc(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates(); // true = не трогать ручные некудот
 }
 document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
 
@@ -879,24 +950,31 @@ function updEmpPoints(keepManual) {
   const hasPoints = hasKids || (st === 'b1' && document.getElementById('profIndustry').value === 'care');
   document.getElementById('pointsBox').style.display = hasPoints ? '' : 'none';
   document.getElementById('ptsHelp').style.display = hasKids ? '' : 'none';
+  if (!hasKids) document.getElementById('ptsHelpNote').classList.remove('open'); // спрятали «?» — закрываем и справку
   document.getElementById('kidsBox').style.display = hasKids ? '' : 'none';
-  if (hasKids) { // некудот за детей (живущих в Израиле): до 6 — 4.5 каждому родителю; 6–17 — маме 2 / папе 1
-    const k0 = Math.max(0, +document.getElementById('profKids0').value || 0);
-    const k6 = Math.max(0, +document.getElementById('profKids6').value || 0);
-    kidsPts = k0 * 4.5 + k6 * (g === 'f' ? 2 : 1);
-    extraPts = Math.max(0, +document.getElementById('profExtraPts').value || 0); // солдат, степень, алименты и др. — вручную
+  if (hasKids) { // сетка «с 2024 года», сверена по כל-זכות 28.07.2026: за детей, живущих в Израиле
+    const n = id => Math.max(0, +document.getElementById(id).value || 0);
+    const mom = g === 'f';
+    kidsPts = n('profKidsB') * 2.5      // год рождения ребёнка
+            + n('profKids12') * 4.5     // 1–2 года
+            + n('profKids3') * 3.5      // 3 года
+            + n('profKids45') * 2.5     // 4–5 лет
+            + n('profKids617') * (mom ? 2 : 1)     // 6–17 лет
+            + n('profKids18') * (mom ? 0.5 : 0);   // год, когда ребёнку исполняется 18
+    extraPts = Math.max(0, +document.getElementById('profExtraPts').value || 0); // степень, алименты, демобилизация и др. — вручную
   }
   const pts = base + olehPts + kidsPts + extraPts;
   document.getElementById('olehInfo').innerHTML = info;
   // видимая разбивка пунктов — чтобы было видно, что дети/доп. учтены (фидбек 26.07)
   const nb = document.getElementById('nkBreak');
   if (hasPoints && !ptsManual) {
-    const parts = [base + ' ' + t('nk.base')];
-    if (olehPts) parts.push(olehPts + ' ' + t('nk.oleh'));
-    if (kidsPts) parts.push(kidsPts + ' ' + t('nk.kids'));
-    if (extraPts) parts.push(extraPts + ' ' + t('nk.extra'));
+    const parts = [t('nk.base') + ' — ' + pluralN(base, 'plural.pts')];
+    if (olehPts) parts.push(t('nk.oleh') + ' — ' + pluralN(olehPts, 'plural.pts'));
+    if (kidsPts) parts.push(t('nk.kids') + ' — ' + pluralN(kidsPts, 'plural.pts'));
+    if (extraPts) parts.push(t('nk.extra') + ' — ' + pluralN(extraPts, 'plural.pts'));
     nb.style.display = '';
-    nb.innerHTML = parts.join(' + ') + ' = <b>' + pts + '</b> · ' + t('nk.each');
+    nb.innerHTML = parts.join(', ') + ', ' + t('nk.total') + ' — <b>' + pluralN(pts, 'plural.pts') +
+                   '</b> · ' + t('nk.each');
   } else nb.style.display = 'none';
   if (ptsManual) {
     document.getElementById('nkAuto').textContent = t('nk.manual');
@@ -958,7 +1036,9 @@ function saveProf() {
     localStorage.setItem(PROF_KEY, JSON.stringify({
       st: segVal('empStatus'), g: segVal('empGender'),
       am: aliyahM.value, ay: aliyahY.value,
-      ind: profIndustry.value, ten: profTenure.value, k0: profKids0.value, k6: profKids6.value, gross: empGross.value,
+      ind: profIndustry.value, ten: profTenure.value, gross: empGross.value,
+      kB: profKidsB.value, k12: profKids12.value, k3: profKids3.value,
+      k45: profKids45.value, k617: profKids617.value, k18: profKids18.value,
       nm: profName.value, ex: profExtraPts.value, hish: profHish.checked
     }));
   } catch (e) {}
@@ -977,9 +1057,16 @@ function loadProf() {
     if (p.ay) aliyahY.value = p.ay;
     if (p.ind) profIndustry.value = p.ind;
     if (p.ten != null) { profTenure.value = p.ten; fTenure.value = p.ten; }
-    if (p.k0 != null) profKids0.value = p.k0;
-    if (p.k6 != null) profKids6.value = p.k6;
-    else if (p.kids != null) profKids6.value = p.kids; // миграция со старого одиночного поля
+    // возрастная сетка (v1.4.0). Старые профили: k0 = «до 6 лет», k6 = «6–17»
+    if (p.kB != null) {
+      profKidsB.value = p.kB; profKids12.value = p.k12; profKids3.value = p.k3;
+      profKids45.value = p.k45; profKids617.value = p.k617; profKids18.value = p.k18;
+    } else {
+      const old0 = +(p.k0 != null ? p.k0 : 0), old6 = +(p.k6 != null ? p.k6 : (p.kids != null ? p.kids : 0));
+      profKids12.value = old0;   // старое «до 6» = 4,5 пункта → бакет 1–2 года, чтобы сумма не прыгнула
+      profKids617.value = old6;  // «6–17» перенеслось один в один
+      if (old0 > 0) document.getElementById('kidsMigrateNote').style.display = ''; // просим уточнить возраст
+    }
     if (p.gross) { empGross.value = p.gross; fGross.value = p.gross; }
     if (p.nm) profName.value = p.nm;
     if (p.ex != null) profExtraPts.value = p.ex;
@@ -1015,8 +1102,8 @@ profIndustry.addEventListener('change', () => {
   calcOT(); calcFired(); updEmpPoints(); // updEmpPoints пересчитает и б1-сиуд некудот, и гейт, и нетто, и сохранит профиль
 });
 profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; autoHish(); updateHishGate(); calcFired(); calcEmp(); saveProf(); });
-profKids0.addEventListener('input', () => updEmpPoints());
-profKids6.addEventListener('input', () => updEmpPoints());
+['profKidsB', 'profKids12', 'profKids3', 'profKids45', 'profKids617', 'profKids18']
+  .forEach(id => document.getElementById(id).addEventListener('input', () => updEmpPoints()));
 profExtraPts.addEventListener('input', () => updEmpPoints());
 profHish.addEventListener('change', () => { calcEmp(); saveProf(); });
 profName.addEventListener('input', () => { updateHello(); saveProf(); });
@@ -1078,6 +1165,61 @@ function syncOtRate() {
 otRate.addEventListener('input', () => { otRateManual = true; calcOT(); });
 ['ot125','ot150'].forEach(id => document.getElementById(id).addEventListener('input', calcOT));
 
+// ======= Норма рабочего времени =======
+// Сверено 29.07.2026 по כל-זכות: неделя 42 ч; день 8,6 ч при 5-дневке и 8 ч при 6-дневке;
+// ночная смена (2+ ч в 22:00–06:00) и канун выходного/праздника — 7 ч;
+// перерыв 45 мин (из них 30 непрерывно) положен после 6 ч физической работы,
+// после 9 ч при 5-дневке / 8 ч при 6-дневке — для не физической;
+// перерыв НЕ рабочее время и не оплачивается, ЕСЛИ работник вправе уйти;
+// если обязан оставаться — входит в рабочие часы и оплачивается.
+const WEEK_NORM = 42, BREAK_MIN = 0.75, DAY_CAP = 12, OT_WEEK_CAP = 16;
+function whCalc() {
+  const days5 = document.getElementById('whDays').value === '5';
+  const manual = document.getElementById('whKind').value === 'manual';
+  const shift = Math.max(0, +document.getElementById('whShift').value || 0);
+  const per = Math.max(0, +document.getElementById('whPer').value || 0);
+  const stay = document.getElementById('whStay').checked;
+  const night = document.getElementById('whNight').checked;
+  const eve = document.getElementById('whEve').checked;
+
+  const dayNorm = (night || eve) ? 7 : (days5 ? 8.6 : 8);
+  const breakAfter = manual ? 6 : (days5 ? 9 : 8);
+  const breakDue = shift >= breakAfter ? BREAK_MIN : 0;
+  const unpaid = breakDue && !stay ? breakDue : 0;   // вычитается из оплачиваемых часов
+  const paidHours = Math.max(0, shift - unpaid);
+  const ot = Math.max(0, paidHours - dayNorm);
+  const ot125 = Math.min(2, ot), ot150 = Math.max(0, ot - 2);
+  const rate = Math.max(0, +document.getElementById('otRate').value || 0);
+  const extra = rate * (0.25 * ot125 + 0.5 * ot150);   // доплата СВЕРХ обычной ставки
+  const weekPaid = paidHours * per, weekOt = ot * per;
+
+  const h = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 2}).format(n) + ' ' + t('wh.hh');
+  let out = '<div style="margin-top:12px">';
+  out += row(t('wh.o.week'), h(WEEK_NORM));
+  out += row(t('wh.o.day'), h(dayNorm));
+  out += row(t('wh.o.break'), breakDue
+        ? tf('wh.o.break.due', {a: h(breakAfter)}) + ' · ' + t(stay ? 'wh.o.break.paid' : 'wh.o.break.unpaid')
+        : tf('wh.o.break.no', {a: h(breakAfter)}));
+  out += row(t('wh.o.paid'), h(paidHours), 'pos');
+  out += row(t('wh.o.otfrom'), h(dayNorm));
+  out += row(t('wh.o.ot'), ot ? h(ot125) + ' × 125% + ' + h(ot150) + ' × 150%' : t('wh.o.none'), ot ? 'neg' : '');
+  if (ot && rate) out += row(t('wh.o.extra'), '+' + fmt(extra), 'pos');
+  out += row(t('wh.o.weekly'), h(weekPaid) + (weekPaid > WEEK_NORM ? ' (+' + h(weekPaid - WEEK_NORM) + ')' : ''), weekPaid > WEEK_NORM ? 'neg' : 'pos');
+  out += '</div>';
+
+  const warn = [];
+  if (shift > DAY_CAP) warn.push(tf('wh.w.day', {c: DAY_CAP}));
+  if (weekOt > OT_WEEK_CAP) warn.push(tf('wh.w.week', {c: OT_WEEK_CAP}));
+  if (breakDue && stay) warn.push(t('wh.w.stay'));
+  if (warn.length) out += '<div class="note warn" style="margin-top:8px">' + warn.join('<br>') + '</div>';
+  out += '<div class="note" style="margin-top:8px">' + t('wh.o.note') + '</div>';
+  document.getElementById('whOut').innerHTML = out;
+}
+['whDays','whKind','whShift','whPer','whStay','whNight','whEve'].forEach(id => {
+  const e = document.getElementById(id);
+  e.addEventListener('input', whCalc); e.addEventListener('change', whCalc);
+});
+
 // ======= Чекап прав =======
 const QUIZ = [
   {id:'tlush'}, {id:'minw'}, {id:'ot'}, {id:'pens', s25:true}, {id:'nesiot'},
@@ -1122,23 +1264,24 @@ function quizResultShow() {
   if (!answered.length) html = '<div class="note warn" style="margin-top:10px">' + t('quizres.empty') + '</div>';
   else {
     if (!bad.length && !dk.length) html = '<div class="note" style="margin-top:10px">' + t('quizres.ok') + '</div>';
-    if (bad.length) html += '<div class="note warn" style="margin-top:10px"><b>' + tf('quizres.found', {n: bad.length}) + '</div>' + bad.map(q => `<div class="viol bad"><b>⚠️ ${t('quiz.' + q.id + '.q')}</b>${quizBad(q)}</div>`).join('');
+    if (bad.length) html += '<div class="note warn" style="margin-top:10px"><b>' + tf('quizres.found', {n: bad.length, w: plural(bad.length, 'plural.viol')}) + '</div>' + bad.map(q => `<div class="viol bad"><b>⚠️ ${t('quiz.' + q.id + '.q')}</b>${quizBad(q)}</div>`).join('');
     if (dk.length) html += dk.map(q => `<div class="viol dk"><b>${t('quizres.check')}${t('quiz.' + q.id + '.q')}</b>${quizBad(q)}</div>`).join('');
     if (bad.length || dk.length) html += '<div class="viol dk"><b>' + t('quizres.where') + '</b>' + t('quizres.whereText') + '</div>';
     html += '<button class="btn ghost" onclick="shareQuiz(' + bad.length + ', this)">' + t('share.btn') + '</button>';
   }
   document.getElementById('quizResult').innerHTML = html;
 }
+const APP_URL = 'https://dimollia-lang.github.io/heshbon-plus/'; // куда ведёт «поделиться»
 function shareQuiz(n, btn) {
-  const text = tf('share.text', {n});
-  if (navigator.share) { navigator.share({text}).catch(() => {}); return; }
+  const text = tf('share.text', {n, w: plural(n, 'plural.viol'), url: APP_URL});
+  if (navigator.share) { navigator.share({text, url: APP_URL}).catch(() => {}); return; }
   const ta = document.createElement('textarea');
   ta.value = text; document.body.appendChild(ta); ta.select();
   try { document.execCommand('copy'); btn.textContent = t('share.copied'); } catch (e) {}
   ta.remove();
 }
 
-// ======= AI (офлайн-база; полный Claude API — в релизе) =======
+// ======= AI (офлайн-база типовых тем; живой Claude — кнопкой «Уточнить у онлайн-AI») =======
 document.querySelectorAll('.ai-chip').forEach(chip => chip.onclick = () => {
   const target = chip.closest('.card').querySelector('.ai-answer');
   target.style.display = 'block';

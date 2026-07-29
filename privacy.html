@@ -5,68 +5,159 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Heshbon+ — Privacy Policy / Политика конфиденциальности / מדיניות פרטיות</title>
 <style>
-  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px 18px 60px; line-height: 1.6; color: #1a2333; }
-  h1 { font-size: 26px; } h2 { font-size: 20px; margin-top: 34px; border-top: 2px solid #e2e8f0; padding-top: 22px; }
-  h3 { font-size: 15px; margin-top: 18px; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; max-width: 760px; margin: 0 auto; padding: 24px 18px 60px; line-height: 1.65; color: #1a2333; background: #fff; }
+  h1 { font-size: 25px; margin-bottom: 4px; }
+  h2 { font-size: 20px; margin-top: 38px; border-top: 2px solid #e2e8f0; padding-top: 22px; }
+  h3 { font-size: 15.5px; margin-top: 22px; margin-bottom: 6px; }
   p, li { font-size: 14.5px; }
+  ul { padding-inline-start: 22px; }
   .he { direction: rtl; text-align: right; }
+  .he ul { padding-inline-start: 22px; }
   .muted { color: #64748b; font-size: 13px; }
+  .box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; margin: 14px 0; }
+  a { color: #2563eb; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #0f172a; color: #e2e8f0; }
+    h2 { border-color: #334155; }
+    .box { background: #1e293b; border-color: #334155; }
+    .muted { color: #94a3b8; }
+    a { color: #60a5fa; }
+  }
 </style>
 </head>
 <body>
-<h1>Heshbon+ («Хешбон+», חשבון+) — Privacy Policy</h1>
-<p class="muted">Effective date: 25.07.2026 · Contact: dimollia@gmail.com</p>
 
-<h2>English</h2>
-<h3>What we collect</h3>
-<ul>
-  <li><b>Nothing is collected automatically.</b> The app has no analytics SDKs, no advertising SDKs, no trackers, and does not require an account.</li>
-  <li><b>Your profile and calculator inputs</b> (status, industry, tenure, salary figures, checkup answers, language) are stored <b>only on your device</b> (local storage) and never leave it.</li>
-  <li><b>Online AI questions.</b> If you tap "Ask the online AI", the text of your question, your selected app language and worker status are sent over HTTPS to our server (Cloudflare Workers) and forwarded to Anthropic's Claude API solely to generate the answer. We do not store your questions on our server, do not build user profiles, and do not sell or share this data. Anthropic processes the request as a data processor under its API terms.</li>
-  <li><b>Rates update.</b> On launch the app downloads a public rates file (rates.json) from our website. This is a plain file download; no personal data is sent.</li>
-</ul>
-<h3>Your choices</h3>
-<ul>
-  <li>You can use the entire app offline; the online AI is optional per question.</li>
-  <li>Clearing the app's data (Android settings) deletes everything the app stored locally.</li>
-</ul>
-<h3>Children</h3>
-<p>The app is an informational tool for workers and is not directed at children under 13.</p>
-<h3>Changes</h3>
-<p>We will update this page if the practices change. Material changes will be noted in the app's update notes.</p>
+<h1>Heshbon+ («Хешбон+», חשבון+)</h1>
+<p class="muted">Privacy Policy · Политика конфиденциальности · מדיניות פרטיות<br>
+Last updated / Последнее обновление / עדכון אחרון: 29.07.2026 · dimollia@gmail.com</p>
 
+<!-- ============================================ RU -->
 <h2>Русский</h2>
-<h3>Что мы собираем</h3>
+<p>Настоящая Политика конфиденциальности описывает, как приложение «Хешбон+» (далее — «Приложение») обращается с вашей информацией.</p>
+
+<h3>1. Сбор и использование информации</h3>
+<p>Приложение предназначено для информационных расчётов трудовых выплат. <b>По умолчанию все расчёты выполняются локально на вашем устройстве.</b> В Приложении нет аналитики, рекламных SDK и трекеров, регистрация и аккаунт не требуются.</p>
+<p>Три функции работают через интернет, и только по вашему явному действию:</p>
 <ul>
-  <li><b>Автоматически — ничего.</b> В приложении нет аналитики, рекламных SDK и трекеров; аккаунт не требуется.</li>
-  <li><b>Профиль и данные калькуляторов</b> (статус, отрасль, стаж, суммы, ответы чекапа, язык) хранятся <b>только на вашем устройстве</b> и никуда не передаются.</li>
-  <li><b>Вопросы к онлайн-AI.</b> При нажатии «Уточнить у онлайн-AI» текст вопроса, язык приложения и выбранный статус передаются по HTTPS на наш сервер (Cloudflare Workers) и далее в Anthropic Claude API — исключительно для генерации ответа. Мы не храним ваши вопросы на сервере, не строим профили пользователей, не продаём и не передаём данные третьим лицам. Anthropic обрабатывает запрос как процессор данных по условиям своего API.</li>
-  <li><b>Обновление ставок.</b> При запуске приложение скачивает публичный файл ставок (rates.json) с нашего сайта. Персональные данные при этом не передаются.</li>
+  <li><b>Вопрос онлайн-AI</b> — при нажатии «Уточнить у онлайн-AI» на наш сервер (Cloudflare Workers) и далее в Anthropic Claude API передаются текст вашего вопроса, язык интерфейса и выбранный статус работника.</li>
+  <li><b>Сканирование расчётного листа (тлуша)</b> — при загрузке фото или PDF расчётного листа <b>изображение документа целиком передаётся</b> тем же путём для распознавания. Расчётный лист может содержать ваши имя, название работодателя, суммы зарплаты и другие данные — загружайте его осознанно.</li>
+  <li><b>Проверка трудового договора</b> — текст или фотографии страниц договора передаются тем же путём для анализа.</li>
 </ul>
-<h3>Ваш выбор</h3>
+<p>Эти данные используются <b>исключительно для формирования ответа в момент запроса</b>. Мы не сохраняем ваши вопросы, фотографии и документы на своём сервере, не формируем профили пользователей, не продаём и не передаём эти данные третьим лицам для рекламы. Anthropic обрабатывает запрос как обработчик данных на условиях своего API.</p>
+<p>Отдельно Приложение при запуске скачивает публичный файл актуальных ставок (<code>rates.json</code>) с нашего сайта. Это обычная загрузка файла, никакие ваши данные при этом не отправляются.</p>
+
+<h3>2. Хранение данных</h3>
+<p>Введённые вами параметры не передаются третьим лицам. Для вашего удобства часть настроек сохраняется <b>в локальной памяти устройства</b> и остаётся там до удаления Приложения или очистки его данных:</p>
 <ul>
-  <li>Всё приложение работает офлайн; онлайн-AI — по желанию, отдельно для каждого вопроса.</li>
-  <li>Очистка данных приложения (настройки Android) удаляет всё, что приложение хранило локально.</li>
+  <li>профиль (статус, пол, отрасль, стаж, дети, суммы, имя, дата алии, дата визы);</li>
+  <li>язык интерфейса, тема оформления и размер шрифта, настройка напоминаний;</li>
+  <li>результат последнего разбора расчётного листа и краткая история по месяцам — для сравнения «стало хуже / стало лучше»;</li>
+  <li>счётчики дневных и месячных лимитов бесплатных обращений к онлайн-AI.</li>
 </ul>
+<p>Ничего из перечисленного не хранится на наших серверах. Очистка данных Приложения в настройках устройства удаляет всё это безвозвратно.</p>
+
+<h3>3. Разрешения устройства</h3>
+<p>Приложению <b>не требуется</b> доступ к вашей адресной книге, местоположению, камере или микрофону.</p>
+<ul>
+  <li><b>Интернет</b> — для трёх функций выше и обновления ставок.</li>
+  <li><b>Уведомления</b> — только чтобы напомнить об истечении визы и о проверке расчётного листа. Разрешение запрашивается отдельно, отказ не мешает работе Приложения; напоминания можно выключить в настройках.</li>
+</ul>
+<p>Фотографии и PDF-файлы вы выбираете сами через системный диалог выбора файла — прямого доступа к вашей галерее у Приложения нет.</p>
+
+<h3>4. Изменения в Политике конфиденциальности</h3>
+<p>Мы можем время от времени обновлять эту Политику. Дата последнего обновления указана вверху страницы; существенные изменения будут отмечены в описании обновления Приложения. Рекомендуем периодически проверять эту страницу.</p>
+
+<h3>5. Контакты</h3>
+<p>Вопросы по данной Политике: <a href="mailto:dimollia@gmail.com">dimollia@gmail.com</a></p>
+
 <h3>Дети</h3>
 <p>Приложение — информационный инструмент для работников и не предназначено для детей младше 13 лет.</p>
 
+<!-- ============================================ EN -->
+<h2>English</h2>
+<p>This Privacy Policy explains how the «Heshbon+» application (the «App») handles your information.</p>
+
+<h3>1. Collection and use of information</h3>
+<p>The App is intended for informational calculations of employment payments. <b>By default all calculations run locally on your device.</b> The App contains no analytics, no advertising SDKs and no trackers; no registration or account is required.</p>
+<p>Three features use the internet, and only when you explicitly trigger them:</p>
+<ul>
+  <li><b>Online AI question</b> — when you tap «Ask the online AI», the text of your question, the interface language and the selected worker status are sent to our server (Cloudflare Workers) and on to the Anthropic Claude API.</li>
+  <li><b>Payslip scan</b> — when you upload a photo or PDF of a payslip, <b>the whole document image is transmitted</b> the same way for recognition. A payslip may contain your name, your employer’s name, salary figures and other details — upload it knowingly.</li>
+  <li><b>Employment contract check</b> — the text or the photographed pages of the contract are transmitted the same way for analysis.</li>
+</ul>
+<p>This data is used <b>solely to produce the answer at the moment of the request</b>. We do not store your questions, photos or documents on our server, do not build user profiles, and do not sell or share this data with third parties for advertising. Anthropic processes the request as a data processor under its API terms.</p>
+<p>Separately, on launch the App downloads a public rates file (<code>rates.json</code>) from our website. This is a plain file download; none of your data is sent.</p>
+
+<h3>2. Data storage</h3>
+<p>The parameters you enter are not shared with third parties. For your convenience some settings are stored <b>in your device’s local storage</b> and remain there until you uninstall the App or clear its data:</p>
+<ul>
+  <li>profile (status, gender, industry, tenure, children, amounts, name, aliyah date, visa date);</li>
+  <li>interface language, theme and font size, reminder setting;</li>
+  <li>the result of the last payslip analysis and a short month-by-month history — used to compare «better / worse»;</li>
+  <li>counters for the daily and monthly limits of free online-AI requests.</li>
+</ul>
+<p>None of this is kept on our servers. Clearing the App’s data in your device settings deletes all of it permanently.</p>
+
+<h3>3. Device permissions</h3>
+<p>The App does <b>not</b> require access to your contacts, location, camera or microphone.</p>
+<ul>
+  <li><b>Internet</b> — for the three features above and for the rates update.</li>
+  <li><b>Notifications</b> — only to remind you about visa expiry and about checking your payslip. The permission is requested separately, refusing it does not affect the App, and reminders can be switched off in settings.</li>
+</ul>
+<p>You pick photos and PDF files yourself through the system file picker — the App has no direct access to your gallery.</p>
+
+<h3>4. Changes to this Privacy Policy</h3>
+<p>We may update this Policy from time to time. The date of the last update is shown at the top of this page; material changes will be noted in the App’s release notes. Please review this page periodically.</p>
+
+<h3>5. Contact</h3>
+<p>Questions about this Policy: <a href="mailto:dimollia@gmail.com">dimollia@gmail.com</a></p>
+
+<h3>Children</h3>
+<p>The App is an informational tool for workers and is not directed at children under 13.</p>
+
+<!-- ============================================ HE -->
 <h2 class="he">עברית</h2>
 <div class="he">
-<h3>מה אנחנו אוספים</h3>
+<p>מדיניות פרטיות זו מסבירה כיצד אפליקציית «חשבון+» (להלן «האפליקציה») מטפלת במידע שלך.</p>
+
+<h3>1. איסוף המידע והשימוש בו</h3>
+<p>האפליקציה נועדה לחישובים אינפורמטיביים של תשלומי עבודה. <b>כברירת מחדל כל החישובים מתבצעים מקומית במכשיר שלך.</b> אין באפליקציה אנליטיקה, אין SDK פרסומי ואין עוקבים; אין צורך בהרשמה או בחשבון.</p>
+<p>שלוש פונקציות פועלות דרך האינטרנט, ורק בפעולה מפורשת שלך:</p>
 <ul>
-  <li><b>שום דבר לא נאסף אוטומטית.</b> אין באפליקציה SDK של אנליטיקה או פרסום, אין עוקבים ולא נדרש חשבון.</li>
-  <li><b>הפרופיל ונתוני המחשבונים</b> (סטטוס, ענף, ותק, סכומים, תשובות הבדיקה, שפה) נשמרים <b>רק במכשיר שלך</b> ולא עוזבים אותו.</li>
-  <li><b>שאלות ל-AI המקוון.</b> בלחיצה על «שאל את ה-AI המקוון», טקסט השאלה, שפת האפליקציה והסטטוס שנבחר נשלחים ב-HTTPS לשרת שלנו (Cloudflare Workers) ומועברים ל-Anthropic Claude API אך ורק להפקת התשובה. איננו שומרים את השאלות בשרת, לא בונים פרופילים ולא מוכרים או משתפים מידע.</li>
-  <li><b>עדכון שיעורים.</b> בהפעלה האפליקציה מורידה קובץ שיעורים ציבורי (rates.json) מהאתר שלנו. לא נשלח מידע אישי.</li>
+  <li><b>שאלה ל־AI המקוון</b> — בלחיצה על «לשאול את ה־AI המקוון» נשלחים לשרת שלנו (Cloudflare Workers) ומשם ל־Anthropic Claude API טקסט השאלה, שפת הממשק וסטטוס העובד שנבחר.</li>
+  <li><b>סריקת תלוש שכר</b> — בהעלאת תמונה או PDF של תלוש, <b>תמונת המסמך כולה נשלחת</b> באותה הדרך לצורך זיהוי. תלוש עשוי לכלול את שמך, שם המעסיק, סכומי שכר ופרטים נוספים — העלה אותו מתוך מודעות לכך.</li>
+  <li><b>בדיקת חוזה עבודה</b> — הטקסט או צילומי דפי החוזה נשלחים באותה הדרך לצורך ניתוח.</li>
 </ul>
-<h3>הבחירה שלך</h3>
+<p>המידע הזה משמש <b>אך ורק להפקת התשובה ברגע הבקשה</b>. איננו שומרים את השאלות, התמונות והמסמכים שלך בשרת שלנו, איננו בונים פרופילי משתמשים ואיננו מוכרים או משתפים מידע זה עם צדדים שלישיים לצורכי פרסום. Anthropic מעבדת את הבקשה כמעבד מידע בהתאם לתנאי ה־API שלה.</p>
+<p>בנפרד, בהפעלה האפליקציה מורידה קובץ ציבורי של שיעורים מעודכנים (<code>rates.json</code>) מהאתר שלנו. זו הורדת קובץ רגילה, ולא נשלח בה מידע שלך.</p>
+
+<h3>2. שמירת נתונים</h3>
+<p>הנתונים שאתה מזין אינם מועברים לצדדים שלישיים. לנוחותך חלק מההגדרות נשמרות <b>בזיכרון המקומי של המכשיר</b> ונשארות שם עד להסרת האפליקציה או לניקוי הנתונים שלה:</p>
 <ul>
-  <li>האפליקציה כולה עובדת אופליין; ה-AI המקוון — לפי בחירה, לכל שאלה בנפרד.</li>
-  <li>ניקוי נתוני האפליקציה (הגדרות אנדרואיד) מוחק את כל מה שנשמר מקומית.</li>
+  <li>פרופיל (סטטוס, מין, ענף, ותק, ילדים, סכומים, שם, תאריך עלייה, תאריך אשרה);</li>
+  <li>שפת הממשק, ערכת הנושא וגודל הגופן, הגדרת התזכורות;</li>
+  <li>תוצאת הניתוח האחרון של תלוש והיסטוריה קצרה לפי חודשים — להשוואה «השתפר / הורע»;</li>
+  <li>מוני המכסות היומיות והחודשיות של פניות חינם ל־AI המקוון.</li>
 </ul>
+<p>שום פריט מהרשימה אינו נשמר בשרתים שלנו. ניקוי נתוני האפליקציה בהגדרות המכשיר מוחק את כל זה לצמיתות.</p>
+
+<h3>3. הרשאות במכשיר</h3>
+<p>האפליקציה <b>אינה</b> זקוקה לגישה לאנשי הקשר, למיקום, למצלמה או למיקרופון.</p>
+<ul>
+  <li><b>אינטרנט</b> — לשלוש הפונקציות שלמעלה ולעדכון השיעורים.</li>
+  <li><b>התראות</b> — רק כדי להזכיר על פקיעת אשרה ועל בדיקת תלוש. ההרשאה מתבקשת בנפרד, סירוב אינו פוגע בפעולת האפליקציה, ואפשר לכבות תזכורות בהגדרות.</li>
+</ul>
+<p>תמונות וקובצי PDF אתה בוחר בעצמך דרך חלון בחירת הקבצים של המערכת — לאפליקציה אין גישה ישירה לגלריה שלך.</p>
+
+<h3>4. שינויים במדיניות הפרטיות</h3>
+<p>אנו עשויים לעדכן מדיניות זו מעת לעת. תאריך העדכון האחרון מופיע בראש העמוד; שינויים מהותיים יצוינו בתיאור העדכון של האפליקציה. מומלץ לבדוק את העמוד מדי פעם.</p>
+
+<h3>5. יצירת קשר</h3>
+<p>שאלות בנוגע למדיניות זו: <a href="mailto:dimollia@gmail.com">dimollia@gmail.com</a></p>
+
 <h3>ילדים</h3>
 <p>האפליקציה היא כלי מידע לעובדים ואינה מיועדת לילדים מתחת לגיל 13.</p>
 </div>
+
 </body>
 </html>
