@@ -2,6 +2,10 @@
 const I18N = {
 // ================================================================== RU
 ru: {
+"tb.csv":"📊 Скопировать CSV (для Excel / Google Таблиц)",
+"tb.edit.cancel":"Отменить",
+"tb.editing":"Правишь запись от {d}.",
+"tb.save":"💾 Сохранить изменения",
 "plural.shift":"смена|смены|смен",
 "tb.note":"<b>Зачем это:</b> учёт рабочих часов обязан вести работодатель, но при споре твой собственный табель — весомое доказательство в суде по труду: суды принимают записи работника, когда работодатель учёт не ведёт или не показывает.<br><b>Полезно знать:</b> срок иска по зарплате — до 7 лет, поэтому табель стоит вести постоянно, а 10-го числа сверять с тлушем.",
 "tb.exp.title":"Табель {m} — Хешбон+",
@@ -14,7 +18,7 @@ ru: {
 "tb.tot.ot":"Из них сверхурочных",
 "tb.tot.paid":"Оплачиваемых часов",
 "tb.tot.h":"Итого за месяц",
-"tb.overnight":"⁺ — смена закончилась после полуночи; 🌙 — ночная смена (норма 7 ч)",
+"tb.overnight":"⁺ — смена закончилась после полуночи; 🌙 — ночная смена (норма 7 ч). Нажми на строку, чтобы исправить время.",
 "tb.shab":"шаббат — 150%",
 "tb.empty":"Записей за этот месяц пока нет.",
 "tb.month":"Месяц",
@@ -358,6 +362,10 @@ ru: {
 },
 // ================================================================== EN
 en: {
+"tb.csv":"📊 Copy CSV (for Excel / Google Sheets)",
+"tb.edit.cancel":"Cancel",
+"tb.editing":"Editing the entry of {d}.",
+"tb.save":"💾 Save changes",
 "plural.shift":"shift|shifts|shifts",
 "tb.note":"<b>Why this matters:</b> keeping a record of working hours is the employer’s duty, but in a dispute your own timesheet is strong evidence in the labour court: courts accept the worker’s records when the employer keeps none or refuses to show them.<br><b>Worth knowing:</b> wage claims reach back up to 7 years, so keep the timesheet running and check it against the payslip on the 10th.",
 "tb.exp.title":"Timesheet {m} — Heshbon+",
@@ -370,7 +378,7 @@ en: {
 "tb.tot.ot":"Of which overtime",
 "tb.tot.paid":"Paid hours",
 "tb.tot.h":"Month total",
-"tb.overnight":"⁺ — the shift ended after midnight; 🌙 — night shift (7-hour norm)",
+"tb.overnight":"⁺ — the shift ended after midnight; 🌙 — night shift (7-hour norm). Tap a row to correct the times.",
 "tb.shab":"Shabbat — 150%",
 "tb.empty":"No entries for this month yet.",
 "tb.month":"Month",
@@ -714,6 +722,10 @@ en: {
 },
 // ================================================================== HE
 he: {
+"tb.csv":"📊 העתק CSV (לאקסל / Google Sheets)",
+"tb.edit.cancel":"ביטול",
+"tb.editing":"עורך את הרשומה מ־{d}.",
+"tb.save":"💾 שמור שינויים",
 "plural.shift":"משמרת|משמרות|משמרות",
 "tb.note":"<b>למה זה חשוב:</b> ניהול רישום שעות הוא חובת המעסיק, אבל במחלוקת הדוח שלך הוא ראיה משמעותית בבית הדין לעבודה: בתי הדין מקבלים רישומי עובד כשהמעסיק לא מנהל רישום או לא מציג אותו.<br><b>כדאי לדעת:</b> תביעת שכר מגיעה עד 7 שנים אחורה, לכן כדאי לנהל את הדוח באופן קבוע ולהשוות לתלוש ב־10 בחודש.",
 "tb.exp.title":"דוח נוכחות {m} — חשבון+",
@@ -726,7 +738,7 @@ he: {
 "tb.tot.ot":"מתוכן שעות נוספות",
 "tb.tot.paid":"שעות בתשלום",
 "tb.tot.h":"סה״כ לחודש",
-"tb.overnight":"⁺ — המשמרת הסתיימה אחרי חצות; 🌙 — משמרת לילה (נורמה 7 שע׳)",
+"tb.overnight":"⁺ — המשמרת הסתיימה אחרי חצות; 🌙 — משמרת לילה (נורמה 7 שע׳). לחץ על שורה כדי לתקן את השעות.",
 "tb.shab":"שבת — 150%",
 "tb.empty":"אין עדיין רשומות לחודש הזה.",
 "tb.month":"חודש",

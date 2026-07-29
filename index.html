@@ -512,7 +512,8 @@
             <input id="tbOut" placeholder="17:00" inputmode="numeric">
           </div>
         </div>
-        <button class="btn ghost" onclick="tbAdd()" data-i18n="tb.add"></button>
+        <button class="btn ghost" id="tbAddBtn" onclick="tbAdd()"></button>
+        <div class="note" id="tbEditNote" style="display:none"></div>
         <div class="note warn" id="tbAddErr" style="display:none" data-i18n="tb.badtime"></div>
       </details>
       <label class="fld" style="margin-top:12px" data-i18n="tb.month"></label>
@@ -520,6 +521,7 @@
       <div id="tbList"></div>
       <div id="tbTotals"></div>
       <button class="btn ghost" onclick="tbExport(this)" data-i18n="tb.export"></button>
+      <button class="btn ghost" onclick="tbCsv(this)" data-i18n="tb.csv"></button>
       <div class="note qnote open" data-i18n-html="tb.note"></div>
     </div>
 
@@ -842,7 +844,7 @@
 
 </div>
 
-<script src="i18n.js?v=150"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=160"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -864,7 +866,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.5.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.6.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1300,28 +1302,60 @@ function tbMakeEntry(d, tin, tout) {
 function tbPunch() {
   let open = null;
   try { open = JSON.parse(localStorage.getItem(TB_OPEN) || 'null'); } catch (e) {}
+  const N = window.HeshbonNative; // в APK — мост, в вебе undefined
   if (!open) {
     localStorage.setItem(TB_OPEN, JSON.stringify({d: tbISO(new Date()), in: tbHM(new Date())}));
+    try { if (N && N.shiftOpened) N.shiftOpened(); } catch (e) {} // напоминание «отметь уход» через 11 ч
   } else {
     const a = tbLoad();
     a.push(tbMakeEntry(open.d, open.in, tbHM(new Date())));
     tbSave(a);
     localStorage.removeItem(TB_OPEN);
+    try { if (N && N.shiftClosed) N.shiftClosed(); } catch (e) {}
   }
   tbRender();
 }
+let tbEditingId = null; // id записи в режиме правки (клик по строке)
 function tbAdd() {
   const tin = document.getElementById('tbIn').value, tout = document.getElementById('tbOut').value;
   const bad = tbParseTime(tin) === null || tbParseTime(tout) === null;
   document.getElementById('tbAddErr').style.display = bad ? '' : 'none';
   if (bad) return;
   const a = tbLoad();
-  a.push(tbMakeEntry(document.getElementById('tbDate').value, tin, tout));
+  const e = tbMakeEntry(document.getElementById('tbDate').value, tin, tout);
+  if (tbEditingId !== null) { // правка: заменяем на месте, id сохраняем
+    const i = a.findIndex(x => x.id === tbEditingId);
+    if (i >= 0) { e.id = tbEditingId; a[i] = e; } else a.push(e);
+    tbEditingId = null;
+  } else a.push(e);
   tbSave(a);
   document.getElementById('tbIn').value = ''; document.getElementById('tbOut').value = '';
   tbRender();
 }
+function tbEdit(id) {
+  const e = tbLoad().find(x => x.id === id);
+  if (!e) return;
+  tbEditingId = id;
+  const dsel = document.getElementById('tbDate');
+  if (![...dsel.options].some(o => o.value === e.d)) { // запись старше 35 дней — добавим её дату
+    const o = document.createElement('option');
+    o.value = e.d; o.textContent = tbDM(e.d);
+    dsel.insertBefore(o, dsel.firstChild);
+  }
+  dsel.value = e.d;
+  document.getElementById('tbIn').value = e.in;
+  document.getElementById('tbOut').value = e.out;
+  document.querySelector('#tbDate').closest('details').open = true;
+  tbRender();
+  document.getElementById('tbDate').closest('details').scrollIntoView({block: 'center'});
+}
+function tbEditCancel() {
+  tbEditingId = null;
+  document.getElementById('tbIn').value = ''; document.getElementById('tbOut').value = '';
+  tbRender();
+}
 function tbDel(id) {
+  if (tbEditingId === id) tbEditCancel();
   tbSave(tbLoad().filter(e => e.id !== id));
   tbRender();
 }
@@ -1355,6 +1389,15 @@ function tbRender() {
     msel.appendChild(o);
   });
   msel.value = months.includes(mcur) ? mcur : months[0];
+  // режим правки: подпись кнопки и подсказка с отменой (ДО раннего выхода при пустом месяце)
+  document.getElementById('tbAddBtn').textContent = t(tbEditingId !== null ? 'tb.save' : 'tb.add');
+  const en = document.getElementById('tbEditNote');
+  if (tbEditingId !== null) {
+    const ee = tbLoad().find(x => x.id === tbEditingId);
+    en.style.display = '';
+    en.innerHTML = tf('tb.editing', {d: ee ? tbDM(ee.d) : ''}) +
+      ' <a href="#" onclick="tbEditCancel();return false">' + t('tb.edit.cancel') + '</a>';
+  } else en.style.display = 'none';
   // строки месяца
   const rows = tbMonthRows(msel.value);
   const list = document.getElementById('tbList');
@@ -1371,7 +1414,10 @@ function tbRender() {
     let right = tbHrs(c.paid);
     if (c.shab) right += ' · <span class="neg">' + t('tb.shab') + '</span>';
     else if (c.ot125 + c.ot150 > 0) right += ' · <span class="neg">OT ' + tbHrs(c.ot125 + c.ot150) + '</span>';
-    return '<div class="b-row"><span class="n">' + tbDM(e.d) + ' ' + e.in + '–' + e.out + (c.overnight ? '⁺' : '') +
+    const editing = e.id === tbEditingId;
+    return '<div class="b-row"' + (editing ? ' style="outline:1px solid var(--accent);border-radius:6px"' : '') +
+           '><span class="n" style="cursor:pointer" onclick="tbEdit(' + e.id + ')">' +
+           tbDM(e.d) + ' ' + e.in + '–' + e.out + (c.overnight ? '⁺' : '') +
            (c.night && !c.shab ? ' 🌙' : '') + '</span><span class="v">' + right +
            ' <button type="button" class="qmark" style="border-color:var(--border);color:var(--muted)" onclick="tbDel(' + e.id + ')">✕</button></span></div>';
   }).join('') + '</div>';
@@ -1405,6 +1451,25 @@ function tbExport(btn) {
     '\n' + t('tb.tot.paid') + ': ' + tbHrs(tot.paid) +
     (tot.ot ? ' · OT ' + tbHrs(tot.ot) : '') + (tot.shab ? ' · ' + t('tb.tot.shab') + ' ' + tbHrs(tot.shab) : '') +
     '\n' + APP_URL;
+  if (navigator.share) { navigator.share({text}).catch(() => {}); return; }
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); btn.textContent = t('tb.exported'); } catch (e) {}
+  ta.remove();
+}
+function tbCsv(btn) {
+  const mon = document.getElementById('tbMonth').value;
+  const rows = tbMonthRows(mon).slice().reverse();
+  const n2 = x => (Math.round(x * 100) / 100); // машинный формат: точка, без локали
+  let tot = {paid: 0, ot125: 0, ot150: 0, shab: 0};
+  const head = ['date', 'in', 'out', 'break_min', 'paid_h', 'ot125_h', 'ot150_h', 'shabbat_h'];
+  const lines = rows.map(e => {
+    const c = tbCalc(e);
+    tot.paid += c.paid; tot.ot125 += c.ot125; tot.ot150 += c.ot150; tot.shab += c.shabH;
+    return [e.d, e.in, e.out, e.stay ? 0 : (e.br || 0), n2(c.paid), n2(c.ot125), n2(c.ot150), n2(c.shabH)].join(',');
+  });
+  const text = head.join(',') + '\n' + lines.join('\n') +
+    '\nTOTAL,,,,' + [n2(tot.paid), n2(tot.ot125), n2(tot.ot150), n2(tot.shab)].join(',') + '\n';
   if (navigator.share) { navigator.share({text}).catch(() => {}); return; }
   const ta = document.createElement('textarea');
   ta.value = text; document.body.appendChild(ta); ta.select();
