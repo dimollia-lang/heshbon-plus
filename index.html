@@ -492,6 +492,38 @@
     </div>
 
     <div class="card">
+      <h3 data-i18n="tb.h"></h3>
+      <div class="hint" data-i18n="tb.hint"></div>
+      <button class="btn" id="tbPunch" onclick="tbPunch()"></button>
+      <div class="note" id="tbStatus"></div>
+      <details class="exp">
+        <summary data-i18n="tb.manual.h"></summary>
+        <div class="row3" style="margin-top:8px">
+          <div>
+            <label class="fld" data-i18n="tb.date"></label>
+            <select id="tbDate"></select>
+          </div>
+          <div>
+            <label class="fld" data-i18n="tb.in"></label>
+            <input id="tbIn" placeholder="08:00" inputmode="numeric">
+          </div>
+          <div>
+            <label class="fld" data-i18n="tb.out"></label>
+            <input id="tbOut" placeholder="17:00" inputmode="numeric">
+          </div>
+        </div>
+        <button class="btn ghost" onclick="tbAdd()" data-i18n="tb.add"></button>
+        <div class="note warn" id="tbAddErr" style="display:none" data-i18n="tb.badtime"></div>
+      </details>
+      <label class="fld" style="margin-top:12px" data-i18n="tb.month"></label>
+      <select id="tbMonth"></select>
+      <div id="tbList"></div>
+      <div id="tbTotals"></div>
+      <button class="btn ghost" onclick="tbExport(this)" data-i18n="tb.export"></button>
+      <div class="note qnote open" data-i18n-html="tb.note"></div>
+    </div>
+
+    <div class="card">
       <h3 data-i18n="quiz.h"></h3>
       <div class="hint" data-i18n="quiz.hint"></div>
       <div id="rightsQuiz"></div>
@@ -810,7 +842,7 @@
 
 </div>
 
-<script src="i18n.js?v=142"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=150"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -832,7 +864,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.4.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.5.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -855,7 +887,7 @@ function setLang(l) {
   document.getElementById('aiAns').style.display = 'none';
   vatOut.innerHTML = '';
   updateHello();
-  updEmpPoints(true); calcOT(); whCalc(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates(); // true = не трогать ручные некудот
+  updEmpPoints(true); calcOT(); whCalc(); tbRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates(); // true = не трогать ручные некудот
 }
 document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
 
@@ -1219,6 +1251,168 @@ function whCalc() {
   const e = document.getElementById(id);
   e.addEventListener('input', whCalc); e.addEventListener('change', whCalc);
 });
+
+// ======= Табель: пунч прихода/ухода =======
+// Записи только на устройстве (heshbon_tabel). Нормы — те же, что в whCalc.
+// Шаббат (суббота) = все часы 150%; канун (пятница) и ночная смена = норма 7 ч.
+const TB_KEY = 'heshbon_tabel', TB_OPEN = 'heshbon_tabel_open';
+const tbLoad = () => { try { return JSON.parse(localStorage.getItem(TB_KEY) || '[]'); } catch (e) { return []; } };
+const tbSave = a => { try { localStorage.setItem(TB_KEY, JSON.stringify(a)); } catch (e) {} };
+const tbISO = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const tbHM = d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+const tbDM = iso => new Intl.DateTimeFormat(t('locale'), {weekday: 'short', day: '2-digit', month: '2-digit'}).format(new Date(iso + 'T12:00:00'));
+const tbHrs = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 2}).format(n) + ' ' + t('wh.hh');
+function tbParseTime(s) {
+  const m = String(s).trim().match(/^(\d{1,2})[:.‐-]?(\d{2})?$/);
+  if (!m) return null;
+  const h = +m[1], mm = +(m[2] || 0);
+  return (h > 23 || mm > 59) ? null : h * 60 + mm;
+}
+// перекрытие смены с ночным окном 22:00–06:00 (интервалы в минутах от начала суток старта)
+function tbNightOverlap(inM, endM) {
+  const ovl = (a, b, c, d) => Math.max(0, Math.min(b, d) - Math.max(a, c));
+  return ovl(inM, endM, 0, 360) + ovl(inM, endM, 1320, 1440) + ovl(inM, endM, 1440, 1800);
+}
+function tbCalc(e) {
+  const inM = tbParseTime(e.in), outM = tbParseTime(e.out);
+  let dur = (outM - inM) / 60;
+  const overnight = dur < 0; // ровно 0 = случайный двойной пунч, а не суточная смена
+  if (overnight) dur += 24;
+  const paid = Math.max(0, dur - (e.stay ? 0 : (e.br || 0) / 60));
+  const wd = new Date(e.d + 'T12:00:00').getDay(); // 0=вс … 5=пт, 6=сб
+  const shab = wd === 6;
+  const night = tbNightOverlap(inM, inM + dur * 60) >= 120;
+  const days5 = document.getElementById('whDays').value === '5';
+  const norm = shab ? 0 : (night || wd === 5) ? 7 : (days5 ? 8.6 : 8);
+  const ot = shab ? 0 : Math.max(0, paid - norm);
+  return { dur, paid, overnight, shab, night,
+           ot125: Math.min(2, ot), ot150: Math.max(0, ot - 2), shabH: shab ? paid : 0 };
+}
+function tbMakeEntry(d, tin, tout) {
+  const manual = document.getElementById('whKind').value === 'manual';
+  const days5 = document.getElementById('whDays').value === '5';
+  let dur = (tbParseTime(tout) - tbParseTime(tin)) / 60;
+  if (dur < 0) dur += 24;
+  const breakAfter = manual ? 6 : (days5 ? 9 : 8);
+  return { id: Date.now(), d, in: tin, out: tout,
+           br: dur >= breakAfter ? 45 : 0, stay: document.getElementById('whStay').checked };
+}
+function tbPunch() {
+  let open = null;
+  try { open = JSON.parse(localStorage.getItem(TB_OPEN) || 'null'); } catch (e) {}
+  if (!open) {
+    localStorage.setItem(TB_OPEN, JSON.stringify({d: tbISO(new Date()), in: tbHM(new Date())}));
+  } else {
+    const a = tbLoad();
+    a.push(tbMakeEntry(open.d, open.in, tbHM(new Date())));
+    tbSave(a);
+    localStorage.removeItem(TB_OPEN);
+  }
+  tbRender();
+}
+function tbAdd() {
+  const tin = document.getElementById('tbIn').value, tout = document.getElementById('tbOut').value;
+  const bad = tbParseTime(tin) === null || tbParseTime(tout) === null;
+  document.getElementById('tbAddErr').style.display = bad ? '' : 'none';
+  if (bad) return;
+  const a = tbLoad();
+  a.push(tbMakeEntry(document.getElementById('tbDate').value, tin, tout));
+  tbSave(a);
+  document.getElementById('tbIn').value = ''; document.getElementById('tbOut').value = '';
+  tbRender();
+}
+function tbDel(id) {
+  tbSave(tbLoad().filter(e => e.id !== id));
+  tbRender();
+}
+function tbMonthRows(mon) {
+  return tbLoad().filter(e => e.d.slice(0, 7) === mon).sort((x, y) => x.d < y.d ? 1 : -1);
+}
+function tbRender() {
+  // кнопка-пунч и статус
+  let open = null;
+  try { open = JSON.parse(localStorage.getItem(TB_OPEN) || 'null'); } catch (e) {}
+  document.getElementById('tbPunch').textContent = open ? t('tb.punch.out') : t('tb.punch.in');
+  document.getElementById('tbStatus').textContent = open ? tf('tb.status.open', {t: tbDM(open.d) + ' ' + open.in}) : t('tb.status.none');
+  // дата для ручного ввода: последние 35 дней
+  const dsel = document.getElementById('tbDate'), dcur = dsel.value;
+  dsel.innerHTML = '';
+  for (let i = 0; i < 35; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const o = document.createElement('option');
+    o.value = tbISO(d); o.textContent = tbDM(tbISO(d));
+    dsel.appendChild(o);
+  }
+  if (dcur) dsel.value = dcur;
+  if (!dsel.value) dsel.selectedIndex = 0;
+  // селектор месяца: месяцы с записями + текущий
+  const msel = document.getElementById('tbMonth'), mcur = msel.value;
+  const months = [...new Set(tbLoad().map(e => e.d.slice(0, 7)).concat(tbISO(new Date()).slice(0, 7)))].sort().reverse();
+  msel.innerHTML = '';
+  months.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m.slice(5) + '.' + m.slice(0, 4);
+    msel.appendChild(o);
+  });
+  msel.value = months.includes(mcur) ? mcur : months[0];
+  // строки месяца
+  const rows = tbMonthRows(msel.value);
+  const list = document.getElementById('tbList');
+  if (!rows.length) {
+    list.innerHTML = '<div class="note" style="margin-top:8px">' + t('tb.empty') + '</div>';
+    document.getElementById('tbTotals').innerHTML = '';
+    return;
+  }
+  let tot = {paid: 0, ot125: 0, ot150: 0, shab: 0, anyON: false};
+  list.innerHTML = '<div style="margin-top:8px">' + rows.map(e => {
+    const c = tbCalc(e);
+    tot.paid += c.paid; tot.ot125 += c.ot125; tot.ot150 += c.ot150; tot.shab += c.shabH;
+    tot.anyON = tot.anyON || c.overnight;
+    let right = tbHrs(c.paid);
+    if (c.shab) right += ' · <span class="neg">' + t('tb.shab') + '</span>';
+    else if (c.ot125 + c.ot150 > 0) right += ' · <span class="neg">OT ' + tbHrs(c.ot125 + c.ot150) + '</span>';
+    return '<div class="b-row"><span class="n">' + tbDM(e.d) + ' ' + e.in + '–' + e.out + (c.overnight ? '⁺' : '') +
+           (c.night && !c.shab ? ' 🌙' : '') + '</span><span class="v">' + right +
+           ' <button type="button" class="qmark" style="border-color:var(--border);color:var(--muted)" onclick="tbDel(' + e.id + ')">✕</button></span></div>';
+  }).join('') + '</div>';
+  // итоги
+  const rate = Math.max(0, +document.getElementById('otRate').value || 0);
+  const extra = rate * (0.25 * tot.ot125 + 0.5 * tot.ot150 + 0.5 * tot.shab);
+  const pay = rate * tot.paid + extra;
+  let out = '<div style="margin-top:10px"><b>' + t('tb.tot.h') + ' — ' + pluralN(rows.length, 'plural.shift') + '</b>';
+  out += row(t('tb.tot.paid'), tbHrs(tot.paid), 'pos');
+  if (tot.ot125 + tot.ot150 > 0) out += row(t('tb.tot.ot'), tbHrs(tot.ot125) + ' × 125% + ' + tbHrs(tot.ot150) + ' × 150%', 'neg');
+  if (tot.shab > 0) out += row(t('tb.tot.shab'), tbHrs(tot.shab), 'neg');
+  if (rate) {
+    if (extra > 0) out += row(t('tb.tot.extra'), '+' + fmt(extra), 'pos');
+    out += row(t('tb.tot.pay'), fmt(pay), 'pos');
+  }
+  out += '<div class="note" style="margin-top:6px">' + tf('tb.tot.pct', {p: Math.round(tot.paid / 182 * 100)}) +
+         (tot.anyON ? '<br>' + t('tb.overnight') : '') + '</div></div>';
+  document.getElementById('tbTotals').innerHTML = out;
+}
+function tbExport(btn) {
+  const mon = document.getElementById('tbMonth').value;
+  const rows = tbMonthRows(mon).slice().reverse();
+  let tot = {paid: 0, ot: 0, shab: 0};
+  const lines = rows.map(e => {
+    const c = tbCalc(e);
+    tot.paid += c.paid; tot.ot += c.ot125 + c.ot150; tot.shab += c.shabH;
+    return tbDM(e.d) + ' ' + e.in + '–' + e.out + (c.overnight ? '⁺' : '') + ' = ' + tbHrs(c.paid) +
+           (c.shab ? ' · ' + t('tb.shab') : (c.ot125 + c.ot150 > 0 ? ' · OT ' + tbHrs(c.ot125 + c.ot150) : ''));
+  });
+  const text = tf('tb.exp.title', {m: mon.slice(5) + '.' + mon.slice(0, 4)}) + '\n' + lines.join('\n') +
+    '\n' + t('tb.tot.paid') + ': ' + tbHrs(tot.paid) +
+    (tot.ot ? ' · OT ' + tbHrs(tot.ot) : '') + (tot.shab ? ' · ' + t('tb.tot.shab') + ' ' + tbHrs(tot.shab) : '') +
+    '\n' + APP_URL;
+  if (navigator.share) { navigator.share({text}).catch(() => {}); return; }
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); btn.textContent = t('tb.exported'); } catch (e) {}
+  ta.remove();
+}
+document.getElementById('tbMonth').addEventListener('change', tbRender);
+document.getElementById('otRate').addEventListener('input', tbRender);
 
 // ======= Чекап прав =======
 const QUIZ = [
