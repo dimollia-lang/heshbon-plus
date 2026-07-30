@@ -523,6 +523,37 @@
       <div class="note" data-i18n="tlush.note"></div>
     </div>
 
+    <div class="card" id="ltCard">
+      <h3 data-i18n="lt.h"></h3>
+      <div class="hint" data-i18n="lt.hint"></div>
+      <div>
+        <span class="ai-chip" onclick="ltShow('tlush')" data-i18n="lt.t.tlush"></span>
+        <span class="ai-chip" onclick="ltShow('pay')" data-i18n="lt.t.pay"></span>
+        <span class="ai-chip" onclick="ltShow('pension')" data-i18n="lt.t.pension"></span>
+        <span class="ai-chip" onclick="ltShow('delay')" data-i18n="lt.t.delay"></span>
+      </div>
+      <div id="ltOut" style="display:none">
+        <div id="ltHe" dir="rtl" style="margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:10px;white-space:pre-wrap;font-size:13.5px;text-align:right"></div>
+        <div class="note" id="ltTr" style="white-space:pre-wrap"></div>
+        <button class="btn" onclick="ltShare(this)" data-i18n="lt.share"></button>
+      </div>
+      <div class="note" data-i18n="lt.note"></div>
+    </div>
+
+    <div class="card" id="holCard">
+      <h3 data-i18n="hol.h"></h3>
+      <div class="hint" data-i18n="hol.hint"></div>
+      <label class="fld" data-i18n="hol.conf"></label>
+      <select id="holConf" onchange="holConfChange()">
+        <option value="jew" data-i18n="hol.c.jew"></option>
+        <option value="mus" data-i18n="hol.c.mus"></option>
+        <option value="chr" data-i18n="hol.c.chr"></option>
+        <option value="none" data-i18n="hol.c.none"></option>
+      </select>
+      <div id="holList"></div>
+      <div class="note qnote open" data-i18n-html="hol.rules"></div>
+    </div>
+
     <div class="card">
       <h3 data-i18n="fired.h"></h3>
       <div class="hint" data-i18n="fired.hint"></div>
@@ -580,16 +611,23 @@
       <div class="note" id="tbStatus"></div>
       <details class="exp">
         <summary data-i18n="tb.manual.h"></summary>
+        <label class="fld" style="margin-top:8px" data-i18n="tb.type"></label>
+        <select id="tbType" onchange="tbTypeToggle()">
+          <option value="work" data-i18n="tb.ty.work"></option>
+          <option value="sick" data-i18n="tb.ty.sick"></option>
+          <option value="vacation" data-i18n="tb.ty.vac"></option>
+          <option value="holiday" data-i18n="tb.ty.hol"></option>
+        </select>
         <div class="row3" style="margin-top:8px">
           <div>
             <label class="fld" data-i18n="tb.date"></label>
             <select id="tbDate"></select>
           </div>
-          <div>
+          <div id="tbInWrap">
             <label class="fld" data-i18n="tb.in"></label>
             <input id="tbIn" placeholder="08:00" inputmode="numeric">
           </div>
-          <div>
+          <div id="tbOutWrap">
             <label class="fld" data-i18n="tb.out"></label>
             <input id="tbOut" placeholder="17:00" inputmode="numeric">
           </div>
@@ -602,8 +640,11 @@
       <select id="tbMonth"></select>
       <div id="tbList"></div>
       <div id="tbTotals"></div>
+      <div class="note" id="tbBalance" style="display:none"></div>
       <button class="btn ghost" onclick="tbExport(this)" data-i18n="tb.export"></button>
       <button class="btn ghost" onclick="tbCsv(this)" data-i18n="tb.csv"></button>
+      <button class="btn" onclick="tbCompare()" data-i18n="tb.cmp.btn" style="margin-top:8px"></button>
+      <div id="tbCmp"></div>
       <div class="note qnote open" data-i18n-html="tb.note"></div>
     </div>
 
@@ -858,7 +899,7 @@
 
 </div>
 
-<script src="i18n.js?v=171"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=180"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -880,7 +921,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.7.1'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.8.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -901,6 +942,7 @@ function setLang(l) {
   fillVisaSelects();
   document.getElementById('aiAnsEmp').style.display = 'none';
   document.getElementById('aiAns').style.display = 'none';
+  document.getElementById('ltOut').style.display = 'none'; // письмо рендерится под язык — при смене закрываем
   vatOut.innerHTML = '';
   updateHello();
   refreshAll(true); // true = не трогать ручные некудот
@@ -908,7 +950,7 @@ function setLang(l) {
 // Полный пересчёт: единая цепочка для старта и смены языка.
 // Держать ОДИН список — раздельные копии уже давали пустую кнопку пунча при запуске (whCalc/tbRender не входили в init).
 function refreshAll(keepPts) {
-  updEmpPoints(keepPts); calcOT(); whCalc(); tbRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates();
+  updEmpPoints(keepPts); calcOT(); whCalc(); tbRender(); holRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates();
 }
 document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
 
@@ -1320,6 +1362,9 @@ function tbNightOverlap(inM, endM) {
   return ovl(inM, endM, 0, 360) + ovl(inM, endM, 1320, 1440) + ovl(inM, endM, 1440, 1800);
 }
 function tbCalc(e) {
+  // особые дни (болезнь/отпуск/праздник) — без часов, считаются отдельно в итогах
+  if (e.ty && e.ty !== 'work') return { special: e.ty, dur: 0, paid: 0, overnight: false, shab: false,
+                                        night: false, brMin: 0, ot125: 0, ot150: 0, shabH: 0 };
   const inM = tbParseTime(e.in), outM = tbParseTime(e.out);
   let dur = (outM - inM) / 60;
   const overnight = dur < 0; // ровно 0 = случайный двойной пунч, а не суточная смена
@@ -1360,13 +1405,20 @@ function tbPunch() {
   tbRender();
 }
 let tbEditingId = null; // id записи в режиме правки (клик по строке)
+function tbTypeToggle() {
+  const work = document.getElementById('tbType').value === 'work';
+  document.getElementById('tbInWrap').style.display = work ? '' : 'none';
+  document.getElementById('tbOutWrap').style.display = work ? '' : 'none';
+}
 function tbAdd() {
+  const ty = document.getElementById('tbType').value;
   const tin = document.getElementById('tbIn').value, tout = document.getElementById('tbOut').value;
-  const bad = tbParseTime(tin) === null || tbParseTime(tout) === null;
+  const bad = ty === 'work' && (tbParseTime(tin) === null || tbParseTime(tout) === null);
   document.getElementById('tbAddErr').style.display = bad ? '' : 'none';
   if (bad) return;
   const a = tbLoad();
-  const e = tbMakeEntry(document.getElementById('tbDate').value, tin, tout);
+  const e = ty === 'work' ? tbMakeEntry(document.getElementById('tbDate').value, tin, tout)
+                          : { id: Date.now(), d: document.getElementById('tbDate').value, ty };
   if (tbEditingId !== null) { // правка: заменяем на месте, id сохраняем
     const i = a.findIndex(x => x.id === tbEditingId);
     if (i >= 0) { e.id = tbEditingId; a[i] = e; } else a.push(e);
@@ -1387,8 +1439,10 @@ function tbEdit(id) {
     dsel.insertBefore(o, dsel.firstChild);
   }
   dsel.value = e.d;
-  document.getElementById('tbIn').value = e.in;
-  document.getElementById('tbOut').value = e.out;
+  document.getElementById('tbType').value = (e.ty && e.ty !== 'work') ? e.ty : 'work';
+  tbTypeToggle();
+  document.getElementById('tbIn').value = e.in || '';
+  document.getElementById('tbOut').value = e.out || '';
   document.querySelector('#tbDate').closest('details').open = true;
   tbRender();
   document.getElementById('tbDate').closest('details').scrollIntoView({block: 'center'});
@@ -1406,12 +1460,43 @@ function tbDel(id) {
 function tbMonthRows(mon) {
   return tbLoad().filter(e => e.d.slice(0, 7) === mon).sort((x, y) => x.d < y.d ? 1 : -1);
 }
+const TY_ICO = {sick: '🤒', vacation: '🌴', holiday: '🎉'};
+const TY_KEY = {sick: 'tb.ty.sick', vacation: 'tb.ty.vac', holiday: 'tb.ty.hol'};
+// Итоги месяца: часы/OT/шаббат/перерывы + особые дни. Больничные — по эпизодам подряд:
+// 1-й день 0%, 2–3-й 50%, с 4-го 100% (эпизод считается внутри выбранного месяца)
+function tbMonthTotals(mon) {
+  const tot = {workN: 0, paid: 0, ot125: 0, ot150: 0, shab: 0, br: 0, anyON: false,
+               sickN: 0, vacN: 0, holN: 0, sickDates: []};
+  tbMonthRows(mon).forEach(e => {
+    const c = tbCalc(e);
+    if (c.special) {
+      if (c.special === 'sick') { tot.sickN++; tot.sickDates.push(e.d); }
+      else if (c.special === 'vacation') tot.vacN++;
+      else tot.holN++;
+      return;
+    }
+    tot.workN++;
+    tot.paid += c.paid; tot.ot125 += c.ot125; tot.ot150 += c.ot150; tot.shab += c.shabH; tot.br += c.brMin;
+    tot.anyON = tot.anyON || c.overnight;
+  });
+  const ds = [...new Set(tot.sickDates)].sort();
+  let f = 0, run = 0, prev = null;
+  ds.forEach(d => {
+    run = (prev && (new Date(d + 'T12:00:00') - new Date(prev + 'T12:00:00')) === 86400000) ? run + 1 : 1;
+    f += run === 1 ? 0 : (run <= 3 ? 0.5 : 1);
+    prev = d;
+  });
+  tot.sickFactor = f;
+  return tot;
+}
 function tbRender() {
   // кнопка-пунч и статус
   let open = null;
   try { open = JSON.parse(localStorage.getItem(TB_OPEN) || 'null'); } catch (e) {}
   document.getElementById('tbPunch').textContent = open ? t('tb.punch.out') : t('tb.punch.in');
-  document.getElementById('tbStatus').textContent = open ? tf('tb.status.open', {t: tbDM(open.d) + ' ' + open.in}) : t('tb.status.none');
+  const hs = holSoonNote(); // «сегодня/завтра праздник» — прямо в статусе табеля
+  document.getElementById('tbStatus').textContent =
+    (open ? tf('tb.status.open', {t: tbDM(open.d) + ' ' + open.in}) : t('tb.status.none')) + (hs ? ' · ' + hs : '');
   document.getElementById('empSubDot').style.display = open ? '' : 'none'; // зелёная точка на сегменте «Табель» при открытой смене
   // дата для ручного ввода: последние 35 дней
   const dsel = document.getElementById('tbDate'), dcur = dsel.value;
@@ -1444,38 +1529,48 @@ function tbRender() {
       ' <a href="#" onclick="tbEditCancel();return false">' + t('tb.edit.cancel') + '</a>';
   } else en.style.display = 'none';
   // строки месяца
+  document.getElementById('tbCmp').innerHTML = ''; // сверка — по кнопке, не держим протухший результат
   const rows = tbMonthRows(msel.value);
   const list = document.getElementById('tbList');
+  const bal = document.getElementById('tbBalance');
   if (!rows.length) {
     list.innerHTML = '<div class="note" style="margin-top:8px">' + t('tb.empty') + '</div>';
     document.getElementById('tbTotals').innerHTML = '';
+    bal.style.display = 'none';
     return;
   }
-  let tot = {paid: 0, ot125: 0, ot150: 0, shab: 0, br: 0, anyON: false};
+  const tot = tbMonthTotals(msel.value);
   list.innerHTML = '<div style="margin-top:8px">' + rows.map(e => {
     const c = tbCalc(e);
-    tot.paid += c.paid; tot.ot125 += c.ot125; tot.ot150 += c.ot150; tot.shab += c.shabH; tot.br += c.brMin;
-    tot.anyON = tot.anyON || c.overnight;
+    const editing = e.id === tbEditingId;
+    const st = editing ? ' style="outline:1px solid var(--accent);border-radius:6px"' : '';
+    const del = ' <button type="button" class="qmark" style="border-color:var(--border);color:var(--muted)" onclick="tbDel(' + e.id + ')">✕</button>';
+    if (c.special) {
+      return '<div class="b-row"' + st + '><span class="n" style="cursor:pointer" onclick="tbEdit(' + e.id + ')">' +
+             TY_ICO[c.special] + ' ' + tbDM(e.d) + ' — ' + t(TY_KEY[c.special]) + '</span><span class="v">' + del + '</span></div>';
+    }
     let right = tbHrs(c.paid);
     if (c.brMin) right += ' <span style="color:var(--muted);font-weight:400">' + tf('tb.br.row', {m: c.brMin}) + '</span>';
     if (c.shab) right += ' · <span class="neg">' + t('tb.shab') + '</span>';
     else if (c.ot125 + c.ot150 > 0) right += ' · <span class="neg">OT ' + tbHrs(c.ot125 + c.ot150) + '</span>';
-    const editing = e.id === tbEditingId;
-    return '<div class="b-row"' + (editing ? ' style="outline:1px solid var(--accent);border-radius:6px"' : '') +
-           '><span class="n" style="cursor:pointer" onclick="tbEdit(' + e.id + ')">' +
+    return '<div class="b-row"' + st + '><span class="n" style="cursor:pointer" onclick="tbEdit(' + e.id + ')">' +
            tbDM(e.d) + ' ' + e.in + '–' + e.out + (c.overnight ? '⁺' : '') +
-           (c.night && !c.shab ? ' 🌙' : '') + '</span><span class="v">' + right +
-           ' <button type="button" class="qmark" style="border-color:var(--border);color:var(--muted)" onclick="tbDel(' + e.id + ')">✕</button></span></div>';
+           (c.night && !c.shab ? ' 🌙' : '') + '</span><span class="v">' + right + del + '</span></div>';
   }).join('') + '</div>';
   // итоги
   const rate = Math.max(0, +document.getElementById('otRate').value || 0);
+  const dayNorm = document.getElementById('whDays').value === '5' ? 8.6 : 8;
   const extra = rate * (0.25 * tot.ot125 + 0.5 * tot.ot150 + 0.5 * tot.shab);
-  const pay = rate * tot.paid + extra;
-  let out = '<div style="margin-top:10px"><b>' + t('tb.tot.h') + ' — ' + pluralN(rows.length, 'plural.shift') + '</b>';
+  const sickPay = tot.sickFactor * dayNorm * rate, vacPay = tot.vacN * dayNorm * rate, holPay = tot.holN * dayNorm * rate;
+  const pay = rate * tot.paid + extra + sickPay + vacPay + holPay;
+  let out = '<div style="margin-top:10px"><b>' + t('tb.tot.h') + ' — ' + pluralN(tot.workN, 'plural.shift') + '</b>';
   out += row(t('tb.tot.paid'), tbHrs(tot.paid), 'pos');
   if (tot.br > 0) out += row(t('tb.tot.br'), '−' + tbHrs(tot.br / 60));
   if (tot.ot125 + tot.ot150 > 0) out += row(t('tb.tot.ot'), tbHrs(tot.ot125) + ' × 125% + ' + tbHrs(tot.ot150) + ' × 150%', 'neg');
   if (tot.shab > 0) out += row(t('tb.tot.shab'), tbHrs(tot.shab), 'neg');
+  if (tot.sickN) out += row('🤒 ' + t('tb.tot.sick'), pluralN(tot.sickN, 'plural.day') + (rate ? ' · ~' + fmt(sickPay) : ''));
+  if (tot.vacN) out += row('🌴 ' + t('tb.tot.vac'), pluralN(tot.vacN, 'plural.day') + (rate ? ' · ~' + fmt(vacPay) : ''));
+  if (tot.holN) out += row('🎉 ' + t('tb.tot.hol'), pluralN(tot.holN, 'plural.day') + (rate ? ' · ~' + fmt(holPay) : ''));
   if (rate) {
     if (extra > 0) out += row(t('tb.tot.extra'), '+' + fmt(extra), 'pos');
     out += row(t('tb.tot.pay'), fmt(pay), 'pos');
@@ -1483,6 +1578,20 @@ function tbRender() {
   out += '<div class="note" style="margin-top:6px">' + tf('tb.tot.pct', {p: Math.round(tot.paid / 182 * 100)}) +
          (tot.anyON ? '<br>' + t('tb.overnight') : '') + '</div></div>';
   document.getElementById('tbTotals').innerHTML = out;
+  // баланс прав: остатки из последнего скана тлуша + использовано в этом месяце
+  let tl = null;
+  try { tl = (JSON.parse(localStorage.getItem('heshbon_tlush') || 'null') || {}).last || null; } catch (e) {}
+  if ((tl && (tl.vacation_balance != null || tl.sick_balance != null)) || tot.vacN || tot.sickN) {
+    let b = '<b>' + t('tb.bal.h') + '</b><br>';
+    if (tl && (tl.vacation_balance != null || tl.sick_balance != null)) {
+      b += tf('tb.bal.scan', {m: tl.month || '—', v: tl.vacation_balance != null ? tl.vacation_balance : '—',
+                              s: tl.sick_balance != null ? tl.sick_balance : '—'}) + '<br>';
+    }
+    if (tot.vacN || tot.sickN) b += tf('tb.bal.used', {v: tot.vacN, s: tot.sickN}) + '<br>';
+    b += t('tb.bal.note');
+    bal.innerHTML = b;
+    bal.style.display = '';
+  } else bal.style.display = 'none';
 }
 function tbExport(btn) {
   const mon = document.getElementById('tbMonth').value;
@@ -1490,6 +1599,7 @@ function tbExport(btn) {
   let tot = {paid: 0, ot: 0, shab: 0};
   const lines = rows.map(e => {
     const c = tbCalc(e);
+    if (c.special) return TY_ICO[c.special] + ' ' + tbDM(e.d) + ' — ' + t(TY_KEY[c.special]);
     tot.paid += c.paid; tot.ot += c.ot125 + c.ot150; tot.shab += c.shabH;
     return tbDM(e.d) + ' ' + e.in + '–' + e.out + (c.overnight ? '⁺' : '') + ' = ' + tbHrs(c.paid) +
            (c.shab ? ' · ' + t('tb.shab') : (c.ot125 + c.ot150 > 0 ? ' · OT ' + tbHrs(c.ot125 + c.ot150) : ''));
@@ -1509,14 +1619,15 @@ function tbCsv(btn) {
   const rows = tbMonthRows(mon).slice().reverse();
   const n2 = x => (Math.round(x * 100) / 100); // машинный формат: точка, без локали
   let tot = {paid: 0, ot125: 0, ot150: 0, shab: 0};
-  const head = ['date', 'in', 'out', 'break_min', 'paid_h', 'ot125_h', 'ot150_h', 'shabbat_h'];
+  const head = ['date', 'type', 'in', 'out', 'break_min', 'paid_h', 'ot125_h', 'ot150_h', 'shabbat_h'];
   const lines = rows.map(e => {
     const c = tbCalc(e);
+    if (c.special) return [e.d, c.special, '', '', 0, 0, 0, 0, 0].join(',');
     tot.paid += c.paid; tot.ot125 += c.ot125; tot.ot150 += c.ot150; tot.shab += c.shabH;
-    return [e.d, e.in, e.out, e.stay ? 0 : (e.br || 0), n2(c.paid), n2(c.ot125), n2(c.ot150), n2(c.shabH)].join(',');
+    return [e.d, 'work', e.in, e.out, e.stay ? 0 : (e.br || 0), n2(c.paid), n2(c.ot125), n2(c.ot150), n2(c.shabH)].join(',');
   });
   const text = head.join(',') + '\n' + lines.join('\n') +
-    '\nTOTAL,,,,' + [n2(tot.paid), n2(tot.ot125), n2(tot.ot150), n2(tot.shab)].join(',') + '\n';
+    '\nTOTAL,,,,,' + [n2(tot.paid), n2(tot.ot125), n2(tot.ot150), n2(tot.shab)].join(',') + '\n';
   if (navigator.share) { navigator.share({text}).catch(() => {}); return; }
   const ta = document.createElement('textarea');
   ta.value = text; document.body.appendChild(ta); ta.select();
@@ -1533,6 +1644,145 @@ function empSubShow(v) {
   try { localStorage.setItem('heshbon_emp_sub', v); } catch (e) {}
 }
 segInit('empSub', v => { empSubShow(v); window.scrollTo(0, 0); });
+
+// ======= Письма работодателю (текст письма — всегда иврит, перевод ниже для понимания) =======
+let ltPrefill = null; // {month, hours, diff} — заполняет сверка с тлушем
+let ltCurrent = '';
+const LT_HE = {
+  tlush: p => 'לכבוד המעסיק,\n\nבהתאם לחוק הגנת השכר, תלוש שכר יש למסור לעובד עד ה-9 בחודש. אבקש למסור לי את תלוש/י השכר עבור: ' + p.month + '.\n\nאודה לטיפולכם בהקדם.\n\nבכבוד רב,\n' + p.name,
+  pay: p => 'לכבוד המעסיק,\n\nלפי הרישום האישי שלי, בחודש ' + p.month + ' עבדתי ' + p.hours + ' שעות. לפי חישובי, השכר ששולם אינו תואם את שעות העבודה (הפרש משוער: ' + p.diff + ' ₪). אבקש לבדוק את החישוב ולשלם את ההפרש בשכר הקרוב, בהתאם לחוק הגנת השכר ולחוק שכר מינימום.\n\nאשמח לקבל פירוט שעות מלא בתלוש.\n\nבכבוד רב,\n' + p.name,
+  pension: p => 'לכבוד המעסיק,\n\nאבקש לקבל אישור הפקדות לקרן הפנסיה/קופת הגמל שלי לחודשים האחרונים, בהתאם לצו ההרחבה לפנסיה חובה. ככל שקיימים פערים בין הניכויים בתלוש לבין ההפקדות בפועל — אבקש להסדירם בהקדם.\n\nבכבוד רב,\n' + p.name,
+  delay: p => 'לכבוד המעסיק,\n\nשכר חודש ' + p.month + ' טרם שולם. לפי חוק הגנת השכר יש לשלם את השכר עד ה-9 בחודש; לאחר מועד זה מדובר בהלנת שכר המזכה בפיצוי. אבקש לשלם את השכר באופן מיידי.\n\nבכבוד רב,\n' + p.name
+};
+function ltParams() {
+  const name = (profName.value || '').trim() || '____';
+  const now = new Date();
+  const mdef = String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+  const p = ltPrefill || {};
+  return { name, month: p.month || mdef,
+           hours: p.hours != null ? p.hours : '____',
+           diff: p.diff != null ? p.diff : '____' };
+}
+function ltShow(k) {
+  const p = ltParams();
+  ltCurrent = LT_HE[k](p);
+  document.getElementById('ltHe').textContent = ltCurrent;
+  const tr = document.getElementById('ltTr');
+  if (LANG === 'he') tr.style.display = 'none';
+  else { tr.style.display = ''; tr.textContent = tf('lt.x.' + k, p); }
+  document.getElementById('ltOut').style.display = '';
+}
+function ltShare(btn) {
+  if (navigator.share) { navigator.share({text: ltCurrent}).catch(() => {}); return; }
+  const ta = document.createElement('textarea');
+  ta.value = ltCurrent; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); btn.textContent = t('lt.copied'); } catch (e) {}
+  ta.remove();
+}
+
+// ======= Сверка табеля с тлушем =======
+function tbCompare() {
+  const mon = document.getElementById('tbMonth').value;
+  const box = document.getElementById('tbCmp');
+  let store = null;
+  try { store = JSON.parse(localStorage.getItem('heshbon_tlush') || 'null'); } catch (e) {}
+  if (!store || !store.last) {
+    box.innerHTML = '<div class="note warn" style="margin-top:8px">' + t('tb.cmp.noscan') + '</div>';
+    return;
+  }
+  const mm = mon.slice(5, 7), yy = mon.slice(0, 4);
+  const match = (store.hist || []).filter(h => h && h.month && String(h.month).includes(mm) && String(h.month).includes(yy));
+  const scan = match.length ? match[match.length - 1] : store.last;
+  const tot = tbMonthTotals(mon);
+  const rate = Math.max(0, +document.getElementById('otRate').value || 0);
+  const dayNorm = document.getElementById('whDays').value === '5' ? 8.6 : 8;
+  const extra = rate * (0.25 * tot.ot125 + 0.5 * tot.ot150 + 0.5 * tot.shab);
+  const expect = rate * tot.paid + extra + (tot.sickFactor + tot.vacN + tot.holN) * dayNorm * rate;
+  const issues = [];
+  let diff = 0;
+  if (scan.hours != null && Math.abs(scan.hours - tot.paid) >= 1) {
+    issues.push(tf(scan.hours < tot.paid ? 'tb.cmp.hless' : 'tb.cmp.hmore', {a: tbHrs(scan.hours), b: tbHrs(tot.paid)}));
+  }
+  if (scan.hourly_rate != null && rate - scan.hourly_rate > 0.1) issues.push(tf('tb.cmp.rate', {a: scan.hourly_rate, b: rate}));
+  if ((tot.ot125 + tot.ot150 + tot.shab) > 0.2 && !(scan.overtime_pay > 0)) issues.push(t('tb.cmp.noot'));
+  if (scan.gross != null && rate && expect > scan.gross + 50) {
+    diff = Math.round(expect - scan.gross);
+    issues.push(tf('tb.cmp.pay', {e: fmt(expect), g: fmt(scan.gross), d: fmt(diff)}));
+  }
+  let out = '<div class="note' + (issues.length ? ' warn' : '') + '" style="margin-top:8px"><b>' +
+    tf('tb.cmp.h', {m: scan.month || '—'}) + '</b>' + (match.length ? '' : '<br>' + t('tb.cmp.lastused')) + '<br>';
+  out += issues.length ? '• ' + issues.join('<br>• ') + '<br>' + t('tb.cmp.what') : t('tb.cmp.ok');
+  out += '</div>';
+  if (issues.length) out += '<button class="btn ghost" onclick="ltFromCmp()">✉️ ' + t('lt.t.pay') + '</button>';
+  box.innerHTML = out;
+  ltPrefill = issues.length ? {month: mm + '/' + yy, hours: Math.round(tot.paid * 10) / 10, diff: diff || null} : null;
+}
+function ltFromCmp() { // из сверки — к письму о недоплате (карточка писем в «Зарплате»)
+  document.querySelectorAll('#empSub button').forEach(b => b.classList.toggle('on', b.dataset.v === 'sal'));
+  empSubShow('sal');
+  ltShow('pay');
+  document.getElementById('ltCard').scrollIntoView({block: 'start'});
+}
+
+// ======= Праздники и оплата =======
+// Даты проверены 30.07.2026 (hebcal + chabad, совпали): оплачиваемые праздничные дни Израиля.
+// Мусульманские — по лунному календарю, жёстких дат не даём (право выбора своих праздников — кользхут).
+const HOL_JEW = [
+  ['2026-04-02', 'hol.pes1'], ['2026-04-08', 'hol.pes7'], ['2026-04-22', 'hol.atz'], ['2026-05-22', 'hol.shav'],
+  ['2026-09-12', 'hol.rh'], ['2026-09-13', 'hol.rh'], ['2026-09-21', 'hol.yk'], ['2026-09-26', 'hol.suk'], ['2026-10-03', 'hol.shm'],
+  ['2027-04-22', 'hol.pes1'], ['2027-04-28', 'hol.pes7'], ['2027-05-12', 'hol.atz'], ['2027-06-11', 'hol.shav'],
+  ['2027-10-02', 'hol.rh'], ['2027-10-03', 'hol.rh'], ['2027-10-11', 'hol.yk'], ['2027-10-16', 'hol.suk'], ['2027-10-23', 'hol.shm']
+];
+const HOL_CHR = [['2026-12-25', 'hol.xmas'], ['2027-01-01', 'hol.ny'], ['2027-01-07', 'hol.xmaso'], ['2027-12-25', 'hol.xmas']];
+function holRender() {
+  const conf = localStorage.getItem('heshbon_conf') || 'jew';
+  document.getElementById('holConf').value = conf;
+  const box = document.getElementById('holList');
+  if (conf === 'mus') { box.innerHTML = '<div class="note" style="margin-top:8px">' + t('hol.mus.note') + '</div>'; return; }
+  if (conf === 'none') { box.innerHTML = '<div class="note" style="margin-top:8px">' + t('hol.none.note') + '</div>'; return; }
+  const list = conf === 'chr' ? HOL_CHR : HOL_JEW;
+  const today = tbISO(new Date());
+  const up = list.filter(h => h[0] >= today).slice(0, 4);
+  box.innerHTML = up.length
+    ? '<div style="margin-top:8px">' + up.map(h => row(t(h[1]), tbDM(h[0]) + '.' + h[0].slice(0, 4))).join('') + '</div>'
+    : '<div class="note" style="margin-top:8px">' + t('hol.none.note') + '</div>';
+}
+function holSoonNote() { // «сегодня/завтра праздник» — для статуса в табеле
+  const conf = localStorage.getItem('heshbon_conf') || 'jew';
+  if (conf === 'mus' || conf === 'none') return '';
+  const list = conf === 'chr' ? HOL_CHR : HOL_JEW;
+  const t0 = tbISO(new Date());
+  const d1 = new Date(); d1.setDate(d1.getDate() + 1);
+  const t1 = tbISO(d1);
+  const hit = list.find(h => h[0] === t0 || h[0] === t1);
+  return hit ? tf(hit[0] === t0 ? 'hol.today' : 'hol.tomorrow', {n: t(hit[1])}) : '';
+}
+function holConfChange() {
+  const v = document.getElementById('holConf').value;
+  try { localStorage.setItem('heshbon_conf', v); } catch (e) {}
+  if (window.HeshbonNative && window.HeshbonNative.setConfession) try { window.HeshbonNative.setConfession(v); } catch (e) {}
+  holRender(); tbRender();
+}
+
+// ======= «Ушёл» из шторки: время нажатия лежит в prefs, материализуем запись при открытии =======
+function tbConsumePendingOut() {
+  const N = window.HeshbonNative;
+  if (!N || !N.getPendingOut) return;
+  try {
+    const po = +N.getPendingOut() || 0;
+    if (po > 0) {
+      let open = null;
+      try { open = JSON.parse(localStorage.getItem(TB_OPEN) || 'null'); } catch (e) {}
+      if (open) {
+        const a = tbLoad();
+        a.push(tbMakeEntry(open.d, open.in, tbHM(new Date(po))));
+        tbSave(a);
+        localStorage.removeItem(TB_OPEN);
+      }
+      N.clearPendingOut();
+    }
+  } catch (e) {}
+}
 
 // ======= Чекап прав =======
 const QUIZ = [
@@ -2063,6 +2313,7 @@ function loadSettings() {
     if (v && NB.setVisaDate) try { NB.setVisaDate(v); } catch (e) {}
     if (NB.setMonthly) try { NB.setMonthly(remind10El.checked); } catch (e) {}
     if (NB.setLang) try { NB.setLang(LANG); } catch (e) {}
+    if (NB.setConfession) try { NB.setConfession(localStorage.getItem('heshbon_conf') || 'jew'); } catch (e) {}
   }
 }
 // «?» — раскрытие пояснений; preventDefault, чтобы клик не щёлкал чекбокс внутри label
@@ -2173,6 +2424,7 @@ loadSettings();
 whLoad();
 updateHello();
 syncOtRate();
+tbConsumePendingOut(); // «Ушёл» из шторки, нажатый пока приложение было закрыто
 refreshAll();
 const empSubSaved = localStorage.getItem('heshbon_emp_sub');
 if (empSubSaved === 'tb') {
