@@ -837,14 +837,7 @@
     <div class="sheet">
       <h2 data-i18n="prem.title"></h2>
       <div class="sub" data-i18n="prem.sub"></div>
-      <div class="plan">
-        <div class="p-name" data-i18n="prem.free.n"></div>
-        <div class="p-price" data-i18n="prem.free.p"></div>
-        <ul data-i18n-html="prem.free.f"></ul>
-        <button class="btn ghost" disabled data-i18n="prem.current"></button>
-      </div>
       <div class="plan hot">
-        <span class="hot-badge" data-i18n="prem.popular"></span>
         <div class="p-name" data-i18n="prem.prem.n"></div>
         <div class="p-price" data-i18n="prem.prem.p"></div>
         <ul data-i18n-html="prem.prem.f"></ul>
@@ -899,7 +892,7 @@
 
 </div>
 
-<script src="i18n.js?v=180"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=181"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -921,7 +914,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.8.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.8.1'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
