@@ -712,6 +712,64 @@
       <div class="note" data-i18n-html="self.save.note"></div>
     </div>
 
+    <div class="card">
+      <h3 data-i18n="inc.h"></h3>
+      <div class="hint" data-i18n="inc.hint"></div>
+      <div class="row3">
+        <div>
+          <label class="fld" data-i18n="inc.date"></label>
+          <select id="incDate"></select>
+        </div>
+        <div>
+          <label class="fld" data-i18n="inc.sum"></label>
+          <input type="number" id="incSum" inputmode="decimal" placeholder="500">
+        </div>
+        <div>
+          <label class="fld" data-i18n="inc.client"></label>
+          <input id="incClient" maxlength="25" data-i18n-ph="inc.client.ph">
+        </div>
+      </div>
+      <button class="btn ghost" onclick="incAdd()" data-i18n="inc.add"></button>
+      <label class="fld" style="margin-top:12px" data-i18n="inc.month"></label>
+      <select id="incMonth"></select>
+      <div id="incList"></div>
+      <div id="incTotals"></div>
+      <div id="incPatur"></div>
+      <button class="btn ghost" onclick="incCsv(this)" data-i18n="inc.csv"></button>
+      <div class="note" data-i18n="inc.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="pr.h"></h3>
+      <div class="hint" data-i18n="pr.hint"></div>
+      <div class="row2">
+        <div>
+          <label class="fld" data-i18n="pr.want"></label>
+          <input type="number" id="prWant" value="8000" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="pr.pts"></label>
+          <input type="number" id="prPts" step="0.25" value="2.25" inputmode="decimal">
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="prPens" checked> <span data-i18n="pr.pens"></span></label>
+      <div class="result-hero">
+        <span class="lbl" data-i18n="pr.lbl"></span>
+        <span class="val" id="prOut">—</span>
+      </div>
+      <div class="breakdown" id="prBreak"></div>
+      <div class="note" data-i18n-html="pr.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="sp.h"></h3>
+      <div class="hint" data-i18n="sp.hint"></div>
+      <label class="fld" data-i18n="sp.inc"></label>
+      <input type="number" id="spInc" value="10000" inputmode="decimal">
+      <div class="breakdown" id="spOut" style="margin-top:10px"></div>
+      <div class="note" data-i18n-html="sp.note"></div>
+    </div>
+
     <div class="ad-card">
       <span class="ad-badge" data-i18n="ads.badge"></span>
       <h4 data-i18n="ads.slot2.t"></h4>
@@ -745,6 +803,11 @@
     <div class="card">
       <h3 data-i18n="esek.h"></h3>
       <div class="hint" data-i18n="esek.hint"></div>
+      <div id="ekBox" style="margin-bottom:10px">
+        <b data-i18n="ek.h"></b>
+        <div id="ekList" style="margin-top:6px"></div>
+        <div class="note" id="ekDone" style="display:none" data-i18n="ek.done"></div>
+      </div>
       <details class="acc"><summary data-i18n="esek.cit.t"></summary><div class="body" data-i18n-html="esek.cit.body"></div></details>
       <details class="acc"><summary data-i18n="esek.oleh.t"></summary><div class="body" data-i18n-html="esek.oleh.body"></div></details>
       <details class="acc"><summary data-i18n="esek.b1.t"></summary><div class="body" data-i18n-html="esek.b1.body"></div></details>
@@ -799,6 +862,73 @@
         <span class="lbl" data-i18n="rev.lbl"></span>
         <span class="val" id="revGross">—</span>
       </div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="ec.h"></h3>
+      <div class="hint" data-i18n="ec.hint"></div>
+      <label class="fld" data-i18n="ec.gross"></label>
+      <input type="number" id="ecGross" value="9500" inputmode="decimal">
+      <label class="check"><input type="checkbox" id="ecHish"> <span data-i18n="ec.hish"></span></label>
+      <label class="check"><input type="checkbox" id="ecFull" checked> <span data-i18n="ec.full"></span></label>
+      <div class="result-hero">
+        <span class="lbl" data-i18n="ec.lbl"></span>
+        <span class="val" id="ecOut">—</span>
+      </div>
+      <div class="breakdown" id="ecBreak"></div>
+      <div class="note" data-i18n="ec.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="tr.h"></h3>
+      <div class="hint" data-i18n="tr.hint"></div>
+      <div class="row3">
+        <div>
+          <label class="fld" data-i18n="tr.months"></label>
+          <input type="number" id="trMonths" value="12" min="1" max="12" inputmode="numeric">
+        </div>
+        <div>
+          <label class="fld" data-i18n="tr.gross"></label>
+          <input type="number" id="trGross" value="9500" inputmode="decimal">
+        </div>
+        <div>
+          <label class="fld" data-i18n="tr.paid"></label>
+          <input type="number" id="trPaid" inputmode="decimal" placeholder="6000">
+        </div>
+      </div>
+      <label class="fld" data-i18n="tr.pts"></label>
+      <input type="number" id="trPts" step="0.25" value="2.25" inputmode="decimal">
+      <div class="result-hero">
+        <span class="lbl" data-i18n="tr.lbl"></span>
+        <span class="val" id="trOut">—</span>
+      </div>
+      <div class="breakdown" id="trBreak"></div>
+      <div class="note" data-i18n-html="tr.note"></div>
+      <details class="acc"><summary data-i18n="tium.t"></summary><div class="body" data-i18n-html="tium.body"></div></details>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="gl.h"></h3>
+      <div class="hint" data-i18n="gl.hint"></div>
+      <details class="acc"><summary data-i18n="gl.gross.t"></summary><div class="body" data-i18n-html="gl.gross.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.tax.t"></summary><div class="body" data-i18n-html="gl.tax.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.bl.t"></summary><div class="body" data-i18n-html="gl.bl.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.pens.t"></summary><div class="body" data-i18n-html="gl.pens.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.pitz.t"></summary><div class="body" data-i18n-html="gl.pitz.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.hish.t"></summary><div class="body" data-i18n-html="gl.hish.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.ot.t"></summary><div class="body" data-i18n-html="gl.ot.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.nes.t"></summary><div class="body" data-i18n-html="gl.nes.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.hav.t"></summary><div class="body" data-i18n-html="gl.hav.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.hag.t"></summary><div class="body" data-i18n-html="gl.hag.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.zvira.t"></summary><div class="body" data-i18n-html="gl.zvira.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.pts.t"></summary><div class="body" data-i18n-html="gl.pts.b"></div></details>
+      <details class="acc"><summary data-i18n="gl.tium.t"></summary><div class="body" data-i18n-html="gl.tium.b"></div></details>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="rep.h"></h3>
+      <div class="hint" data-i18n="rep.hint"></div>
+      <div data-i18n-html="rep.body"></div>
     </div>
 
     <div class="card">
@@ -892,7 +1022,7 @@
 
 </div>
 
-<script src="i18n.js?v=181"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=190"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -914,7 +1044,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.8.1'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.9.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -944,6 +1074,7 @@ function setLang(l) {
 // Держать ОДИН список — раздельные копии уже давали пустую кнопку пунча при запуске (whCalc/tbRender не входили в init).
 function refreshAll(keepPts) {
   updEmpPoints(keepPts); calcOT(); whCalc(); tbRender(); holRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates();
+  incRender(); ekRender(); calcPrice(); calcSelfPens(); calcEmpCost(); calcRefund();
 }
 document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
 
@@ -959,6 +1090,9 @@ let NI_B1  = [.0004, .0087];// иностранный работник/2(а)5 (�
 let NI_SELF = [.0610, .18]; // ацмаи 2026
 let PENSION_EMP = .06, PENSION_ER = .065, PITZUIM = .06, NI_ER = [.0451, .076]; // пицуим: мин. 6%, полное 8.33%
 let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 418, HAVRAA_PUB = 511.6, CLEAN_HOUR = 39.11, SEC_HOUR = 39.11; // хавраа: частный 418 (451.5 после указа), гос./клининг/охрана 511.6
+let PATUR_LIMIT = 122833; // потолок оборота осек патур 2026 (greeninvoice+кользхут, 31.07.2026; обновляется из rates.json)
+const SP_LOW = .0445, SP_HIGH = .1255, SP_LOW_CAP = 6884.5, SP_MAX = 1170; // обязательная пенсия ацмаи (подтв. v1.2.0)
+const HISH_SELF_PCT = .045, HISH_SELF_CAP = 13203, HISH_SELF_FREE = 20566; // иштальмут ацмаи 2026: вычет 4,5% до 13 203, льгота прироста до 20 566 (analyst+pensuni, 31.07.2026)
 let ratesVer = null;
 
 const fmt = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 0}).format(Math.round(n)) + ' ₪';
@@ -2329,6 +2463,196 @@ function calcSelf() {
 }
 ['seIncome','sePoints'].forEach(id => document.getElementById(id).addEventListener('input', calcSelf));
 
+// ======= Журнал доходов осека (локально, heshbon_income) =======
+const INC_KEY = 'heshbon_income';
+const incLoad = () => { try { return JSON.parse(localStorage.getItem(INC_KEY) || '[]'); } catch (e) { return []; } };
+const incSave = a => { try { localStorage.setItem(INC_KEY, JSON.stringify(a)); } catch (e) {} };
+function incAdd() {
+  const s = +document.getElementById('incSum').value || 0;
+  if (s <= 0) return;
+  const a = incLoad();
+  a.push({id: Date.now(), d: document.getElementById('incDate').value, s,
+          c: (document.getElementById('incClient').value || '').trim()});
+  incSave(a);
+  document.getElementById('incSum').value = ''; document.getElementById('incClient').value = '';
+  incRender();
+}
+function incDel(id) { incSave(incLoad().filter(e => e.id !== id)); incRender(); }
+function incRender() {
+  const dsel = document.getElementById('incDate'), dcur = dsel.value;
+  dsel.innerHTML = '';
+  for (let i = 0; i < 35; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const o = document.createElement('option');
+    o.value = tbISO(d); o.textContent = tbDM(tbISO(d));
+    dsel.appendChild(o);
+  }
+  if (dcur) dsel.value = dcur;
+  if (!dsel.value) dsel.selectedIndex = 0;
+  const all = incLoad();
+  const msel = document.getElementById('incMonth'), mcur = msel.value;
+  const months = [...new Set(all.map(e => e.d.slice(0, 7)).concat(tbISO(new Date()).slice(0, 7)))].sort().reverse();
+  msel.innerHTML = '';
+  months.forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m.slice(5) + '.' + m.slice(0, 4); msel.appendChild(o); });
+  msel.value = months.includes(mcur) ? mcur : months[0];
+  const rows = all.filter(e => e.d.slice(0, 7) === msel.value).sort((x, y) => x.d < y.d ? 1 : -1);
+  document.getElementById('incList').innerHTML = rows.length
+    ? '<div style="margin-top:8px">' + rows.map(e =>
+      '<div class="b-row"><span class="n">' + tbDM(e.d) + (e.c ? ' · ' + escT(e.c) : '') + '</span><span class="v">' + fmt(e.s) +
+      ' <button type="button" class="qmark" style="border-color:var(--border);color:var(--muted)" onclick="incDel(' + e.id + ')">✕</button></span></div>').join('') + '</div>'
+    : '<div class="note" style="margin-top:8px">' + t('inc.empty') + '</div>';
+  // итоги месяца + «отложи на налоги сейчас» (некудот — из калькулятора выше)
+  const mSum = rows.reduce((s, e) => s + e.s, 0);
+  const pts = +document.getElementById('sePoints').value || 0;
+  let out = '';
+  if (mSum > 0) {
+    const aside = Math.max(0, incomeTax(mSum, pts) + natIns(mSum, NI_SELF));
+    out = '<div style="margin-top:10px">' + row(t('inc.tot.m'), fmt(mSum), 'pos') +
+          row(t('inc.tot.aside'), '~' + fmt(aside), 'neg') + '</div>';
+  }
+  document.getElementById('incTotals').innerHTML = out;
+  // прогресс к потолку осек патур за год выбранного месяца
+  const yr = msel.value.slice(0, 4);
+  const ySum = all.filter(e => e.d.slice(0, 4) === yr).reduce((s, e) => s + e.s, 0);
+  const pct = Math.min(100, ySum / PATUR_LIMIT * 100);
+  let pat = '<div style="margin-top:10px"><b>' + tf('inc.pat.h', {y: yr}) + '</b>' +
+    '<div style="height:10px;border-radius:5px;background:var(--bg);border:1px solid var(--border);margin:8px 0">' +
+    '<div style="height:100%;width:' + pct.toFixed(1) + '%;border-radius:5px;background:' +
+    (pct >= 90 ? 'var(--red)' : pct >= 70 ? '#eab308' : 'var(--green)') + '"></div></div>' +
+    row(t('inc.pat.done'), fmt(ySum) + ' / ' + fmt(PATUR_LIMIT), pct >= 90 ? 'neg' : '');
+  const now = new Date();
+  if (yr === String(now.getFullYear()) && ySum > 0) {
+    const dayOfYear = Math.max(1, Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000));
+    const proj = ySum / dayOfYear * 365;
+    if (proj > PATUR_LIMIT) {
+      const cd = new Date(now.getFullYear(), 0, Math.ceil(PATUR_LIMIT / (ySum / dayOfYear)));
+      pat += '<div class="note warn" style="margin-top:6px">' + tf('inc.pat.warn',
+        {p: fmt(proj), m: String(cd.getMonth() + 1).padStart(2, '0') + '.' + cd.getFullYear()}) + '</div>';
+    } else {
+      pat += '<div class="note" style="margin-top:6px">' + tf('inc.pat.ok', {p: fmt(proj)}) + '</div>';
+    }
+  }
+  document.getElementById('incPatur').innerHTML = pat + '</div>';
+}
+function incCsv(btn) {
+  const mon = document.getElementById('incMonth').value;
+  const rows = incLoad().filter(e => e.d.slice(0, 7) === mon).sort((x, y) => x.d > y.d ? 1 : -1);
+  const text = 'date,client,sum\n' + rows.map(e =>
+    [e.d, '"' + (e.c || '').replace(/"/g, '""') + '"', e.s].join(',')).join('\n') +
+    '\nTOTAL,,' + rows.reduce((s, e) => s + e.s, 0) + '\n';
+  if (navigator.share) { navigator.share({text}).catch(() => {}); return; }
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); btn.textContent = t('tb.exported'); } catch (e) {}
+  ta.remove();
+}
+document.getElementById('incMonth').addEventListener('change', incRender);
+document.getElementById('sePoints').addEventListener('input', incRender);
+
+// ======= «Хочу чистыми X» — обратное ценообразование ацмаи =======
+function selfPensMand(m) { // обязательная пенсия ацмаи, ₪/мес
+  return Math.min(Math.min(m, SP_LOW_CAP) * SP_LOW + Math.max(0, m - SP_LOW_CAP) * SP_HIGH, SP_MAX);
+}
+function selfNet(g, pts, pens) {
+  return g - incomeTax(g, pts) - natIns(g, NI_SELF) - (pens ? selfPensMand(g) : 0);
+}
+function calcPrice() {
+  const want = +document.getElementById('prWant').value || 0;
+  const pts = +document.getElementById('prPts').value || 0;
+  const pens = document.getElementById('prPens').checked;
+  if (!want) { document.getElementById('prOut').textContent = '—'; document.getElementById('prBreak').innerHTML = ''; return; }
+  let lo = want, hi = want * 2.5 + 3000;
+  for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (selfNet(mid, pts, pens) < want) lo = mid; else hi = mid; }
+  const g = Math.ceil(hi);
+  const tax = incomeTax(g, pts), ni = natIns(g, NI_SELF), pn = pens ? selfPensMand(g) : 0;
+  document.getElementById('prOut').textContent = fmt(g);
+  document.getElementById('prBreak').innerHTML =
+    row(t('pr.b.tax'), '−' + fmt(tax)) + row(t('pr.b.ni'), '−' + fmt(ni)) +
+    (pens ? row(t('pr.b.pens'), '−' + fmt(pn)) : '') +
+    row(t('pr.b.net'), fmt(g - tax - ni - pn), 'pos') +
+    row(t('pr.b.vat'), '+' + fmt(g * VAT));
+}
+['prWant','prPts'].forEach(id => document.getElementById(id).addEventListener('input', calcPrice));
+document.getElementById('prPens').addEventListener('change', calcPrice);
+
+// ======= Пенсия и иштальмут ацмаи =======
+function calcSelfPens() {
+  const m = +document.getElementById('spInc').value || 0;
+  const pens = selfPensMand(m);
+  const hishRec = Math.min(m * 12 * HISH_SELF_PCT, HISH_SELF_CAP);
+  document.getElementById('spOut').innerHTML = m ?
+    row(t('sp.b.pens'), fmt(pens) + t('sp.mo'), 'neg') +
+    row(t('sp.b.pensy'), fmt(pens * 12) + t('sp.yr')) +
+    row(t('sp.b.hish'), fmt(hishRec) + t('sp.yr'), 'pos') +
+    row(t('sp.b.hishmax'), fmt(HISH_SELF_FREE) + t('sp.yr')) : '';
+}
+document.getElementById('spInc').addEventListener('input', calcSelfPens);
+
+// ======= Чек-лист открытия эсека (галочки в heshbon_ek) =======
+const EK_STEPS = ['vat', 'tax', 'bl', 'book', 'pens'];
+function ekRender() {
+  let st = {};
+  try { st = JSON.parse(localStorage.getItem('heshbon_ek') || '{}'); } catch (e) {}
+  const box = document.getElementById('ekList');
+  box.innerHTML = EK_STEPS.map(k =>
+    '<label class="check"><input type="checkbox" data-ek="' + k + '"' + (st[k] ? ' checked' : '') +
+    '> <span>' + t('ek.' + k) + '</span></label>').join('');
+  const done = () => { document.getElementById('ekDone').style.display = EK_STEPS.every(k => st[k]) ? '' : 'none'; };
+  box.querySelectorAll('input').forEach(c => c.addEventListener('change', () => {
+    st[c.dataset.ek] = c.checked;
+    try { localStorage.setItem('heshbon_ek', JSON.stringify(st)); } catch (e) {}
+    done();
+  }));
+  done();
+}
+
+// ======= Алут маасик: сколько работник стоит работодателю =======
+function calcEmpCost() {
+  const g = +document.getElementById('ecGross').value || 0;
+  if (!g) { document.getElementById('ecOut').textContent = '—'; document.getElementById('ecBreak').innerHTML = ''; return; }
+  const ni = natIns(g, NI_ER);
+  const pens = g * PENSION_ER;
+  const pitz = g * (document.getElementById('ecFull').checked ? .0833 : PITZUIM);
+  const hi = document.getElementById('ecHish').checked ? g * .075 : 0;
+  const total = g + ni + pens + pitz + hi;
+  document.getElementById('ecOut').textContent = fmt(total);
+  document.getElementById('ecBreak').innerHTML =
+    row(t('ec.b.gross'), fmt(g)) + row(t('ec.b.ni'), '+' + fmt(ni)) +
+    row(t('ec.b.pens'), '+' + fmt(pens)) + row(t('ec.b.pitz'), '+' + fmt(pitz)) +
+    (hi ? row(t('ec.b.hish'), '+' + fmt(hi)) : '') +
+    row(t('ec.b.pct'), '+' + Math.round((total / g - 1) * 100) + '%', 'neg');
+}
+['ecGross'].forEach(id => document.getElementById(id).addEventListener('input', calcEmpCost));
+['ecHish','ecFull'].forEach(id => document.getElementById(id).addEventListener('change', calcEmpCost));
+
+// ======= Возврат налога (грубый годовой пересчёт) =======
+function yearTax(annual, pts) { // годовые ступени = месячные × 12; некудот годовые
+  let tax = 0, prev = 0;
+  for (const [cap, rate] of BRACKETS) {
+    const c = cap === Infinity ? Infinity : cap * 12;
+    tax += Math.max(0, Math.min(annual, c) - prev) * rate;
+    if (annual <= c) break;
+    prev = c;
+  }
+  return Math.max(0, tax - pts * POINT * 12);
+}
+function calcRefund() {
+  const k = Math.min(12, Math.max(1, +document.getElementById('trMonths').value || 12));
+  const m = +document.getElementById('trGross').value || 0;
+  const paidRaw = document.getElementById('trPaid').value;
+  const pts = +document.getElementById('trPts').value || 0;
+  const outEl = document.getElementById('trOut'), br = document.getElementById('trBreak');
+  if (!m || paidRaw === '') { outEl.textContent = '—'; br.innerHTML = m ? '<div class="note">' + t('tr.needpaid') + '</div>' : ''; return; }
+  const due = yearTax(m * k, pts);
+  const diff = (+paidRaw || 0) - due;
+  outEl.textContent = diff > 50 ? '≈ ' + fmt(diff) : t('tr.zero');
+  br.innerHTML = row(t('tr.b.year'), fmt(m * k)) + row(t('tr.b.due'), fmt(due)) +
+    row(t('tr.b.paid'), fmt(+paidRaw || 0)) +
+    (diff > 50 ? '<div class="note" style="margin-top:6px">' + t('tr.b.yes') + '</div>'
+               : diff < -50 ? '<div class="note warn" style="margin-top:6px">' + t('tr.b.debt') + '</div>' : '');
+}
+['trMonths','trGross','trPaid','trPts'].forEach(id => document.getElementById(id).addEventListener('input', calcRefund));
+
 let vatLock = false;
 vatNet.addEventListener('input', () => { if (vatLock) return; vatLock = true;
   const n = +vatNet.value || 0; vatGross.value = n ? (n * (1 + VAT)).toFixed(2) : '';
@@ -2402,7 +2726,7 @@ function fetchRates(i) {
     POINT = d.point || POINT; NI_T = d.ni_t || NI_T; NI_CAP = d.ni_cap || NI_CAP;
     NI_EMP = d.ni_emp || NI_EMP; NI_B1 = d.ni_b1 || NI_B1; NI_SELF = d.ni_self || NI_SELF; NI_ER = d.ni_er || NI_ER;
     PENSION_EMP = d.pension_emp || PENSION_EMP; PENSION_ER = d.pension_er || PENSION_ER; PITZUIM = d.pitzuim || PITZUIM;
-    VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; HAVRAA_PUB = d.havraa_pub || HAVRAA_PUB; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR; SEC_HOUR = d.security_hour || SEC_HOUR;
+    VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; HAVRAA_PUB = d.havraa_pub || HAVRAA_PUB; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR; SEC_HOUR = d.security_hour || SEC_HOUR; PATUR_LIMIT = d.patur_limit || PATUR_LIMIT;
     ratesVer = d.version;
     calcEmp(); calcSelf(); calcRev(); calcOT(); calcFired(); showRates();
   }).catch(() => fetchRates(i + 1)); // следующий источник; все недоступны — работаем на вшитых
