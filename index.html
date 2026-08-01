@@ -1008,6 +1008,10 @@
         <span class="ai-chip" data-ai="ai.acct.a3" data-i18n="ai.acct.c3"></span>
         <span class="ai-chip" data-ai="ai.acct.a4" data-i18n="ai.acct.c4"></span>
       </div>
+      <div class="ai-ask">
+        <input type="text" id="aiAcctQ" data-i18n-ph="ai.free.ph">
+        <button onclick="aiAsk('aiAcctQ','aiAns')" data-i18n="ai.free.btn"></button>
+      </div>
       <div class="ai-answer" id="aiAns"></div>
       <div class="note" data-i18n="ai.note"></div>
     </div>
@@ -1112,7 +1116,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.10.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.10.1'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -2045,10 +2049,14 @@ function shareQuiz(n, btn) {
 }
 
 // ======= AI (офлайн-база типовых тем; живой Claude — кнопкой «Уточнить у онлайн-AI») =======
-document.querySelectorAll('.ai-chip').forEach(chip => chip.onclick = () => {
+// Селектор строго [data-ai]: чипы писем (ltShow) живут на inline-onclick — общий .ai-chip
+// перетирал их обработчик, и карточка писем молчала (регрессия, найдена 01.08.2026).
+document.querySelectorAll('.ai-chip[data-ai]').forEach(chip => chip.onclick = () => {
   const target = chip.closest('.card').querySelector('.ai-answer');
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   target.style.display = 'block';
-  target.innerHTML = '💬 <b>«' + chip.textContent + '»</b><br>' + t(chip.dataset.ai);
+  target.innerHTML = '💬 <b>«' + esc(chip.textContent) + '»</b><br>' + t(chip.dataset.ai)
+    + '<br><button class="btn ghost" style="margin-top:9px;padding:9px" data-q="' + esc(chip.textContent).replace(/"/g, '&quot;') + '" data-target="' + target.id + '" onclick="aiOnline(this)">' + t('ai.online.btn') + '</button>';
   target.scrollIntoView({behavior: 'smooth', block: 'nearest'});
 });
 // свободный вопрос: скоринг тем по ключевым словам (3 языка). prio — бонус специфичным
@@ -2152,6 +2160,7 @@ document.getElementById('unClear').addEventListener('click', e => {
   e.preventDefault(); localStorage.removeItem(UN_KEY); unUpdate();
 });
 document.getElementById('aiEmpQ').addEventListener('keydown', e => { if (e.key === 'Enter') aiAsk('aiEmpQ','aiAnsEmp'); });
+document.getElementById('aiAcctQ').addEventListener('keydown', e => { if (e.key === 'Enter') aiAsk('aiAcctQ','aiAns'); });
 
 // ======= Онлайн-AI: Cloudflare Worker → Claude (ключ на сервере, не в приложении) =======
 const AI_URL = 'https://heshbon-ai.heshbon.workers.dev';
