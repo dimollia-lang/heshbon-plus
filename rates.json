@@ -1,5 +1,5 @@
 {
-  "version": "31.07.2026",
+  "version": "01.08.2026",
   "brackets": [[7010, 0.10], [10060, 0.14], [19000, 0.20], [25100, 0.31], [46690, 0.35], [60130, 0.47], [null, 0.50]],
   "point": 242,
   "ni_t": 7703,
@@ -18,5 +18,19 @@
   "havraa_pub": 511.6,
   "cleaning_hour": 39.11,
   "security_hour": 39.11,
-  "patur_limit": 122833
+  "patur_limit": 122833,
+  "sp_low": 0.0445,
+  "sp_high": 0.1255,
+  "sp_low_cap": 6884.5,
+  "sp_max": 1170,
+  "hish_self_pct": 0.045,
+  "hish_self_cap": 13203,
+  "hish_self_free": 20566,
+  "alloc_th": 5000,
+  "cash_biz": 6000,
+  "cash_priv": 15000,
+  "gift_cap": 240,
+  "patur_fine": 750,
+  "pens_fine": 500,
+  "zair_pct": 0.30
 }

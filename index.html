@@ -513,6 +513,13 @@
     </div>
 
     <div class="card">
+      <h3 data-i18n="f101.h"></h3>
+      <div class="hint" data-i18n="f101.hint"></div>
+      <button class="btn ghost" onclick="f101Build()" data-i18n="f101.btn"></button>
+      <div id="f101Out" style="display:none"></div>
+    </div>
+
+    <div class="card">
       <h3><span data-i18n="tlush.h"></span> <span class="pill">β</span></h3>
       <div class="hint" data-i18n="tlush.hint"></div>
       <input type="file" id="tlFile" accept="image/*,application/pdf" style="display:none">
@@ -729,6 +736,7 @@
           <input id="incClient" maxlength="25" data-i18n-ph="inc.client.ph">
         </div>
       </div>
+      <div class="note warn" id="incCashWarn" style="display:none" data-i18n-html="inc.cash.warn"></div>
       <button class="btn ghost" onclick="incAdd()" data-i18n="inc.add"></button>
       <label class="fld" style="margin-top:12px" data-i18n="inc.month"></label>
       <select id="incMonth"></select>
@@ -737,6 +745,60 @@
       <div id="incPatur"></div>
       <button class="btn ghost" onclick="incCsv(this)" data-i18n="inc.csv"></button>
       <div class="note" data-i18n="inc.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="ej.h"></h3>
+      <div class="hint" data-i18n="ej.hint"></div>
+      <div class="row3">
+        <div>
+          <label class="fld" data-i18n="ej.date"></label>
+          <select id="ejDate"></select>
+        </div>
+        <div>
+          <label class="fld" data-i18n="ej.sum"></label>
+          <input type="number" id="ejSum" inputmode="decimal" placeholder="300">
+        </div>
+        <div>
+          <label class="fld" data-i18n="ej.cat"></label>
+          <select id="ejCat"></select>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="ejMurshe"> <span data-i18n="ej.murshe"></span> <button type="button" class="qmark" data-note="ejMursheNote">?</button></label>
+      <div class="note qnote" id="ejMursheNote" data-i18n-html="ej.murshe.hint"></div>
+      <button class="btn ghost" onclick="ejAdd()" data-i18n="ej.add"></button>
+      <label class="fld" style="margin-top:12px" data-i18n="ej.month"></label>
+      <select id="ejMonth"></select>
+      <div id="ejList"></div>
+      <div id="ejTotals"></div>
+      <button class="btn ghost" onclick="ejCsv(this)" data-i18n="ej.csv"></button>
+      <details class="acc"><summary data-i18n="ej.rules.t"></summary><div class="body" data-i18n-html="ej.rules.b"></div></details>
+      <div class="note" data-i18n="ej.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="zr.h"></h3>
+      <div class="hint" data-i18n="zr.hint"></div>
+      <div id="zrOut"></div>
+      <details class="acc"><summary data-i18n="zr.who.t"></summary><div class="body" data-i18n-html="zr.who.b"></div></details>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="blm.h"></h3>
+      <div class="hint" data-i18n="blm.hint"></div>
+      <label class="fld" data-i18n="blm.base"></label>
+      <input type="number" id="blmBase" inputmode="decimal" placeholder="8000">
+      <div id="blmOut"></div>
+      <div class="note" data-i18n-html="blm.note"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="ivc.h"></h3>
+      <div class="hint" data-i18n="ivc.hint"></div>
+      <label class="fld" data-i18n="ivc.sum"></label>
+      <input type="number" id="ivcSum" inputmode="decimal" placeholder="4000">
+      <label class="check"><input type="checkbox" id="ivcCash"> <span data-i18n="ivc.cash"></span></label>
+      <div id="ivcOut"></div>
     </div>
 
     <div class="card">
@@ -817,6 +879,7 @@
     <div class="card">
       <h3 data-i18n="dl.h"></h3>
       <div id="seDeadlines"></div>
+      <label class="check" style="margin-top:8px"><input type="checkbox" id="selfPush"> <span data-i18n="dl.push"></span></label>
       <div class="note" data-i18n="dl.note"></div>
     </div>
 
@@ -903,6 +966,11 @@
         <span class="val" id="trOut">—</span>
       </div>
       <div class="breakdown" id="trBreak"></div>
+      <div style="margin-top:10px">
+        <input type="file" id="t6File" accept="image/*,application/pdf" style="display:none">
+        <button class="btn ghost" id="t6Btn" onclick="document.getElementById('t6File').click()" data-i18n="t6.btn"></button>
+        <div id="t6Out" style="display:none"></div>
+      </div>
       <div class="note" data-i18n-html="tr.note"></div>
       <details class="acc"><summary data-i18n="tium.t"></summary><div class="body" data-i18n-html="tium.body"></div></details>
     </div>
@@ -1022,7 +1090,7 @@
 
 </div>
 
-<script src="i18n.js?v=190"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1100"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1044,7 +1112,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.9.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.10.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1075,6 +1143,7 @@ function setLang(l) {
 function refreshAll(keepPts) {
   updEmpPoints(keepPts); calcOT(); whCalc(); tbRender(); holRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates();
   incRender(); ekRender(); calcPrice(); calcSelfPens(); calcEmpCost(); calcRefund();
+  ejRender(); zrRender(); blmRender(); ivcRender();
 }
 document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
 
@@ -1091,8 +1160,11 @@ let NI_SELF = [.0610, .18]; // ацмаи 2026
 let PENSION_EMP = .06, PENSION_ER = .065, PITZUIM = .06, NI_ER = [.0451, .076]; // пицуим: мин. 6%, полное 8.33%
 let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 418, HAVRAA_PUB = 511.6, CLEAN_HOUR = 39.11, SEC_HOUR = 39.11; // хавраа: частный 418 (451.5 после указа), гос./клининг/охрана 511.6
 let PATUR_LIMIT = 122833; // потолок оборота осек патур 2026 (greeninvoice+кользхут, 31.07.2026; обновляется из rates.json)
-const SP_LOW = .0445, SP_HIGH = .1255, SP_LOW_CAP = 6884.5, SP_MAX = 1170; // обязательная пенсия ацмаи (подтв. v1.2.0)
-const HISH_SELF_PCT = .045, HISH_SELF_CAP = 13203, HISH_SELF_FREE = 20566; // иштальмут ацмаи 2026: вычет 4,5% до 13 203, льгота прироста до 20 566 (analyst+pensuni, 31.07.2026)
+let SP_LOW = .0445, SP_HIGH = .1255, SP_LOW_CAP = 6884.5, SP_MAX = 1170; // обязательная пенсия ацмаи (подтв. v1.2.0)
+let HISH_SELF_PCT = .045, HISH_SELF_CAP = 13203, HISH_SELF_FREE = 20566; // иштальмут ацмаи 2026: вычет 4,5% до 13 203, льгота прироста до 20 566 (analyst+pensuni, 31.07.2026)
+// проверено 01.08.2026 (2+ источника): миспар акцаа 5000 с 01.06.2026; закон наличных 6000/15000, штрафы 15–30%;
+// подарки клиентам 240 ₪/чел/год с 01.2024; штраф декларации патура 750; кнас пенсии ацмаи 500; осек заир 30%
+let ALLOC_TH = 5000, CASH_BIZ = 6000, CASH_PRIV = 15000, GIFT_CAP = 240, PATUR_FINE = 750, PENS_FINE = 500, ZAIR_PCT = .30;
 let ratesVer = null;
 
 const fmt = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 0}).format(Math.round(n)) + ' ₪';
@@ -2424,6 +2496,11 @@ remind10El.addEventListener('change', () => {
   localStorage.setItem('heshbon_remind10', remind10El.checked ? '1' : '');
   if (NB && NB.setMonthly) try { NB.setMonthly(remind10El.checked); } catch (e) {}
 });
+const selfPushEl = document.getElementById('selfPush');
+selfPushEl.addEventListener('change', () => {
+  localStorage.setItem('heshbon_selfpush', selfPushEl.checked ? '1' : '');
+  if (NB && NB.setSelfDeadlines) try { NB.setSelfDeadlines(selfPushEl.checked); } catch (e) {}
+});
 function loadSettings() {
   const th = localStorage.getItem('heshbon_theme') || 'system';
   const fo = localStorage.getItem('heshbon_font') || '1';
@@ -2434,11 +2511,13 @@ function loadSettings() {
   setSeg('setTheme', th); setSeg('setFont', fo);
   applyTheme(th); applyFont(fo);
   remind10El.checked = localStorage.getItem('heshbon_remind10') === '1';
+  selfPushEl.checked = localStorage.getItem('heshbon_selfpush') === '1';
   document.getElementById('setNativeNote').style.display = NB ? 'none' : '';
   if (NB) { // переотправка состояния в мост — после обновления APK будильники живы
     const v = localStorage.getItem(VISA_KEY);
     if (v && NB.setVisaDate) try { NB.setVisaDate(v); } catch (e) {}
     if (NB.setMonthly) try { NB.setMonthly(remind10El.checked); } catch (e) {}
+    if (NB.setSelfDeadlines) try { NB.setSelfDeadlines(selfPushEl.checked); } catch (e) {}
     if (NB.setLang) try { NB.setLang(LANG); } catch (e) {}
     if (NB.setConfession) try { NB.setConfession(localStorage.getItem('heshbon_conf') || 'jew'); } catch (e) {}
   }
@@ -2548,6 +2627,234 @@ function incCsv(btn) {
 }
 document.getElementById('incMonth').addEventListener('change', incRender);
 document.getElementById('sePoints').addEventListener('input', incRender);
+// закон наличных: подсказка при вводе крупной суммы дохода (лимит сделки с осеком)
+document.getElementById('incSum').addEventListener('input', () => {
+  document.getElementById('incCashWarn').style.display =
+    (+document.getElementById('incSum').value || 0) > CASH_BIZ ? 'block' : 'none';
+});
+
+// ======= Журнал расходов осека: доли признания мас/маам (проверено 01.08.2026, 2+ источника) =======
+// [категория, доля признания в мас hахнаса, доля вычета входного маам]. Машина 45%/⅔ (обслуживание),
+// мобильный ~50%/⅔, дом.офис — доля комнаты (по умолчанию 25%, маам по жилью не вычитаем — спорная зона),
+// кибуд 80% без маам, подарки до GIFT_CAP ₪/чел/год, бигуд представительский 80% (маам только с лого), аш"ль 0.
+const EJ_KEY = 'heshbon_exp_journal';
+const EJ_CATS = [
+  ['office', 1, 1], ['materials', 1, 1], ['fees', 1, 1], ['books', 1, 1], ['insurance', 1, 1],
+  ['car', .45, 2 / 3], ['phone', .5, 2 / 3], ['home', .25, 0],
+  ['kibud', .8, 0], ['gifts', 1, 0], ['clothes', .8, 0], ['meals', 0, 0]
+];
+const ejLoad = () => { try { return JSON.parse(localStorage.getItem(EJ_KEY) || '[]'); } catch (e) { return []; } };
+const ejSave = a => { try { localStorage.setItem(EJ_KEY, JSON.stringify(a)); } catch (e) {} };
+const ejIsMurshe = () => localStorage.getItem('heshbon_exp_murshe') === '1';
+function ejCalc(e) { // {vat: маам к вычету (только мурше), tax: признано для мас после снятия маам}
+  const c = EJ_CATS.find(x => x[0] === e.cat) || ['x', 0, 0];
+  const vat = ejIsMurshe() ? e.s * (VAT / (1 + VAT)) * c[2] : 0;
+  return { vat, tax: (e.s - vat) * c[1] };
+}
+function ejAdd() {
+  const s = +document.getElementById('ejSum').value || 0;
+  if (s <= 0) return;
+  const a = ejLoad();
+  a.push({ id: Date.now(), d: document.getElementById('ejDate').value, s, cat: document.getElementById('ejCat').value });
+  ejSave(a);
+  document.getElementById('ejSum').value = '';
+  ejRender(); zrRender();
+}
+function ejDel(id) { ejSave(ejLoad().filter(e => e.id !== id)); ejRender(); zrRender(); }
+function ejRender() {
+  const dsel = document.getElementById('ejDate'), dcur = dsel.value;
+  dsel.innerHTML = '';
+  for (let i = 0; i < 35; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const o = document.createElement('option'); o.value = tbISO(d); o.textContent = tbDM(tbISO(d)); dsel.appendChild(o);
+  }
+  if (dcur) dsel.value = dcur;
+  if (!dsel.value) dsel.selectedIndex = 0;
+  const csel = document.getElementById('ejCat'), ccur = csel.value;
+  csel.innerHTML = '';
+  EJ_CATS.forEach(c => { const o = document.createElement('option'); o.value = c[0]; o.textContent = t('ej.c.' + c[0]); csel.appendChild(o); });
+  if (ccur) csel.value = ccur;
+  document.getElementById('ejMurshe').checked = ejIsMurshe();
+  const all = ejLoad();
+  const msel = document.getElementById('ejMonth'), mcur = msel.value;
+  const months = [...new Set(all.map(e => e.d.slice(0, 7)).concat(tbISO(new Date()).slice(0, 7)))].sort().reverse();
+  msel.innerHTML = '';
+  months.forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m.slice(5) + '.' + m.slice(0, 4); msel.appendChild(o); });
+  msel.value = months.includes(mcur) ? mcur : months[0];
+  const rows = all.filter(e => e.d.slice(0, 7) === msel.value).sort((x, y) => x.d < y.d ? 1 : -1);
+  document.getElementById('ejList').innerHTML = rows.length
+    ? '<div style="margin-top:8px">' + rows.map(e =>
+      '<div class="b-row"><span class="n">' + tbDM(e.d) + ' · ' + t('ej.c.' + e.cat) + '</span><span class="v">' + fmt(e.s) +
+      ' <button type="button" class="qmark" style="border-color:var(--border);color:var(--muted)" onclick="ejDel(' + e.id + ')">✕</button></span></div>').join('') + '</div>'
+    : '<div class="note" style="margin-top:8px">' + t('ej.empty') + '</div>';
+  let out = '';
+  if (rows.length) {
+    const spent = rows.reduce((s, e) => s + e.s, 0);
+    const tax = rows.reduce((s, e) => s + ejCalc(e).tax, 0);
+    const vat = rows.reduce((s, e) => s + ejCalc(e).vat, 0);
+    out = '<div style="margin-top:10px">' + row(t('ej.tot.spent'), fmt(spent)) +
+      row(t('ej.tot.tax'), fmt(tax), 'pos') +
+      (ejIsMurshe() ? row(t('ej.tot.vat'), fmt(vat), 'pos') : '') + '</div>';
+    const yr = msel.value.slice(0, 4);
+    const yTax = all.filter(e => e.d.slice(0, 4) === yr).reduce((s, e) => s + ejCalc(e).tax, 0);
+    const yVat = all.filter(e => e.d.slice(0, 4) === yr).reduce((s, e) => s + ejCalc(e).vat, 0);
+    out += '<div class="note" style="margin-top:6px">' + tf('ej.tot.y', { y: yr, t: fmt(yTax), v: fmt(yVat) }) + '</div>';
+  }
+  document.getElementById('ejTotals').innerHTML = out;
+}
+function ejCsv(btn) {
+  const mon = document.getElementById('ejMonth').value;
+  const rows = ejLoad().filter(e => e.d.slice(0, 7) === mon).sort((x, y) => x.d > y.d ? 1 : -1);
+  const text = 'date,category,sum,recognized_tax,vat_deductible\n' + rows.map(e => {
+    const c = ejCalc(e);
+    return [e.d, e.cat, e.s, c.tax.toFixed(2), c.vat.toFixed(2)].join(',');
+  }).join('\n') + '\nTOTAL,,' + rows.reduce((s, e) => s + e.s, 0) + ',' +
+    rows.reduce((s, e) => s + ejCalc(e).tax, 0).toFixed(2) + ',' +
+    rows.reduce((s, e) => s + ejCalc(e).vat, 0).toFixed(2) + '\n';
+  if (navigator.share) { navigator.share({ text }).catch(() => {}); return; }
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); btn.textContent = t('tb.exported'); } catch (e) {}
+  ta.remove();
+}
+document.getElementById('ejMonth').addEventListener('change', ejRender);
+document.getElementById('ejMurshe').addEventListener('change', () => {
+  try { localStorage.setItem('heshbon_exp_murshe', document.getElementById('ejMurshe').checked ? '1' : ''); } catch (e) {}
+  ejRender(); zrRender();
+});
+
+// ======= Осек заир (реформа 2024): реальные признанные расходы vs нормативные 30% =======
+function zrRender() {
+  const box = document.getElementById('zrOut');
+  const yr = String(new Date().getFullYear());
+  const inc = incLoad().filter(e => e.d.slice(0, 4) === yr).reduce((s, e) => s + e.s, 0);
+  if (!inc) { box.innerHTML = '<div class="note">' + t('zr.empty') + '</div>'; return; }
+  const real = ejLoad().filter(e => e.d.slice(0, 4) === yr).reduce((s, e) => s + ejCalc(e).tax, 0);
+  const norm = inc * ZAIR_PCT;
+  const d = norm - real;
+  let verdict;
+  if (inc > PATUR_LIMIT) verdict = '<div class="note warn" style="margin-top:6px">' + tf('zr.over', { c: fmt(PATUR_LIMIT) }) + '</div>';
+  else if (Math.abs(d) < inc * .03) verdict = '<div class="note" style="margin-top:6px">' + tf('zr.close', { d: fmt(Math.abs(d)) }) + '</div>';
+  else if (d > 0) verdict = '<div class="note" style="margin-top:6px;border-color:var(--green)">' + tf('zr.better.norm', { d: fmt(d) }) + '</div>';
+  else verdict = '<div class="note" style="margin-top:6px">' + tf('zr.better.real', { d: fmt(-d) }) + '</div>';
+  box.innerHTML = row(tf('zr.turn', { y: yr }), fmt(inc)) +
+    row(t('zr.real'), fmt(real)) + row(t('zr.norm'), fmt(norm), 'pos') + verdict;
+}
+
+// ======= Сверка заявленной в БЛ базы с реальным доходом (дмей пгия считают по микдамот!) =======
+function blmRender() {
+  const base = +document.getElementById('blmBase').value || 0;
+  try { localStorage.setItem('heshbon_blm', base ? String(base) : ''); } catch (e) {}
+  const box = document.getElementById('blmOut');
+  const now = new Date(), yr = String(now.getFullYear());
+  const ySum = incLoad().filter(e => e.d.slice(0, 4) === yr).reduce((s, e) => s + e.s, 0);
+  const avg = ySum / (now.getMonth() + 1);
+  if (!base || !ySum) { box.innerHTML = '<div class="note" style="margin-top:8px">' + t('blm.empty') + '</div>'; return; }
+  const p = Math.round((avg - base) / base * 100);
+  let msg;
+  if (Math.abs(p) < 10) msg = '<div class="note" style="margin-top:6px;border-color:var(--green)">' + t('blm.ok') + '</div>';
+  else if (p > 0) msg = '<div class="note warn" style="margin-top:6px">' + tf('blm.up', { p, b: fmt(base) }) + '</div>';
+  else msg = '<div class="note" style="margin-top:6px">' + tf('blm.down', { p: -p }) + '</div>';
+  box.innerHTML = '<div style="margin-top:8px">' + row(tf('blm.avg', { y: yr }), fmt(avg)) + '</div>' + msg;
+}
+document.getElementById('blmBase').addEventListener('input', blmRender);
+(() => { const b = localStorage.getItem('heshbon_blm'); if (b) document.getElementById('blmBase').value = b; })();
+
+// ======= Проверка входящего хешбонита: реестр мурше, миспар акцаа, наличные =======
+function ivcRender() {
+  const s = +document.getElementById('ivcSum').value || 0;
+  const cash = document.getElementById('ivcCash').checked;
+  const box = document.getElementById('ivcOut');
+  if (!s) { box.innerHTML = ''; return; }
+  const net = s / (1 + VAT);
+  const li = (html, warn) => '<div class="note' + (warn ? ' warn' : '') + '" style="margin-top:6px">' + html + '</div>';
+  let html = li(t('ivc.i.sup') + ' <a href="https://taxinfo.taxes.gov.il/emosek" target="_blank" rel="noopener">taxinfo.taxes.gov.il/emosek</a>');
+  html += net >= ALLOC_TH
+    ? li(tf('ivc.i.alloc', { n: fmt(ALLOC_TH) }) + ' <a href="https://www.gov.il/he/service/verify-vendor-invoice-information" target="_blank" rel="noopener">gov.il</a>', true)
+    : li(tf('ivc.i.allocok', { n: fmt(ALLOC_TH) }));
+  if (cash) html += s > CASH_BIZ ? li(tf('ivc.i.cash.bad', { n: fmt(CASH_BIZ) }), true) : li(tf('ivc.i.cash.ok', { n: fmt(CASH_BIZ) }));
+  html += li(t('ivc.i.req'));
+  box.innerHTML = html;
+}
+document.getElementById('ivcSum').addEventListener('input', ivcRender);
+document.getElementById('ivcCash').addEventListener('change', ivcRender);
+
+// ======= Тофес 101: шпаргалка из профиля (заполняется при найме и каждый январь) =======
+function f101Build() {
+  const st = segVal('empStatus');
+  const kids = ['profKidsB', 'profKids12', 'profKids3', 'profKids45', 'profKids617', 'profKids18']
+    .reduce((s, id) => s + (+document.getElementById(id).value || 0), 0);
+  const extra = +document.getElementById('profExtraPts').value || 0;
+  const items = [t('f101.i.base')];
+  if (st === 'resident' || st === 'oleh') items.push(t('f101.i.resident'));
+  else items.push(t('f101.i.foreign'));
+  if (st === 'oleh') {
+    const y = +document.getElementById('aliyahY').value, mo = +document.getElementById('aliyahM').value;
+    let m = 0;
+    if (y && mo) { const now = new Date(); m = (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - mo) + 1; }
+    items.push(tf('f101.i.oleh', { m: m > 0 && m <= 54 ? m : '54+' }));
+  }
+  if ((st === 'resident' || st === 'oleh') && kids > 0) items.push(tf('f101.i.kids', { n: kids }));
+  items.push(t('f101.i.second'));
+  if (extra > 0 && (st === 'resident' || st === 'oleh')) items.push(tf('f101.i.extra', { n: extra }));
+  items.push(t('f101.i.when'));
+  const box = document.getElementById('f101Out');
+  box.style.display = 'block';
+  box.innerHTML = '<ol style="padding-inline-start:20px;margin:10px 0 4px">' +
+    items.map(i => '<li style="margin-bottom:8px">' + i + '</li>').join('') + '</ol>' +
+    '<div class="note">' + t('f101.note') + '</div>';
+}
+
+// ======= Скан тофес 106 → автозаполнение калькулятора возврата =======
+document.getElementById('t6File').addEventListener('change', ev => {
+  const f = ev.target.files && ev.target.files[0];
+  ev.target.value = '';
+  if (!f) return;
+  const out = document.getElementById('t6Out'), btn = document.getElementById('t6Btn');
+  const used = +localStorage.getItem(aiQuotaKey()) || 0;
+  if (used >= AI_DAILY) { out.style.display = 'block'; out.textContent = tf('ai.online.limit', { n: AI_DAILY }); return; }
+  const send = (b64, media) => {
+    btn.disabled = true; btn.textContent = t('t6.wait');
+    fetch(AI_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 't106', img: b64, media, lang: LANG }) })
+      .then(r => r.json())
+      .then(resp => {
+        btn.disabled = false; btn.textContent = t('t6.btn');
+        const d = resp && resp.data;
+        if (!d) throw 0;
+        out.style.display = 'block';
+        if (!d.is_106) { out.innerHTML = '<div class="note warn">' + t('t6.not') + '</div>'; return; }
+        try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
+        const months = Math.min(12, Math.max(1, Math.round(d.months_worked || 12)));
+        if (d.gross_total) {
+          document.getElementById('trMonths').value = months;
+          document.getElementById('trGross').value = Math.round(d.gross_total / months);
+        }
+        if (d.tax_042 != null) document.getElementById('trPaid').value = Math.round(d.tax_042);
+        if (d.credit_points != null && d.credit_points > 0) document.getElementById('trPts').value = d.credit_points;
+        calcRefund();
+        out.innerHTML = '<b>' + tf('t6.got', { y: escT(d.year || '?'), emp: escT(d.employer || '—') }) + '</b>' +
+          (d.gross_total != null ? row(t('t6.b.gross'), fmt2(d.gross_total)) : '') +
+          (d.tax_042 != null ? row(t('t6.b.tax'), fmt2(d.tax_042)) : '') +
+          row(t('t6.b.months'), String(months)) +
+          (d.analysis ? '<div class="note" style="margin-top:6px">' + escT(d.analysis).replace(/\n/g, '<br>') + '</div>' : '') +
+          '<div class="note" style="margin-top:6px">' + t('t6.note') + '</div>';
+      })
+      .catch(() => {
+        btn.disabled = false; btn.textContent = t('t6.btn');
+        out.style.display = 'block'; out.textContent = t('t6.err');
+      });
+  };
+  if (f.type === 'application/pdf') {
+    if (f.size > 2500000) { out.style.display = 'block'; out.textContent = t('tlush.toobig'); return; }
+    const fr = new FileReader();
+    fr.onerror = () => { out.style.display = 'block'; out.textContent = t('tlush.badfile'); };
+    fr.onload = () => send(String(fr.result).slice(String(fr.result).indexOf(',') + 1), 'application/pdf');
+    fr.readAsDataURL(f);
+  } else {
+    compressPhoto(f, (b64, media) => send(b64, media), () => { out.style.display = 'block'; out.textContent = t('tlush.badfile'); });
+  }
+});
 
 // ======= «Хочу чистыми X» — обратное ценообразование ацмаи =======
 function selfPensMand(m) { // обязательная пенсия ацмаи, ₪/мес
@@ -2671,11 +2978,18 @@ function renderDeadlines() {
     if (d < now) d = mk(day, now.getMonth() + 1, now.getFullYear());
     return d;
   };
+  const nextAnnual = (day, mon) => { // ближайшая годовая дата (mon 0-based)
+    let d = mk(day, mon, now.getFullYear());
+    if (d < now) d = mk(day, mon, now.getFullYear() + 1);
+    return d;
+  };
   const items = [
     { d: nextDay(15), tt: t('dl.vat.t'), s: t('dl.vat.s') },
     { d: nextDay(15), tt: t('dl.mik.t'), s: t('dl.mik.s') },
     { d: nextDay(15), tt: t('dl.btl.t'), s: t('dl.btl.s') },
+    { d: nextAnnual(31, 0), tt: t('dl.pat.t'), s: tf('dl.pat.s', {f: fmt(PATUR_FINE)}) },
     { d: mk(31, 4, now.getMonth() > 4 ? now.getFullYear() + 1 : now.getFullYear()), tt: t('dl.year.t'), s: t('dl.year.s') },
+    { d: nextAnnual(31, 11), tt: t('dl.pens.t'), s: tf('dl.pens.s', {f: fmt(PENS_FINE)}) },
   ].sort((a, b) => a.d - b.d);
   const MON = t('months');
   seDeadlines.innerHTML = items.map(i =>
@@ -2727,8 +3041,13 @@ function fetchRates(i) {
     NI_EMP = d.ni_emp || NI_EMP; NI_B1 = d.ni_b1 || NI_B1; NI_SELF = d.ni_self || NI_SELF; NI_ER = d.ni_er || NI_ER;
     PENSION_EMP = d.pension_emp || PENSION_EMP; PENSION_ER = d.pension_er || PENSION_ER; PITZUIM = d.pitzuim || PITZUIM;
     VAT = d.vat || VAT; MIN_HOUR = d.min_hour || MIN_HOUR; HAVRAA_DAY = d.havraa_day || HAVRAA_DAY; HAVRAA_PUB = d.havraa_pub || HAVRAA_PUB; CLEAN_HOUR = d.cleaning_hour || CLEAN_HOUR; SEC_HOUR = d.security_hour || SEC_HOUR; PATUR_LIMIT = d.patur_limit || PATUR_LIMIT;
+    SP_LOW = d.sp_low || SP_LOW; SP_HIGH = d.sp_high || SP_HIGH; SP_LOW_CAP = d.sp_low_cap || SP_LOW_CAP; SP_MAX = d.sp_max || SP_MAX;
+    HISH_SELF_PCT = d.hish_self_pct || HISH_SELF_PCT; HISH_SELF_CAP = d.hish_self_cap || HISH_SELF_CAP; HISH_SELF_FREE = d.hish_self_free || HISH_SELF_FREE;
+    ALLOC_TH = d.alloc_th || ALLOC_TH; CASH_BIZ = d.cash_biz || CASH_BIZ; CASH_PRIV = d.cash_priv || CASH_PRIV; GIFT_CAP = d.gift_cap || GIFT_CAP;
+    PATUR_FINE = d.patur_fine || PATUR_FINE; PENS_FINE = d.pens_fine || PENS_FINE; ZAIR_PCT = d.zair_pct || ZAIR_PCT;
     ratesVer = d.version;
     calcEmp(); calcSelf(); calcRev(); calcOT(); calcFired(); showRates();
+    ejRender(); zrRender(); blmRender(); ivcRender(); calcSelfPens();
   }).catch(() => fetchRates(i + 1)); // следующий источник; все недоступны — работаем на вшитых
 }
 
