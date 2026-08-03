@@ -276,6 +276,23 @@
   nav.tabbar button .ico { font-size: 21px; line-height: 1; }
   nav.tabbar button .t { font-size: 10.5px; font-weight: 700; letter-spacing: .1px; }
   nav.tabbar button.on { color: var(--accent); background: var(--accent-soft); }
+/* Печатный табель: скрыт на экране; при печати виден ТОЛЬКО он (WebView-адаптер применяет print CSS) */
+#printArea{display:none}
+@media print{
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important;color:#000;background:#fff;font-size:12px;line-height:1.45}
+  #printArea h2{font-size:16px;margin:0 0 2px}
+  #printArea .pr-sub{font-size:11px;color:#333;margin-bottom:10px}
+  #printArea .pr-meta{margin:8px 0 10px}
+  #printArea table{width:100%;border-collapse:collapse;margin:6px 0 10px}
+  #printArea th,#printArea td{border:1px solid #000;padding:3px 6px;text-align:center;font-size:11px}
+  #printArea th{background:#eee}
+  #printArea .pr-tot{margin:4px 0}
+  #printArea .pr-note{font-size:9.5px;color:#333;margin:10px 0}
+  #printArea .pr-sig{display:flex;justify-content:space-between;gap:24px;margin-top:26px}
+  #printArea .pr-sig div{flex:1;border-top:1px solid #000;padding-top:4px;font-size:10.5px;text-align:center}
+  #printArea .he{unicode-bidi:isolate;direction:rtl}
+}
 </style>
 </head>
 <body>
@@ -547,6 +564,32 @@
       <div class="note" data-i18n="lt.note"></div>
     </div>
 
+    <div class="card" id="offersCard">
+      <h3 data-i18n="of.h"></h3>
+      <div class="hint" data-i18n="of.hint"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <label class="fld" data-i18n="of.a"></label>
+          <input type="number" id="ofA" inputmode="numeric" placeholder="9500">
+          <label class="check" style="margin-top:6px"><input type="checkbox" id="ofHishA"> <span data-i18n="of.hish"></span></label>
+        </div>
+        <div>
+          <label class="fld" data-i18n="of.b"></label>
+          <input type="number" id="ofB" inputmode="numeric" placeholder="10200">
+          <label class="check" style="margin-top:6px"><input type="checkbox" id="ofHishB"> <span data-i18n="of.hish"></span></label>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+        <div>
+          <label class="fld" data-i18n="of.pts"></label>
+          <input type="number" id="ofPts" step="0.25" inputmode="decimal">
+        </div>
+        <label class="check" style="align-self:end"><input type="checkbox" id="ofPen" checked> <span data-i18n="of.pen"></span></label>
+      </div>
+      <button class="btn" onclick="calcOffers()" data-i18n="of.btn" style="margin-top:10px"></button>
+      <div id="ofOut"></div>
+    </div>
+
     <div class="card" id="holCard">
       <h3 data-i18n="hol.h"></h3>
       <div class="hint" data-i18n="hol.hint"></div>
@@ -650,6 +693,7 @@
       <div class="note" id="tbBalance" style="display:none"></div>
       <button class="btn ghost" onclick="tbExport(this)" data-i18n="tb.export"></button>
       <button class="btn ghost" onclick="tbCsv(this)" data-i18n="tb.csv"></button>
+      <button class="btn ghost" onclick="tbPrint()" data-i18n="tb.print"></button>
       <button class="btn" onclick="tbCompare()" data-i18n="tb.cmp.btn" style="margin-top:8px"></button>
       <div id="tbCmp"></div>
       <div class="note qnote open" data-i18n-html="tb.note"></div>
@@ -1094,7 +1138,7 @@
 
 </div>
 
-<script src="i18n.js?v=1110"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1120"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1116,7 +1160,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.11.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.12.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1868,6 +1912,69 @@ function tbCsv(btn) {
   try { document.execCommand('copy'); btn.textContent = t('tb.exported'); } catch (e) {}
   ta.remove();
 }
+// Печатный отчёт месяца с подписями сторон: заголовки таблицы двуязычные (иврит — для
+// работодателя), подписанный работодателем табель = сильное доказательство в суде по труду.
+// Веб: window.print(); APK: HeshbonNative.printPage → PrintManager (адаптер применяет @media print).
+function tbPrint() {
+  const mon = document.getElementById('tbMonth').value;
+  if (!mon) return;
+  const rows = tbMonthRows(mon).slice().reverse();
+  if (!rows.length) return;
+  const tot = tbMonthTotals(mon), wk = tbWeeklyOT(mon);
+  const rate = Math.max(0, +document.getElementById('otRate').value || 0);
+  const days = t('tb.print.days').split('|');
+  const HE_COLS = ['תאריך', 'יום', 'כניסה', 'יציאה', 'הפסקה (דק׳)', 'שעות', 'ש״נ / הערות'];
+  const he = LANG === 'he';
+  const cols = t('tb.print.cols').split('|');
+  const bi = (heTxt, key) => '<span class="he">' + heTxt + '</span>' + (he ? '' : ' / ' + t(key));
+  const name = escT((typeof profName !== 'undefined' && profName.value || '').trim());
+  const trs = rows.map(e => {
+    const c = tbCalc(e);
+    const dayName = days[new Date(e.d + 'T12:00:00').getDay()] || '';
+    if (c.special) {
+      return '<tr><td>' + tbDM(e.d) + '</td><td>' + dayName + '</td><td colspan="4">' +
+             t(TY_KEY[c.special]) + '</td><td></td></tr>';
+    }
+    const notes = [];
+    if (c.shab) notes.push('<span class="he">שבת</span>');
+    if (c.night && !c.shab) notes.push('🌙');
+    if (c.overnight) notes.push('+24');
+    return '<tr><td>' + tbDM(e.d) + '</td><td>' + dayName + '</td><td>' + e.in + '</td><td>' + e.out +
+           '</td><td>' + (c.brMin || 0) + '</td><td>' + tbHrs(c.paid) + '</td><td>' +
+           (c.ot125 + c.ot150 > 0 ? tbHrs(c.ot125 + c.ot150) : '') +
+           (notes.length ? ' ' + notes.join(' ') : '') + '</td></tr>';
+  }).join('');
+  const totL = [];
+  totL.push([bi('שעות בפועל', 'tb.tot.paid'), tbHrs(tot.paid)]);
+  if (tot.ot125 + tot.ot150 > 0) totL.push([bi('שעות נוספות יומיות', 'tb.tot.ot'),
+    tbHrs(tot.ot125) + ' × 125% + ' + tbHrs(tot.ot150) + ' × 150%']);
+  if (wk.w125 + wk.w150 > 0) totL.push([bi('שעות נוספות שבועיות (מעל 42)', 'tb.tot.otw'),
+    tbHrs(wk.w125) + ' × 125% + ' + tbHrs(wk.w150) + ' × 150%']);
+  if (tot.shab > 0) totL.push([bi('שעות שבת (150%)', 'tb.tot.shab'), tbHrs(tot.shab)]);
+  if (tot.br > 0) totL.push([bi('הפסקות (לא בתשלום)', 'tb.tot.br'), '−' + tbHrs(tot.br / 60)]);
+  if (tot.sickN) totL.push([bi('ימי מחלה', 'tb.tot.sick'), tot.sickN]);
+  if (tot.vacN) totL.push([bi('ימי חופשה', 'tb.tot.vac'), tot.vacN]);
+  if (tot.holN) totL.push([bi('ימי חג', 'tb.tot.hol'), tot.holN]);
+  if (rate) totL.push([bi('תעריף לשעה', 'tb.print.rate'), fmt2(rate)]);
+  const html =
+    '<h2>' + bi('דו״ח נוכחות ושעות עבודה', 'tb.print.h') + '</h2>' +
+    '<div class="pr-sub">Heshbon+ · ' + APP_URL + '</div>' +
+    '<div class="pr-meta">' +
+      bi('חודש', 'tb.print.mon') + ': <b>' + mon.slice(5) + '.' + mon.slice(0, 4) + '</b><br>' +
+      bi('עובד', 'tb.print.emp') + ': <b>' + (name || '________________') + '</b><br>' +
+      bi('מעסיק', 'tb.print.empr') + ': ________________</div>' +
+    '<table><thead><tr>' + HE_COLS.map((h, i) =>
+      '<th><span class="he">' + h + '</span>' + (he ? '' : '<br>' + (cols[i] || '')) + '</th>').join('') +
+    '</tr></thead><tbody>' + trs + '</tbody></table>' +
+    totL.map(p => '<div class="pr-tot">' + p[0] + ': <b>' + p[1] + '</b></div>').join('') +
+    '<div class="pr-note">' + t('tb.print.note') + '</div>' +
+    '<div class="pr-sig"><div>' + bi('חתימת העובד ותאריך', 'tb.print.sig1') + '</div>' +
+    '<div>' + bi('חתימת המעסיק ותאריך', 'tb.print.sig2') + '</div></div>';
+  document.getElementById('printArea').innerHTML = html;
+  const N = window.HeshbonNative;
+  if (N && N.printPage) { try { N.printPage('Heshbon ' + mon); return; } catch (e) {} }
+  window.print();
+}
 document.getElementById('tbMonth').addEventListener('change', tbRender);
 document.getElementById('otRate').addEventListener('input', tbRender);
 
@@ -1958,6 +2065,37 @@ function ltFromCmp() { // из сверки — к письму о недопл�
   ltShow('pay');
   document.getElementById('ltCard').scrollIntoView({block: 'start'});
 }
+
+// ======= Сравнение двух офферов: нетто по некудот пользователя + «невидимый пакет» =======
+// Пакет = минимумы цав пенсия хова (работодатель 6,5% пенсия + 6% пицуим; полная ст.14 = 8,33)
+// + иштальмут 7,5% сверху, если отмечен. Считаем тем же движком netOf, что и обратный расчёт.
+function calcOffers() {
+  const ptsEl = document.getElementById('ofPts');
+  if (ptsEl.value === '') ptsEl.value = +document.getElementById('empPoints').value || 2.25;
+  const pts = +ptsEl.value || 0, pen = document.getElementById('ofPen').checked;
+  const r = ['A', 'B'].map(k => {
+    const g = +document.getElementById('of' + k).value || 0;
+    const hish = document.getElementById('ofHish' + k).checked;
+    const net = g > 0 ? netOf(g, pts, pen) - (hish ? g * 0.025 : 0) : 0;
+    const pack = g > 0 ? (pen ? g * (0.065 + 0.06) : 0) + (hish ? g * 0.075 : 0) : 0;
+    return {g, net, pack, tot: net + pack};
+  });
+  const out = document.getElementById('ofOut');
+  if (!(r[0].g > 0) || !(r[1].g > 0)) { out.innerHTML = ''; return; }
+  const d = r[1].tot - r[0].tot;
+  const verdict = Math.abs(d) < 50 ? t('of.eq')
+    : tf('of.win', {x: d > 0 ? 'B' : 'A', d: fmt(Math.abs(d))});
+  out.innerHTML = '<div style="margin-top:10px">' +
+    row(t('of.net'), fmt(r[0].net) + ' · ' + fmt(r[1].net), 'pos') +
+    row(t('of.pack'), fmt(r[0].pack) + ' · ' + fmt(r[1].pack)) +
+    row(t('of.tot'), fmt(r[0].tot) + ' · ' + fmt(r[1].tot), 'pos') +
+    row(t('of.diff'), (d >= 0 ? '+' : '−') + fmt(Math.abs(d))) +
+    '</div><div class="note" style="margin-top:6px"><b>' + verdict + '</b></div>';
+}
+['ofA', 'ofB', 'ofHishA', 'ofHishB', 'ofPts', 'ofPen'].forEach(id =>
+  document.getElementById(id).addEventListener('input', () => {
+    if (document.getElementById('ofOut').innerHTML) calcOffers(); // живой пересчёт после первого «Сравнить»
+  }));
 
 // ======= Праздники и оплата =======
 // Даты проверены 30.07.2026 (hebcal + chabad, совпали): оплачиваемые праздничные дни Израиля.
@@ -3113,5 +3251,6 @@ if (empSubSaved === 'tb') {
 fetchRates();
 document.getElementById('empGross').addEventListener('input', saveProf);
 </script>
+<div id="printArea"></div>
 </body>
 </html>
