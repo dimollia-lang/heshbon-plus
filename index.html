@@ -350,6 +350,31 @@
         <div class="note" id="olehInfo"></div>
       </div>
 
+      <!-- v1.14: работающий пенсионер — пониженные/нулевые взносы БЛ+бриют (кользхут, 07.08.2026).
+           Только резидент/оле: кицбат зикна требует резидентства, у Б1/2а5 свои ставки нерезидента -->
+      <div id="retBox">
+        <label class="check"><input type="checkbox" id="empRetiree"> <span data-i18n="ret.chk"></span> <button type="button" class="qmark" data-note="retHintNote">?</button></label>
+        <div class="note qnote" id="retHintNote" data-i18n-html="ret.hint"></div>
+        <div id="retOpts" style="display:none">
+          <label class="fld" data-i18n="ret.kitzba"></label>
+          <div class="seg" id="retKitzba">
+            <button data-v="yes" data-i18n="quiz.yes"></button>
+            <button data-v="no" class="on" data-i18n="quiz.no"></button>
+          </div>
+          <label class="fld" data-i18n="ret.age"></label>
+          <div class="seg" id="retAge">
+            <button data-v="a6267" class="on">62–67</button>
+            <button data-v="a6770">67–70</button>
+            <button data-v="a70">70+</button>
+          </div>
+          <label class="check"><input type="checkbox" id="retNewJob"> <span data-i18n="ret.newjob"></span> <button type="button" class="qmark" data-note="retNewJobNote">?</button></label>
+          <div class="note qnote" id="retNewJobNote" data-i18n-html="ret.newjob.hint"></div>
+          <div class="note warn" id="retInctest" style="display:none" data-i18n-html="ret.inctest"></div>
+          <div class="note" id="retCheck70" style="display:none" data-i18n="ret.check70"></div>
+          <div class="note" id="retPensNote" style="display:none" data-i18n="ret.pens.note"></div>
+        </div>
+      </div>
+
       <div class="row2">
         <div>
           <label class="fld" data-i18n="emp.fld.gender"></label>
@@ -755,16 +780,76 @@
     <div class="card">
       <h3 data-i18n="self.save.h"></h3>
       <div class="hint" data-i18n="self.save.hint"></div>
+      <!-- v1.14: у самозанятого свой профиль для некудот — вкладка «Работник» независима
+           (там можно параллельно считать своего наёмного работника) -->
+      <details class="exp" id="sepExp">
+        <summary data-i18n="sep.t"></summary>
+        <div class="hint" data-i18n="sep.hint"></div>
+        <label class="fld" data-i18n="emp.fld.status"></label>
+        <div class="seg" id="seStatus">
+          <button data-v="resident" class="on" data-i18n="st.resident"></button>
+          <button data-v="oleh" data-i18n="st.oleh"></button>
+          <button data-v="b1" data-i18n="st.b1"></button>
+          <button data-v="s25" data-i18n="st.s25"></button>
+        </div>
+        <div id="seOlehBlock" style="display:none">
+          <label class="fld" data-i18n="emp.fld.aliyah"></label>
+          <div class="row2">
+            <select id="seAliyahM"></select>
+            <select id="seAliyahY"></select>
+          </div>
+          <div class="note" id="seOlehInfo"></div>
+        </div>
+        <label class="fld" data-i18n="emp.fld.gender"></label>
+        <div class="seg" id="seGender">
+          <button data-v="m" class="on" data-i18n="g.m"></button>
+          <button data-v="f" data-i18n="g.f"></button>
+        </div>
+        <div id="seKidsBox">
+          <div class="fld" data-i18n="prof.kids.h"></div>
+          <div class="row3">
+            <div>
+              <label class="fld" data-i18n="prof.kidsB"></label>
+              <input type="number" id="seKidsB" value="0" step="1" min="0" inputmode="numeric">
+            </div>
+            <div>
+              <label class="fld" data-i18n="prof.kids12"></label>
+              <input type="number" id="seKids12" value="0" step="1" min="0" inputmode="numeric">
+            </div>
+            <div>
+              <label class="fld" data-i18n="prof.kids3"></label>
+              <input type="number" id="seKids3" value="0" step="1" min="0" inputmode="numeric">
+            </div>
+          </div>
+          <div class="row3">
+            <div>
+              <label class="fld" data-i18n="prof.kids45"></label>
+              <input type="number" id="seKids45" value="0" step="1" min="0" inputmode="numeric">
+            </div>
+            <div>
+              <label class="fld" data-i18n="prof.kids617"></label>
+              <input type="number" id="seKids617" value="0" step="1" min="0" inputmode="numeric">
+            </div>
+            <div>
+              <label class="fld" data-i18n="prof.kids18"></label>
+              <input type="number" id="seKids18" value="0" step="1" min="0" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+        <label class="fld" data-i18n="prof.extra"></label>
+        <input type="number" id="seExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
+      </details>
       <div class="row2">
         <div>
           <label class="fld" data-i18n="self.fld.income"></label>
           <input type="number" id="seIncome" value="12000" inputmode="decimal">
         </div>
         <div>
-          <label class="fld" data-i18n="self.fld.points"></label>
+          <label class="fld"><span data-i18n="self.fld.points"></span> <span class="pill" id="seNkAuto"></span></label>
           <input type="number" id="sePoints" step="0.25" value="2.25" inputmode="decimal">
         </div>
       </div>
+      <div class="note" id="seNkBreak" style="display:none"></div>
       <div class="note" data-i18n="self.pts.hint"></div>
       <div class="result-hero">
         <span class="lbl" data-i18n="self.save.lbl"></span>
@@ -1149,7 +1234,7 @@
 
 </div>
 
-<script src="i18n.js?v=1130"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1140"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1171,7 +1256,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.13.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.14.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1200,7 +1285,7 @@ function setLang(l) {
 // Полный пересчёт: единая цепочка для старта и смены языка.
 // Держать ОДИН список — раздельные копии уже давали пустую кнопку пунча при запуске (whCalc/tbRender не входили в init).
 function refreshAll(keepPts) {
-  updEmpPoints(keepPts); calcOT(); whCalc(); tbRender(); holRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates();
+  updEmpPoints(keepPts); updSelfPoints(keepPts); calcOT(); whCalc(); tbRender(); holRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates();
   incRender(); ekRender(); calcPrice(); calcSelfPens(); calcEmpCost(); calcRefund();
   ejRender(); zrRender(); blmRender(); ivcRender();
 }
@@ -1217,6 +1302,13 @@ let NI_EMP = [.0427, .1217];// работник-резидент: БЛ+брию�
 let NI_B1  = [.0004, .0087];// иностранный работник/2(а)5 (без мас бриют; ставки нерезидента)
 let NI_SELF = [.0610, .18]; // ацмаи 2026
 let PENSION_EMP = .06, PENSION_ER = .065, PITZUIM = .06, NI_ER = [.0451, .076]; // пицуим: мин. 6%, полное 8.33%
+// Работающие пенсионеры (кользхут, 07.08.2026, 2 страницы; совпадает с FACTS воркера):
+// получает кицбат зикна — взносы работника 0 (в тлуше законно 0), работодатель 0.61/2.12%;
+// достиг пенс. возраста БЕЗ кицбы — пониженные по возрасту (62–67 / 67–70; для 70+ без кицбы
+// консервативно ставки 67–70 + подсказка проверить право: с 70 кицба платится независимо от заработка)
+const NI_RET_K = [0, 0], NI_RET_ER_K = [.0061, .0212];
+const NI_RET = { a6267: [.0395, .1024], a6770: [.0393, .1003], a70: [.0393, .1003] };
+const NI_RET_ER = { a6267: [.0417, .0712], a6770: [.0413, .0696], a70: [.0413, .0696] };
 let VAT = .18, MIN_HOUR = 35.40, HAVRAA_DAY = 418, HAVRAA_PUB = 511.6, CLEAN_HOUR = 39.11, SEC_HOUR = 39.11; // хавраа: частный 418 (451.5 после указа), гос./клининг/охрана 511.6
 let PATUR_LIMIT = 122833; // потолок оборота осек патур 2026 (greeninvoice+кользхут, 31.07.2026; обновляется из rates.json)
 let SP_LOW = .0445, SP_HIGH = .1255, SP_LOW_CAP = 6884.5, SP_MAX = 1170; // обязательная пенсия ацмаи (подтв. v1.2.0)
@@ -1263,25 +1355,51 @@ function olehBonus(m) {
   if (m <= 54) return 1;
   return 0;
 }
-// два select вместо input type=month — Android WebView календарь месяца не поддерживает
+// два select вместо input type=month — Android WebView календарь месяца не поддерживает.
+// Заполняет обе пары: профиль работника (aliyahM/Y) и профиль самозанятого (seAliyahM/Y)
 function fillAliyahSelects() {
-  const selM = document.getElementById('aliyahM'), selY = document.getElementById('aliyahY');
-  const keepM = selM.value || '1', keepY = selY.value || '2025';
   const MON = t('months');
-  selM.innerHTML = MON.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
+  const mHtml = MON.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
   const nowY = new Date().getFullYear();
   let ys = '';
   for (let y = nowY; y >= 1990; y--) ys += `<option value="${y}">${y}</option>`;
-  selY.innerHTML = ys;
-  selM.value = keepM; selY.value = keepY;
+  [['aliyahM', 'aliyahY'], ['seAliyahM', 'seAliyahY']].forEach(([mi, yi]) => {
+    const selM = document.getElementById(mi), selY = document.getElementById(yi);
+    const keepM = selM.value || '1', keepY = selY.value || '2025';
+    selM.innerHTML = mHtml;
+    selY.innerHTML = ys;
+    selM.value = keepM; selY.value = keepY;
+  });
 }
-function monthsSinceAliyah() {
-  const y = +document.getElementById('aliyahY').value, mo = +document.getElementById('aliyahM').value;
+function monthsSinceSel(selM, selY) { // месяц алии = месяц 1
+  const y = +selY.value, mo = +selM.value;
   if (!y || !mo) return -1;
   const now = new Date();
-  return (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - mo) + 1; // месяц алии = месяц 1
+  return (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - mo) + 1;
 }
+function monthsSinceAliyah() { return monthsSinceSel(aliyahM, aliyahY); }
 let ptsManual = false; // некудот исправлены руками → не перетирать при смене языка
+// сетка детских пунктов «с 2024 года» (кользхут, 28.07.2026) — общая для профилей работника и самозанятого;
+// pre = префикс id полей: 'prof' (работник) или 'se' (самозанятый)
+function kidsPtsFor(g, pre) {
+  const n = id => Math.max(0, +document.getElementById(pre + id).value || 0);
+  const mom = g === 'f';
+  return n('KidsB') * 2.5      // год рождения ребёнка
+       + n('Kids12') * 4.5     // 1–2 года
+       + n('Kids3') * 3.5      // 3 года
+       + n('Kids45') * 2.5     // 4–5 лет
+       + n('Kids617') * (mom ? 2 : 1)     // 6–17 лет
+       + n('Kids18') * (mom ? 0.5 : 0);   // год, когда ребёнку исполняется 18
+}
+// видимая разбивка пунктов: «базовые — 2,75 пункта, … итого — N» (общая для обоих профилей)
+function nkBreakHtml(base, olehPts, kidsPts, extraPts, pts) {
+  const parts = [t('nk.base') + ' — ' + pluralN(base, 'plural.pts')];
+  if (olehPts) parts.push(t('nk.oleh') + ' — ' + pluralN(olehPts, 'plural.pts'));
+  if (kidsPts) parts.push(t('nk.kids') + ' — ' + pluralN(kidsPts, 'plural.pts'));
+  if (extraPts) parts.push(t('nk.extra') + ' — ' + pluralN(extraPts, 'plural.pts'));
+  return parts.join(', ') + ', ' + t('nk.total') + ' — <b>' + pluralN(pts, 'plural.pts') +
+         '</b> · ' + t('nk.each');
+}
 function updEmpPoints(keepManual) {
   const st = segVal('empStatus'), g = segVal('empGender');
   if (!keepManual) ptsManual = false; // смена статуса/пола/даты сбрасывает ручной режим
@@ -1306,14 +1424,7 @@ function updEmpPoints(keepManual) {
   if (!hasKids) document.getElementById('ptsHelpNote').classList.remove('open'); // спрятали «?» — закрываем и справку
   document.getElementById('kidsBox').style.display = hasKids ? '' : 'none';
   if (hasKids) { // сетка «с 2024 года», сверена по כל-זכות 28.07.2026: за детей, живущих в Израиле
-    const n = id => Math.max(0, +document.getElementById(id).value || 0);
-    const mom = g === 'f';
-    kidsPts = n('profKidsB') * 2.5      // год рождения ребёнка
-            + n('profKids12') * 4.5     // 1–2 года
-            + n('profKids3') * 3.5      // 3 года
-            + n('profKids45') * 2.5     // 4–5 лет
-            + n('profKids617') * (mom ? 2 : 1)     // 6–17 лет
-            + n('profKids18') * (mom ? 0.5 : 0);   // год, когда ребёнку исполняется 18
+    kidsPts = kidsPtsFor(g, 'prof');
     extraPts = Math.max(0, +document.getElementById('profExtraPts').value || 0); // степень, алименты, демобилизация и др. — вручную
   }
   const pts = base + olehPts + kidsPts + extraPts;
@@ -1321,13 +1432,8 @@ function updEmpPoints(keepManual) {
   // видимая разбивка пунктов — чтобы было видно, что дети/доп. учтены (фидбек 26.07)
   const nb = document.getElementById('nkBreak');
   if (hasPoints && !ptsManual) {
-    const parts = [t('nk.base') + ' — ' + pluralN(base, 'plural.pts')];
-    if (olehPts) parts.push(t('nk.oleh') + ' — ' + pluralN(olehPts, 'plural.pts'));
-    if (kidsPts) parts.push(t('nk.kids') + ' — ' + pluralN(kidsPts, 'plural.pts'));
-    if (extraPts) parts.push(t('nk.extra') + ' — ' + pluralN(extraPts, 'plural.pts'));
     nb.style.display = '';
-    nb.innerHTML = parts.join(', ') + ', ' + t('nk.total') + ' — <b>' + pluralN(pts, 'plural.pts') +
-                   '</b> · ' + t('nk.each');
+    nb.innerHTML = nkBreakHtml(base, olehPts, kidsPts, extraPts, pts);
   } else nb.style.display = 'none';
   if (ptsManual) {
     document.getElementById('nkAuto').textContent = t('nk.manual');
@@ -1336,19 +1442,54 @@ function updEmpPoints(keepManual) {
     document.getElementById('nkAuto').textContent = t('nk.auto');
   }
   updateHishGate();
+  updRetUI();
   renderVisaUI();
   renderQuiz();
   calcEmp();
   if (typeof profIndustry !== 'undefined') saveProf();
-  // некудот самозанятого = те же правила пола/статуса/детей — тянем из профиля работника,
-  // пока пользователь не ввёл своё значение руками (фидбек тестировщицы 03.08)
-  if (typeof seManual !== 'undefined' && !seManual) {
-    const sp = document.getElementById('sePoints');
-    if (sp && sp.value !== document.getElementById('empPoints').value) {
-      sp.value = document.getElementById('empPoints').value;
-      if (typeof calcSelf === 'function') calcSelf();
-    }
-  }
+  // v1.14: некудот самозанятого больше НЕ синхронизируются отсюда — у него свой профиль
+  // во вкладке «Самозанятый» (updSelfPoints); фидбек бухгалтера 07.08.2026
+}
+// ======= Работающий пенсионер (v1.14, кользхут 07.08.2026) =======
+// Статус действует только для резидента/оле: кицбат зикна и пониженные ставки — про резидентов,
+// у Б1/2(а)5 остаются ставки нерезидента. Кицбу само приложение НЕ считает.
+function retireeState() {
+  const st = segVal('empStatus');
+  const on = document.getElementById('empRetiree').checked && (st === 'resident' || st === 'oleh');
+  return {
+    on,
+    kitzba: on && segVal('retKitzba') === 'yes',      // получает кицбат зикна → взносы работника 0
+    age: segVal('retAge'),                            // a6267 / a6770 / a70
+    exempt: on && document.getElementById('retNewJob').checked // принят после 67 + пенсия → работодатель может быть освобождён от пенсии
+  };
+}
+function empNiRates() { // ставки БЛ+бриют работника с учётом статуса и пенсионерского режима
+  const st = segVal('empStatus');
+  if (st === 'b1' || st === 's25') return NI_B1;
+  const r = retireeState();
+  if (r.on) return r.kitzba ? NI_RET_K : NI_RET[r.age] || NI_EMP;
+  return NI_EMP;
+}
+function erNiRates() { // ставки БЛ работодателя (пониженные за пенсионера)
+  const st = segVal('empStatus');
+  if (st === 'b1' || st === 's25') return NI_ER;
+  const r = retireeState();
+  if (r.on) return r.kitzba ? NI_RET_ER_K : NI_RET_ER[r.age] || NI_ER;
+  return NI_ER;
+}
+function updRetUI() {
+  const st = segVal('empStatus');
+  const visible = st === 'resident' || st === 'oleh';
+  document.getElementById('retBox').style.display = visible ? '' : 'none';
+  if (!visible) document.getElementById('retHintNote').classList.remove('open');
+  const on = visible && document.getElementById('empRetiree').checked;
+  document.getElementById('retOpts').style.display = on ? '' : 'none';
+  if (!on) { document.getElementById('retNewJobNote').classList.remove('open'); return; }
+  const kitzba = segVal('retKitzba') === 'yes', age = segVal('retAge');
+  // кицба до 70 проходит проверку доходов; с 70 платится независимо (мягкая подсказка, не расчёт)
+  document.getElementById('retInctest').style.display = kitzba && age !== 'a70' ? '' : 'none';
+  document.getElementById('retCheck70').style.display = !kitzba && age === 'a70' ? '' : 'none';
+  document.getElementById('retPensNote').style.display = document.getElementById('retNewJob').checked ? '' : 'none';
 }
 function calcEmp() {
   const st = segVal('empStatus');
@@ -1365,7 +1506,8 @@ function calcEmp() {
     (1.25 * nn(document.getElementById('ot125').value) + 1.5 * nn(document.getElementById('ot150').value));
   const taxable = gross + otPay;
   const tax = incomeTax(taxable, pts);
-  const ni = natIns(taxable, foreign ? NI_B1 : NI_EMP);
+  const ret = retireeState(); // работающий пенсионер: пониженные/нулевые взносы БЛ+бриют
+  const ni = natIns(taxable, empNiRates());
   const pen = hasPen ? gross * PENSION_EMP : 0;
   const hishEmp = hish ? gross * 0.025 : 0;
   const net = taxable - tax - ni - pen - hishEmp;
@@ -1375,14 +1517,15 @@ function calcEmp() {
     row(t('brk.gross'), fmt(gross)) +
     (otPay > 0 ? row(t('brk.ot'), '+' + fmt(otPay), 'pos') + row(t('brk.taxbase'), fmt(taxable)) : '') +
     row(tf('brk.tax', {pts}), '−' + fmt(tax), 'neg') +
-    row(foreign ? t('brk.niForeign') : t('brk.ni'), '−' + fmt(ni), 'neg') +
+    // у получателя кицбат зикна строка показывается с нулём — это законный ноль, не пропуск
+    row(foreign ? t('brk.niForeign') : ret.on ? t(ret.kitzba ? 'brk.ni.kitzba' : 'brk.ni.ret') : t('brk.ni'), '−' + fmt(ni), 'neg') +
     (hasPen ? row(t('brk.pension'), '−' + fmt(pen), 'neg') : '') +
     (hish ? row(t('brk.hish'), '−' + fmt(hishEmp), 'neg') : '');
   document.getElementById('empEmployer').innerHTML =
     row(t('employer.pens'), '+' + fmt(gross * PENSION_ER), 'pos') +
     row(t('employer.pitz'), '+' + fmt(gross * PITZUIM), 'pos') +
     (hish ? row(t('employer.hish'), '+' + fmt(gross * 0.075), 'pos') : '') +
-    row(t('employer.ni'), '+' + fmt(natIns(taxable, NI_ER)), 'pos') +
+    row(t('employer.ni'), '+' + fmt(natIns(taxable, erNiRates())), 'pos') +
     (st === 's25' ? '<div class="note warn" style="margin-top:8px">' + t('employer.s25note') + '</div>' : '');
   document.getElementById('empStatusNote').innerHTML = t('status.' + st);
 }
@@ -1401,18 +1544,22 @@ function saveProf() {
       ind: profIndustry.value, ten: profTenure.value, gross: empGross.value,
       kB: profKidsB.value, k12: profKids12.value, k3: profKids3.value,
       k45: profKids45.value, k617: profKids617.value, k18: profKids18.value,
-      nm: profName.value, ex: profExtraPts.value, hish: profHish.checked
+      nm: profName.value, ex: profExtraPts.value, hish: profHish.checked,
+      // работающий пенсионер (v1.14)
+      ret: empRetiree.checked ? 1 : 0, rk: segVal('retKitzba'), ra: segVal('retAge'), rn: retNewJob.checked ? 1 : 0
     }));
   } catch (e) {}
+}
+// установить значение seg-переключателя (общий помощник профилей работника и самозанятого)
+function setSegVal(id, v) {
+  const b = document.querySelector('#' + id + ' button[data-v="' + v + '"]');
+  if (b) { document.querySelectorAll('#' + id + ' button').forEach(x => x.classList.remove('on')); b.classList.add('on'); }
 }
 function loadProf() {
   try {
     const p = JSON.parse(localStorage.getItem(PROF_KEY) || 'null');
     if (!p) return;
-    const setSeg = (id, v) => {
-      const b = document.querySelector('#' + id + ' button[data-v="' + v + '"]');
-      if (b) { document.querySelectorAll('#' + id + ' button').forEach(x => x.classList.remove('on')); b.classList.add('on'); }
-    };
+    const setSeg = setSegVal;
     if (p.st) setSeg('empStatus', p.st);
     if (p.g) setSeg('empGender', p.g);
     if (p.am) aliyahM.value = p.am;
@@ -1433,6 +1580,11 @@ function loadProf() {
     if (p.nm) profName.value = p.nm;
     if (p.ex != null) profExtraPts.value = p.ex;
     if (p.hish != null) profHish.checked = !!p.hish;
+    // работающий пенсионер (v1.14)
+    if (p.ret != null) empRetiree.checked = !!p.ret;
+    if (p.rk) setSegVal('retKitzba', p.rk);
+    if (p.ra) setSegVal('retAge', p.ra);
+    if (p.rn != null) retNewJob.checked = !!p.rn;
   } catch (e) {}
 }
 function updateHello() {
@@ -1469,6 +1621,11 @@ profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; a
 profExtraPts.addEventListener('input', () => updEmpPoints());
 profHish.addEventListener('change', () => { calcEmp(); saveProf(); });
 profName.addEventListener('input', () => { updateHello(); saveProf(); });
+// работающий пенсионер: любые уточнения меняют ставки БЛ → пересчёт и сохранение
+document.getElementById('empRetiree').addEventListener('change', () => { updRetUI(); calcEmp(); saveProf(); });
+segInit('retKitzba', () => { updRetUI(); calcEmp(); saveProf(); });
+segInit('retAge', () => { updRetUI(); calcEmp(); saveProf(); });
+document.getElementById('retNewJob').addEventListener('change', () => { updRetUI(); calcEmp(); saveProf(); });
 ['empGross','empPoints','empPension'].forEach(id => document.getElementById(id).addEventListener('input', () => {
   if (id === 'empPoints') { ptsManual = true; document.getElementById('nkAuto').textContent = t('nk.manual'); }
   if (id === 'empGross') { syncOtRate(); calcOT(); return; } // calcOT сам вызовет calcEmp
@@ -2125,10 +2282,11 @@ function calcOffers() {
   const ptsEl = document.getElementById('ofPts');
   if (ptsEl.value === '') ptsEl.value = +document.getElementById('empPoints').value || 2.25;
   const pts = +ptsEl.value || 0, pen = document.getElementById('ofPen').checked;
+  const myNi = empNiRates(); // офферы сравниваем для этого пользователя: статус/пенсионерский режим учтены
   const r = ['A', 'B'].map(k => {
     const g = +document.getElementById('of' + k).value || 0;
     const hish = document.getElementById('ofHish' + k).checked;
-    const net = g > 0 ? netOf(g, pts, pen) - (hish ? g * 0.025 : 0) : 0;
+    const net = g > 0 ? netOf(g, pts, pen, myNi) - (hish ? g * 0.025 : 0) : 0;
     const pack = g > 0 ? (pen ? g * (0.065 + 0.06) : 0) + (hish ? g * 0.075 : 0) : 0;
     return {g, net, pack, tot: net + pack};
   });
@@ -2222,6 +2380,9 @@ function quizItems() {
   return QUIZ.filter(q => !q.who || (q.who === 'foreign' && foreign) || (q.who === 'b1' && st === 'b1'));
 }
 function quizBad(q) {
+  // пенсионер, принятый после 67 с пенсией: отсутствие пенсионных строк может быть законным —
+  // вместо «нарушения» мягкий текст «проверь условия» (правило проекта про юр-утверждения)
+  if (q.id === 'pens' && retireeState().exempt) return t('ret.pens.note');
   return (segVal('empStatus') === 's25' && q.s25) ? t('quiz.' + q.id + '.badS25') : t('quiz.' + q.id + '.bad');
 }
 function renderQuiz() {
@@ -2388,6 +2549,19 @@ document.getElementById('aiAcctQ').addEventListener('keydown', e => { if (e.key 
 const AI_URL = 'https://heshbon-ai.heshbon.workers.dev';
 const AI_DAILY = 10; // дневной лимит на устройство — предсказуемый бюджет на этапе валидации
 function aiQuotaKey() { return 'heshbon_ai_' + new Date().toISOString().slice(0, 10); }
+// Статус для AI-режимов воркера. Воркер режет status до 24 символов, поэтому пенсионерские
+// уточнения — компактными токенами, которые FACTS воркера узнаёт: '+kitzba' (получает кицбат
+// зикна), '+pens62-67/67-70/70+' (пенс. возраст без кицбы), '+exempt67' (принят после 67
+// с пенсией → работодатель может быть освобождён от пенсии). Самый длинный вариант
+// 'resident+kitzba+exempt67' = ровно 24. При exempt возрастную скобку опускаем — освобождение важнее.
+function aiStatus() {
+  const st = segVal('empStatus');
+  const r = retireeState();
+  if (!r.on) return st;
+  if (r.kitzba) return st + '+kitzba' + (r.exempt ? '+exempt67' : '');
+  if (r.exempt) return st + '+pens+exempt67';
+  return st + '+pens' + ({a6267: '62-67', a6770: '67-70', a70: '70+'}[r.age] || '');
+}
 function aiOnline(btn) {
   const q = btn.dataset.q, targetId = btn.dataset.target;
   const used = +localStorage.getItem(aiQuotaKey()) || 0;
@@ -2398,7 +2572,7 @@ function aiOnline(btn) {
   }
   btn.disabled = true; btn.textContent = t('ai.online.wait');
   fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ q, lang: LANG, status: segVal('empStatus') }) })
+    body: JSON.stringify({ q, lang: LANG, status: aiStatus() }) })
     .then(r => r.ok ? r.json() : Promise.reject(0))
     .then(d => {
       if (!d.answer) throw 0;
@@ -2479,7 +2653,7 @@ function aiContract() {
   if (used >= AI_DAILY) { target.style.display = 'block'; target.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
   const btn = document.getElementById('ctBtn');
   btn.disabled = true; btn.textContent = t('ai.online.wait');
-  const req = { mode: 'contract', lang: LANG, status: segVal('empStatus') };
+  const req = { mode: 'contract', lang: LANG, status: aiStatus() };
   if (ctPages.length) {
     req.imgs = ctPages.map(p => ({img: p.b64, media: p.media}));
     if (txt) req.q = txt.slice(0, 1500);
@@ -2602,7 +2776,7 @@ function tlushScan() {
   const st = tlStore();
   fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({ mode: 'tlush', img: tlSel.b64, media: tlSel.media,
-      prev: st.last ? st.last.f : null, lang: LANG, status: segVal('empStatus'),
+      prev: st.last ? st.last.f : null, lang: LANG, status: aiStatus(), // пенсионерские токены — сверка не требует БЛ/пенсию там, где их законно нет
       sector: profIndustry.value !== 'general' ? profIndustry.value : null, // отраслевая сверка (цав архава)
       tenure: +profTenure.value || null }) })
     .then(r => r.ok ? r.json() : Promise.reject(0))
@@ -2773,9 +2947,99 @@ function calcSelf() {
     row(t('self.brk.ni'), '−' + fmt(ni), 'neg') +
     row(t('self.brk.left'), fmt(m - total), 'pos');
 }
-let seManual = false; // ручной ввод некудот самозанятого отключает синхронизацию с профилем работника
+// ======= Профиль самозанятого (v1.14): свои данные для некудот, независимые от вкладки «Работник» =======
+// Фидбек бухгалтера 07.08.2026: самозанятый ведёт свои некудот здесь, а во вкладке «Работник»
+// может параллельно считать своего наёмного работника (или себя в найме) — ничего не перетирается.
+const PROF_SELF_KEY = 'heshbon_profile_self';
+let seManual = false; // ручной ввод некудот отключает авторасчёт из профиля самозанятого (переживает перезапуск)
+function saveSelfProf() {
+  try {
+    localStorage.setItem(PROF_SELF_KEY, JSON.stringify({
+      st: segVal('seStatus'), g: segVal('seGender'),
+      am: seAliyahM.value, ay: seAliyahY.value,
+      kB: seKidsB.value, k12: seKids12.value, k3: seKids3.value,
+      k45: seKids45.value, k617: seKids617.value, k18: seKids18.value,
+      ex: seExtraPts.value, man: seManual ? 1 : 0, pts: sePoints.value
+    }));
+  } catch (e) {}
+}
+function loadSelfProf() {
+  try {
+    let p = JSON.parse(localStorage.getItem(PROF_SELF_KEY) || 'null');
+    // миграция v1.14: первый запуск — копируем профиль работника (DOM уже заполнен loadProf,
+    // включая перенос старых форматов детских полей); дальше профили живут независимо
+    if (!p) p = { st: segVal('empStatus'), g: segVal('empGender'),
+      am: aliyahM.value, ay: aliyahY.value,
+      kB: profKidsB.value, k12: profKids12.value, k3: profKids3.value,
+      k45: profKids45.value, k617: profKids617.value, k18: profKids18.value,
+      ex: profExtraPts.value };
+    if (p.st) setSegVal('seStatus', p.st);
+    if (p.g) setSegVal('seGender', p.g);
+    if (p.am) seAliyahM.value = p.am;
+    if (p.ay) seAliyahY.value = p.ay;
+    if (p.kB != null) seKidsB.value = p.kB;
+    if (p.k12 != null) seKids12.value = p.k12;
+    if (p.k3 != null) seKids3.value = p.k3;
+    if (p.k45 != null) seKids45.value = p.k45;
+    if (p.k617 != null) seKids617.value = p.k617;
+    if (p.k18 != null) seKids18.value = p.k18;
+    if (p.ex != null) seExtraPts.value = p.ex;
+    seManual = !!p.man;
+    if (seManual && p.pts != null) sePoints.value = p.pts;
+    saveSelfProf(); // копия персистится сразу — с этого момента разделы независимы
+  } catch (e) {}
+}
+function updSelfPoints(keepManual) {
+  const st = segVal('seStatus'), g = segVal('seGender');
+  if (!keepManual) seManual = false; // изменение профиля возвращает авторасчёт (как у работника)
+  let base = POINTS_BASE[g], olehPts = 0, kidsPts = 0, extraPts = 0, info = '';
+  document.getElementById('seOlehBlock').style.display = st === 'oleh' ? 'block' : 'none';
+  if (st === 'oleh') {
+    const m = monthsSinceSel(seAliyahM, seAliyahY), b = olehBonus(m);
+    olehPts = b;
+    if (m < 1) info = t('oleh.ask');
+    else if (m > 54) info = tf('oleh.expired', {m});
+    else {
+      const y = +seAliyahY.value, mo = +seAliyahM.value;
+      const end = new Date(y, mo - 1 + 53, 1); // 54-й льготный месяц
+      info = tf('oleh.active', {m, b, base, end: String(end.getMonth() + 1).padStart(2, '0') + '.' + end.getFullYear()});
+    }
+  } else if (st === 'b1' || st === 's25') base = 0; // у иностранных статусов некудот нет (сиуд-исключение — только в найме)
+  const hasKids = st === 'resident' || st === 'oleh';
+  document.getElementById('seKidsBox').style.display = hasKids ? '' : 'none';
+  if (hasKids) {
+    kidsPts = kidsPtsFor(g, 'se');
+    extraPts = Math.max(0, +seExtraPts.value || 0);
+  }
+  const pts = base + olehPts + kidsPts + extraPts;
+  document.getElementById('seOlehInfo').innerHTML = info;
+  const nb = document.getElementById('seNkBreak');
+  if (seManual) {
+    nb.style.display = 'none';
+    document.getElementById('seNkAuto').textContent = t('nk.manual');
+  } else {
+    sePoints.value = pts;
+    document.getElementById('seNkAuto').textContent = t('nk.auto');
+    if (hasKids) { nb.style.display = ''; nb.innerHTML = nkBreakHtml(base, olehPts, kidsPts, extraPts, pts); }
+    else nb.style.display = 'none';
+  }
+  saveSelfProf();
+  calcSelf(); incRender(); // сумма «отложи» и журнал доходов читают sePoints
+}
+segInit('seStatus', () => updSelfPoints());
+segInit('seGender', () => updSelfPoints());
+['seAliyahM', 'seAliyahY'].forEach(id => document.getElementById(id).addEventListener('change', () => updSelfPoints()));
+['seKidsB', 'seKids12', 'seKids3', 'seKids45', 'seKids617', 'seKids18']
+  .forEach(id => document.getElementById(id).addEventListener('input', () => updSelfPoints()));
+document.getElementById('seExtraPts').addEventListener('input', () => updSelfPoints());
 document.getElementById('seIncome').addEventListener('input', calcSelf);
-document.getElementById('sePoints').addEventListener('input', () => { seManual = true; calcSelf(); });
+document.getElementById('sePoints').addEventListener('input', () => {
+  seManual = true; // ручной override: сохраняется и переживает перезапуск
+  document.getElementById('seNkAuto').textContent = t('nk.manual');
+  document.getElementById('seNkBreak').style.display = 'none';
+  saveSelfProf();
+  calcSelf();
+});
 
 // ======= Журнал доходов осека (локально, heshbon_income) =======
 const INC_KEY = 'heshbon_income';
@@ -3233,8 +3497,8 @@ function renderDeadlines() {
 }
 
 // ======= БУХГАЛТЕР =======
-function netOf(gross, pts, pen) {
-  return gross - incomeTax(gross, pts) - natIns(gross, NI_EMP) - (pen ? gross * PENSION_EMP : 0);
+function netOf(gross, pts, pen, ni) { // ni — необязательные ставки БЛ работника (по умолчанию обычный резидент)
+  return gross - incomeTax(gross, pts) - natIns(gross, ni || NI_EMP) - (pen ? gross * PENSION_EMP : 0);
 }
 function calcRev() {
   const target = +revNet.value || 0, pts = +revPoints.value || 0, pen = revPension.checked;
@@ -3291,12 +3555,13 @@ applyI18n();
 fillAliyahSelects();
 fillVisaSelects();
 loadProf();
+loadSelfProf(); // после loadProf: миграция v1.14 копирует профиль работника в профиль самозанятого
 loadSettings();
 whLoad();
 updateHello();
 syncOtRate();
 tbConsumePendingOut(); // «Ушёл» из шторки, нажатый пока приложение было закрыто
-refreshAll();
+refreshAll(true); // true: не сбрасывать загруженный ручной режим некудот (сам флаг на старте уже из хранилища)
 const empSubSaved = localStorage.getItem('heshbon_emp_sub');
 if (empSubSaved === 'tb') {
   document.querySelectorAll('#empSub button').forEach(b => b.classList.toggle('on', b.dataset.v === 'tb'));
