@@ -441,7 +441,21 @@
         <div class="note" id="kidsMigrateNote" style="display:none" data-i18n="prof.kids.migrate"></div>
       </div>
       <label class="fld" data-i18n="prof.extra"></label>
-      <input type="number" id="profExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
+      <div class="exgrid" id="profExGrid">
+        <label class="check"><input type="checkbox" id="profExDem"> <span data-i18n="nk.ex.dembel"></span></label>
+        <select id="profExDemT" style="display:none">
+          <option value="full" data-i18n="nk.ex.dembelFull"></option>
+          <option value="part" data-i18n="nk.ex.dembelPart"></option>
+        </select>
+        <label class="check"><input type="checkbox" id="profExBa"> <span data-i18n="nk.ex.ba"></span></label>
+        <label class="check"><input type="checkbox" id="profExMa"> <span data-i18n="nk.ex.ma"></span></label>
+        <label class="check"><input type="checkbox" id="profExDip"> <span data-i18n="nk.ex.dip"></span></label>
+        <label class="check"><input type="checkbox" id="profExAlim"> <span data-i18n="nk.ex.alim"></span></label>
+        <label class="check"><input type="checkbox" id="profExSpouse"> <span data-i18n="nk.ex.spouse"></span></label>
+        <label class="fld" data-i18n="nk.ex.manual"></label>
+        <input type="number" id="profExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
+        <div class="note" data-i18n="nk.ex.note"></div>
+      </div>
       <label class="check"><input type="checkbox" id="profHish"> <span data-i18n="prof.hish"></span> <button type="button" class="qmark" data-note="hishHintNote">?</button></label>
       <div class="note qnote" id="hishHintNote" data-i18n-html="prof.hish.hint"></div>
       <div class="note warn" id="hishGateNote" style="display:none"></div>
@@ -837,7 +851,21 @@
           </div>
         </div>
         <label class="fld" data-i18n="prof.extra"></label>
-        <input type="number" id="seExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
+        <div class="exgrid" id="seExGrid">
+          <label class="check"><input type="checkbox" id="seExDem"> <span data-i18n="nk.ex.dembel"></span></label>
+          <select id="seExDemT" style="display:none">
+            <option value="full" data-i18n="nk.ex.dembelFull"></option>
+            <option value="part" data-i18n="nk.ex.dembelPart"></option>
+          </select>
+          <label class="check"><input type="checkbox" id="seExBa"> <span data-i18n="nk.ex.ba"></span></label>
+          <label class="check"><input type="checkbox" id="seExMa"> <span data-i18n="nk.ex.ma"></span></label>
+          <label class="check"><input type="checkbox" id="seExDip"> <span data-i18n="nk.ex.dip"></span></label>
+          <label class="check"><input type="checkbox" id="seExAlim"> <span data-i18n="nk.ex.alim"></span></label>
+          <label class="check"><input type="checkbox" id="seExSpouse"> <span data-i18n="nk.ex.spouse"></span></label>
+          <label class="fld" data-i18n="nk.ex.manual"></label>
+          <input type="number" id="seExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
+          <div class="note" data-i18n="nk.ex.note"></div>
+        </div>
       </details>
       <div class="row2">
         <div>
@@ -1033,142 +1061,7 @@
     </div>
   </section>
 
-  <!-- ================= БУХГАЛТЕР ================= -->
-  <section class="page" id="page-acct">
-    <div class="page-title" data-i18n="acct.title"></div>
-    <p class="page-desc" data-i18n="acct.desc"></p>
-
-    <div class="card">
-      <h3 data-i18n-html="acct.rates.h"></h3>
-      <div data-i18n-html="acct.rates.table1"></div>
-      <div class="note" data-i18n="acct.rates.note"></div>
-      <details class="exp"><summary data-i18n="acct.rates.exp"></summary>
-        <div data-i18n-html="acct.rates.table2"></div>
-      </details>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="rev.h"></h3>
-      <div class="hint" data-i18n="rev.hint"></div>
-      <div class="row2">
-        <div>
-          <label class="fld" data-i18n="rev.fld.net"></label>
-          <input type="number" id="revNet" value="10000" inputmode="decimal">
-        </div>
-        <div>
-          <label class="fld" data-i18n="rev.fld.points"></label>
-          <input type="number" id="revPoints" step="0.25" value="2.25" inputmode="decimal">
-        </div>
-      </div>
-      <label class="check"><input type="checkbox" id="revPension" checked> <span data-i18n="rev.chk"></span></label>
-      <div class="result-hero">
-        <span class="lbl" data-i18n="rev.lbl"></span>
-        <span class="val" id="revGross">—</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="ec.h"></h3>
-      <div class="hint" data-i18n="ec.hint"></div>
-      <label class="fld" data-i18n="ec.gross"></label>
-      <input type="number" id="ecGross" value="9500" inputmode="decimal">
-      <label class="check"><input type="checkbox" id="ecHish"> <span data-i18n="ec.hish"></span></label>
-      <label class="check"><input type="checkbox" id="ecFull" checked> <span data-i18n="ec.full"></span></label>
-      <div class="result-hero">
-        <span class="lbl" data-i18n="ec.lbl"></span>
-        <span class="val" id="ecOut">—</span>
-      </div>
-      <div class="breakdown" id="ecBreak"></div>
-      <div class="note" data-i18n="ec.note"></div>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="tr.h"></h3>
-      <div class="hint" data-i18n="tr.hint"></div>
-      <div class="row3">
-        <div>
-          <label class="fld" data-i18n="tr.months"></label>
-          <input type="number" id="trMonths" value="12" min="1" max="12" inputmode="numeric">
-        </div>
-        <div>
-          <label class="fld" data-i18n="tr.gross"></label>
-          <input type="number" id="trGross" value="9500" inputmode="decimal">
-        </div>
-        <div>
-          <label class="fld" data-i18n="tr.paid"></label>
-          <input type="number" id="trPaid" inputmode="decimal" placeholder="6000">
-        </div>
-      </div>
-      <label class="fld" data-i18n="tr.pts"></label>
-      <input type="number" id="trPts" step="0.25" value="2.25" inputmode="decimal">
-      <div class="result-hero">
-        <span class="lbl" data-i18n="tr.lbl"></span>
-        <span class="val" id="trOut">—</span>
-      </div>
-      <div class="breakdown" id="trBreak"></div>
-      <div style="margin-top:10px">
-        <input type="file" id="t6File" accept="image/*,application/pdf" style="display:none">
-        <button class="btn ghost" id="t6Btn" onclick="document.getElementById('t6File').click()" data-i18n="t6.btn"></button>
-        <div id="t6Out" style="display:none"></div>
-      </div>
-      <div class="note" data-i18n-html="tr.note"></div>
-      <details class="acc"><summary data-i18n="tium.t"></summary><div class="body" data-i18n-html="tium.body"></div></details>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="gl.h"></h3>
-      <div class="hint" data-i18n="gl.hint"></div>
-      <details class="acc"><summary data-i18n="gl.gross.t"></summary><div class="body" data-i18n-html="gl.gross.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.tax.t"></summary><div class="body" data-i18n-html="gl.tax.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.bl.t"></summary><div class="body" data-i18n-html="gl.bl.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.pens.t"></summary><div class="body" data-i18n-html="gl.pens.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.pitz.t"></summary><div class="body" data-i18n-html="gl.pitz.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.hish.t"></summary><div class="body" data-i18n-html="gl.hish.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.ot.t"></summary><div class="body" data-i18n-html="gl.ot.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.nes.t"></summary><div class="body" data-i18n-html="gl.nes.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.hav.t"></summary><div class="body" data-i18n-html="gl.hav.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.hag.t"></summary><div class="body" data-i18n-html="gl.hag.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.zvira.t"></summary><div class="body" data-i18n-html="gl.zvira.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.pts.t"></summary><div class="body" data-i18n-html="gl.pts.b"></div></details>
-      <details class="acc"><summary data-i18n="gl.tium.t"></summary><div class="body" data-i18n-html="gl.tium.b"></div></details>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="rep.h"></h3>
-      <div class="hint" data-i18n="rep.hint"></div>
-      <div data-i18n-html="rep.body"></div>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n-html="ai.acct.h"></h3>
-      <div class="hint" data-i18n="ai.acct.hint"></div>
-      <div>
-        <span class="ai-chip" data-ai="ai.acct.a1" data-i18n="ai.acct.c1"></span>
-        <span class="ai-chip" data-ai="ai.acct.a2" data-i18n="ai.acct.c2"></span>
-        <span class="ai-chip" data-ai="ai.acct.a3" data-i18n="ai.acct.c3"></span>
-        <span class="ai-chip" data-ai="ai.acct.a4" data-i18n="ai.acct.c4"></span>
-      </div>
-      <div class="ai-ask">
-        <input type="text" id="aiAcctQ" data-i18n-ph="ai.free.ph">
-        <button onclick="aiAsk('aiAcctQ','aiAns')" data-i18n="ai.free.btn"></button>
-      </div>
-      <div class="ai-answer" id="aiAns"></div>
-      <div class="note" data-i18n="ai.note"></div>
-    </div>
-
-    <div class="ad-card">
-      <span class="ad-badge" data-i18n="ads.badge"></span>
-      <h4 data-i18n="ads.slot3.t"></h4>
-      <p data-i18n="ads.slot3.x"></p>
-      <a class="ad-cta" href="#" onclick="return false" data-i18n="ads.cta"></a><span class="ad-demo" data-i18n="ads.demo"></span>
-      <div class="ad-place"><span data-i18n="ads.place"></span><a href="mailto:dimollia@gmail.com?subject=Heshbon%2B%20Ads" data-i18n="ads.placeCta"></a></div>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="links.h"></h3>
-      <div class="links" data-i18n-html="links.body"></div>
-    </div>
-  </section>
+  
 
   </main>
 
@@ -1229,12 +1122,11 @@
   <nav class="tabbar">
     <button class="on" data-page="page-emp"><span class="ico">👷</span><span class="t" data-i18n="tab.emp"></span></button>
     <button data-page="page-self"><span class="ico">💼</span><span class="t" data-i18n="tab.self"></span></button>
-    <button data-page="page-acct"><span class="ico">🧮</span><span class="t" data-i18n="tab.acct"></span></button>
   </nav>
 
 </div>
 
-<script src="i18n.js?v=1140"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1150"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1256,7 +1148,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.14.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.15.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1276,7 +1168,6 @@ function setLang(l) {
   fillAliyahSelects();
   fillVisaSelects();
   document.getElementById('aiAnsEmp').style.display = 'none';
-  document.getElementById('aiAns').style.display = 'none';
   document.getElementById('ltOut').style.display = 'none'; // письмо рендерится под язык — при смене закрываем
   vatOut.innerHTML = '';
   updateHello();
@@ -1285,8 +1176,8 @@ function setLang(l) {
 // Полный пересчёт: единая цепочка для старта и смены языка.
 // Держать ОДИН список — раздельные копии уже давали пустую кнопку пунча при запуске (whCalc/tbRender не входили в init).
 function refreshAll(keepPts) {
-  updEmpPoints(keepPts); updSelfPoints(keepPts); calcOT(); whCalc(); tbRender(); holRender(); calcSelf(); calcRev(); calcFired(); renderDeadlines(); unUpdate(); showRates();
-  incRender(); ekRender(); calcPrice(); calcSelfPens(); calcEmpCost(); calcRefund();
+  updEmpPoints(keepPts); updSelfPoints(keepPts); calcOT(); whCalc(); tbRender(); holRender(); calcSelf(); calcFired(); renderDeadlines(); unUpdate(); showRates();
+  incRender(); ekRender(); calcPrice(); calcSelfPens();
   ejRender(); zrRender(); blmRender(); ivcRender();
 }
 document.querySelectorAll('#langs button').forEach(b => b.onclick = () => setLang(b.dataset.l));
@@ -1392,6 +1283,29 @@ function kidsPtsFor(g, pre) {
        + n('Kids18') * (mom ? 0.5 : 0);   // год, когда ребёнку исполняется 18
 }
 // видимая разбивка пунктов: «базовые — 2,75 пункта, … итого — N» (общая для обоих профилей)
+// v1.15: «другие основания» — чекбоксы с баллами (kolzchut, сверено с FACTS воркера 07.08.2026)
+const EX_VALS = { Ba: 1, Ma: 0.5, Dip: 0.5, Alim: 1, Spouse: 1 };
+function exPoints(prefix) {
+  const g = id => document.getElementById(prefix + id);
+  let s = 0;
+  if (g('ExDem') && g('ExDem').checked) s += (g('ExDemT').value === 'part' ? 1 : 2);
+  for (const k in EX_VALS) if (g('Ex' + k) && g('Ex' + k).checked) s += EX_VALS[k];
+  return s;
+}
+function exSave(prefix) {
+  const g = id => document.getElementById(prefix + id);
+  const o = { dem: g('ExDem').checked ? 1 : 0, demT: g('ExDemT').value };
+  for (const k in EX_VALS) o[k] = g('Ex' + k).checked ? 1 : 0;
+  return o;
+}
+function exLoad(prefix, o) {
+  if (!o) return;
+  const g = id => document.getElementById(prefix + id);
+  g('ExDem').checked = !!o.dem;
+  if (o.demT) g('ExDemT').value = o.demT;
+  g('ExDemT').style.display = g('ExDem').checked ? '' : 'none';
+  for (const k in EX_VALS) g('Ex' + k).checked = !!o[k];
+}
 function nkBreakHtml(base, olehPts, kidsPts, extraPts, pts) {
   const parts = [t('nk.base') + ' — ' + pluralN(base, 'plural.pts')];
   if (olehPts) parts.push(t('nk.oleh') + ' — ' + pluralN(olehPts, 'plural.pts'));
@@ -1425,7 +1339,7 @@ function updEmpPoints(keepManual) {
   document.getElementById('kidsBox').style.display = hasKids ? '' : 'none';
   if (hasKids) { // сетка «с 2024 года», сверена по כל-זכות 28.07.2026: за детей, живущих в Израиле
     kidsPts = kidsPtsFor(g, 'prof');
-    extraPts = Math.max(0, +document.getElementById('profExtraPts').value || 0); // степень, алименты, демобилизация и др. — вручную
+    extraPts = exPoints('prof') + Math.max(0, +document.getElementById('profExtraPts').value || 0); // чекбоксы оснований + прочее вручную
   }
   const pts = base + olehPts + kidsPts + extraPts;
   document.getElementById('olehInfo').innerHTML = info;
@@ -1544,7 +1458,7 @@ function saveProf() {
       ind: profIndustry.value, ten: profTenure.value, gross: empGross.value,
       kB: profKidsB.value, k12: profKids12.value, k3: profKids3.value,
       k45: profKids45.value, k617: profKids617.value, k18: profKids18.value,
-      nm: profName.value, ex: profExtraPts.value, hish: profHish.checked,
+      nm: profName.value, ex: profExtraPts.value, exq: exSave('prof'), hish: profHish.checked,
       // работающий пенсионер (v1.14)
       ret: empRetiree.checked ? 1 : 0, rk: segVal('retKitzba'), ra: segVal('retAge'), rn: retNewJob.checked ? 1 : 0
     }));
@@ -1579,6 +1493,7 @@ function loadProf() {
     if (p.gross) { empGross.value = p.gross; fGross.value = p.gross; }
     if (p.nm) profName.value = p.nm;
     if (p.ex != null) profExtraPts.value = p.ex;
+    exLoad('prof', p.exq);
     if (p.hish != null) profHish.checked = !!p.hish;
     // работающий пенсионер (v1.14)
     if (p.ret != null) empRetiree.checked = !!p.ret;
@@ -1619,6 +1534,10 @@ profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; a
 ['profKidsB', 'profKids12', 'profKids3', 'profKids45', 'profKids617', 'profKids18']
   .forEach(id => document.getElementById(id).addEventListener('input', () => updEmpPoints()));
 profExtraPts.addEventListener('input', () => updEmpPoints());
+document.getElementById('profExGrid').addEventListener('change', () => {
+  document.getElementById('profExDemT').style.display = document.getElementById('profExDem').checked ? '' : 'none';
+  updEmpPoints();
+});
 profHish.addEventListener('change', () => { calcEmp(); saveProf(); });
 profName.addEventListener('input', () => { updateHello(); saveProf(); });
 // работающий пенсионер: любые уточнения меняют ставки БЛ → пересчёт и сохранение
@@ -2543,7 +2462,6 @@ document.getElementById('unClear').addEventListener('click', e => {
   e.preventDefault(); localStorage.removeItem(UN_KEY); unUpdate();
 });
 document.getElementById('aiEmpQ').addEventListener('keydown', e => { if (e.key === 'Enter') aiAsk('aiEmpQ','aiAnsEmp'); });
-document.getElementById('aiAcctQ').addEventListener('keydown', e => { if (e.key === 'Enter') aiAsk('aiAcctQ','aiAns'); });
 
 // ======= Онлайн-AI: Cloudflare Worker → Claude (ключ на сервере, не в приложении) =======
 const AI_URL = 'https://heshbon-ai.heshbon.workers.dev';
@@ -2959,7 +2877,7 @@ function saveSelfProf() {
       am: seAliyahM.value, ay: seAliyahY.value,
       kB: seKidsB.value, k12: seKids12.value, k3: seKids3.value,
       k45: seKids45.value, k617: seKids617.value, k18: seKids18.value,
-      ex: seExtraPts.value, man: seManual ? 1 : 0, pts: sePoints.value
+      ex: seExtraPts.value, exq: exSave('se'), man: seManual ? 1 : 0, pts: sePoints.value
     }));
   } catch (e) {}
 }
@@ -2984,6 +2902,7 @@ function loadSelfProf() {
     if (p.k617 != null) seKids617.value = p.k617;
     if (p.k18 != null) seKids18.value = p.k18;
     if (p.ex != null) seExtraPts.value = p.ex;
+    exLoad('se', p.exq);
     seManual = !!p.man;
     if (seManual && p.pts != null) sePoints.value = p.pts;
     saveSelfProf(); // копия персистится сразу — с этого момента разделы независимы
@@ -3009,7 +2928,7 @@ function updSelfPoints(keepManual) {
   document.getElementById('seKidsBox').style.display = hasKids ? '' : 'none';
   if (hasKids) {
     kidsPts = kidsPtsFor(g, 'se');
-    extraPts = Math.max(0, +seExtraPts.value || 0);
+    extraPts = exPoints('se') + Math.max(0, +seExtraPts.value || 0);
   }
   const pts = base + olehPts + kidsPts + extraPts;
   document.getElementById('seOlehInfo').innerHTML = info;
@@ -3032,6 +2951,10 @@ segInit('seGender', () => updSelfPoints());
 ['seKidsB', 'seKids12', 'seKids3', 'seKids45', 'seKids617', 'seKids18']
   .forEach(id => document.getElementById(id).addEventListener('input', () => updSelfPoints()));
 document.getElementById('seExtraPts').addEventListener('input', () => updSelfPoints());
+document.getElementById('seExGrid').addEventListener('change', () => {
+  document.getElementById('seExDemT').style.display = document.getElementById('seExDem').checked ? '' : 'none';
+  updSelfPoints();
+});
 document.getElementById('seIncome').addEventListener('input', calcSelf);
 document.getElementById('sePoints').addEventListener('input', () => {
   seManual = true; // ручной override: сохраняется и переживает перезапуск
@@ -3283,7 +3206,7 @@ function f101Build() {
   const st = segVal('empStatus');
   const kids = ['profKidsB', 'profKids12', 'profKids3', 'profKids45', 'profKids617', 'profKids18']
     .reduce((s, id) => s + (+document.getElementById(id).value || 0), 0);
-  const extra = +document.getElementById('profExtraPts').value || 0;
+  const extra = exPoints('prof') + (+document.getElementById('profExtraPts').value || 0);
   const items = [t('f101.i.base')];
   if (st === 'resident' || st === 'oleh') items.push(t('f101.i.resident'));
   else items.push(t('f101.i.foreign'));
@@ -3303,57 +3226,6 @@ function f101Build() {
     items.map(i => '<li style="margin-bottom:8px">' + i + '</li>').join('') + '</ol>' +
     '<div class="note">' + t('f101.note') + '</div>';
 }
-
-// ======= Скан тофес 106 → автозаполнение калькулятора возврата =======
-document.getElementById('t6File').addEventListener('change', ev => {
-  const f = ev.target.files && ev.target.files[0];
-  ev.target.value = '';
-  if (!f) return;
-  const out = document.getElementById('t6Out'), btn = document.getElementById('t6Btn');
-  const used = +localStorage.getItem(aiQuotaKey()) || 0;
-  if (used >= AI_DAILY) { out.style.display = 'block'; out.textContent = tf('ai.online.limit', { n: AI_DAILY }); return; }
-  const send = (b64, media) => {
-    btn.disabled = true; btn.textContent = t('t6.wait');
-    fetch(AI_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 't106', img: b64, media, lang: LANG }) })
-      .then(r => r.json())
-      .then(resp => {
-        btn.disabled = false; btn.textContent = t('t6.btn');
-        const d = resp && resp.data;
-        if (!d) throw 0;
-        out.style.display = 'block';
-        if (!d.is_106) { out.innerHTML = '<div class="note warn">' + t('t6.not') + '</div>'; return; }
-        try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
-        const months = Math.min(12, Math.max(1, Math.round(d.months_worked || 12)));
-        if (d.gross_total) {
-          document.getElementById('trMonths').value = months;
-          document.getElementById('trGross').value = Math.round(d.gross_total / months);
-        }
-        if (d.tax_042 != null) document.getElementById('trPaid').value = Math.round(d.tax_042);
-        if (d.credit_points != null && d.credit_points > 0) document.getElementById('trPts').value = d.credit_points;
-        calcRefund();
-        out.innerHTML = '<b>' + tf('t6.got', { y: escT(d.year || '?'), emp: escT(d.employer || '—') }) + '</b>' +
-          (d.gross_total != null ? row(t('t6.b.gross'), fmt2(d.gross_total)) : '') +
-          (d.tax_042 != null ? row(t('t6.b.tax'), fmt2(d.tax_042)) : '') +
-          row(t('t6.b.months'), String(months)) +
-          (d.analysis ? '<div class="note" style="margin-top:6px">' + escT(d.analysis).replace(/\n/g, '<br>') + '</div>' : '') +
-          '<div class="note" style="margin-top:6px">' + t('t6.note') + '</div>';
-      })
-      .catch(() => {
-        btn.disabled = false; btn.textContent = t('t6.btn');
-        out.style.display = 'block'; out.textContent = t('t6.err');
-      });
-  };
-  if (f.type === 'application/pdf') {
-    if (f.size > 2500000) { out.style.display = 'block'; out.textContent = t('tlush.toobig'); return; }
-    const fr = new FileReader();
-    fr.onerror = () => { out.style.display = 'block'; out.textContent = t('tlush.badfile'); };
-    fr.onload = () => send(String(fr.result).slice(String(fr.result).indexOf(',') + 1), 'application/pdf');
-    fr.readAsDataURL(f);
-  } else {
-    compressPhoto(f, (b64, media) => send(b64, media), () => { out.style.display = 'block'; out.textContent = t('tlush.badfile'); });
-  }
-});
 
 // ======= «Хочу чистыми X» — обратное ценообразование ацмаи =======
 function selfPensMand(m) { // обязательная пенсия ацмаи, ₪/мес
@@ -3412,52 +3284,9 @@ function ekRender() {
   done();
 }
 
-// ======= Алут маасик: сколько работник стоит работодателю =======
-function calcEmpCost() {
-  const g = +document.getElementById('ecGross').value || 0;
-  if (!g) { document.getElementById('ecOut').textContent = '—'; document.getElementById('ecBreak').innerHTML = ''; return; }
-  const ni = natIns(g, NI_ER);
-  const pens = g * PENSION_ER;
-  const pitz = g * (document.getElementById('ecFull').checked ? .0833 : PITZUIM);
-  const hi = document.getElementById('ecHish').checked ? g * .075 : 0;
-  const total = g + ni + pens + pitz + hi;
-  document.getElementById('ecOut').textContent = fmt(total);
-  document.getElementById('ecBreak').innerHTML =
-    row(t('ec.b.gross'), fmt(g)) + row(t('ec.b.ni'), '+' + fmt(ni)) +
-    row(t('ec.b.pens'), '+' + fmt(pens)) + row(t('ec.b.pitz'), '+' + fmt(pitz)) +
-    (hi ? row(t('ec.b.hish'), '+' + fmt(hi)) : '') +
-    row(t('ec.b.pct'), '+' + Math.round((total / g - 1) * 100) + '%', 'neg');
-}
-['ecGross'].forEach(id => document.getElementById(id).addEventListener('input', calcEmpCost));
-['ecHish','ecFull'].forEach(id => document.getElementById(id).addEventListener('change', calcEmpCost));
 
-// ======= Возврат налога (грубый годовой пересчёт) =======
-function yearTax(annual, pts) { // годовые ступени = месячные × 12; некудот годовые
-  let tax = 0, prev = 0;
-  for (const [cap, rate] of BRACKETS) {
-    const c = cap === Infinity ? Infinity : cap * 12;
-    tax += Math.max(0, Math.min(annual, c) - prev) * rate;
-    if (annual <= c) break;
-    prev = c;
-  }
-  return Math.max(0, tax - pts * POINT * 12);
-}
-function calcRefund() {
-  const k = Math.min(12, Math.max(1, +document.getElementById('trMonths').value || 12));
-  const m = +document.getElementById('trGross').value || 0;
-  const paidRaw = document.getElementById('trPaid').value;
-  const pts = +document.getElementById('trPts').value || 0;
-  const outEl = document.getElementById('trOut'), br = document.getElementById('trBreak');
-  if (!m || paidRaw === '') { outEl.textContent = '—'; br.innerHTML = m ? '<div class="note">' + t('tr.needpaid') + '</div>' : ''; return; }
-  const due = yearTax(m * k, pts);
-  const diff = (+paidRaw || 0) - due;
-  outEl.textContent = diff > 50 ? '≈ ' + fmt(diff) : t('tr.zero');
-  br.innerHTML = row(t('tr.b.year'), fmt(m * k)) + row(t('tr.b.due'), fmt(due)) +
-    row(t('tr.b.paid'), fmt(+paidRaw || 0)) +
-    (diff > 50 ? '<div class="note" style="margin-top:6px">' + t('tr.b.yes') + '</div>'
-               : diff < -50 ? '<div class="note warn" style="margin-top:6px">' + t('tr.b.debt') + '</div>' : '');
-}
-['trMonths','trGross','trPaid','trPts'].forEach(id => document.getElementById(id).addEventListener('input', calcRefund));
+
+
 
 let vatLock = false;
 vatNet.addEventListener('input', () => { if (vatLock) return; vatLock = true;
@@ -3496,18 +3325,11 @@ function renderDeadlines() {
      <div class="info"><b>${i.tt}</b><span>${i.s}</span></div></div>`).join('');
 }
 
-// ======= БУХГАЛТЕР =======
+// ======= Движок нетто (расчёт работника; база для будущего нетто→брутто) =======
 function netOf(gross, pts, pen, ni) { // ni — необязательные ставки БЛ работника (по умолчанию обычный резидент)
   return gross - incomeTax(gross, pts) - natIns(gross, ni || NI_EMP) - (pen ? gross * PENSION_EMP : 0);
 }
-function calcRev() {
-  const target = +revNet.value || 0, pts = +revPoints.value || 0, pen = revPension.checked;
-  if (!target) { revGross.textContent = '—'; return; }
-  let lo = 0, hi = 300000;
-  for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; (netOf(mid, pts, pen) < target) ? lo = mid : hi = mid; }
-  revGross.textContent = fmt(hi);
-}
-['revNet','revPoints','revPension'].forEach(id => document.getElementById(id).addEventListener('input', calcRev));
+
 
 // ======= Premium: запись в ранний доступ (fake-door; биллинг сторов — при релизе) =======
 function joinWait(plan, btn) {
@@ -3545,7 +3367,7 @@ function fetchRates(i) {
     ALLOC_TH = d.alloc_th || ALLOC_TH; CASH_BIZ = d.cash_biz || CASH_BIZ; CASH_PRIV = d.cash_priv || CASH_PRIV; GIFT_CAP = d.gift_cap || GIFT_CAP;
     PATUR_FINE = d.patur_fine || PATUR_FINE; PENS_FINE = d.pens_fine || PENS_FINE; ZAIR_PCT = d.zair_pct || ZAIR_PCT;
     ratesVer = d.version;
-    calcEmp(); calcSelf(); calcRev(); calcOT(); calcFired(); showRates();
+    calcEmp(); calcSelf(); calcOT(); calcFired(); showRates();
     ejRender(); zrRender(); blmRender(); ivcRender(); calcSelfPens();
   }).catch(() => fetchRates(i + 1)); // следующий источник; все недоступны — работаем на вшитых
 }
