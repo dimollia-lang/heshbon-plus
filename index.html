@@ -109,6 +109,15 @@
   }
   .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; display:flex; align-items:center; gap:7px; flex-wrap: wrap; }
   .card .hint { font-size: 12px; color: var(--muted); line-height: 1.45; margin-bottom: 12px; }
+  /* Сворачиваемые карточки (v1.15.1): второстепенные закрыты по умолчанию — интерфейс не перегружен.
+     Клик по заголовку открывает; выбор запоминается (heshbon_folds). */
+  .card.foldable > h3 { cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+  .card.foldable > h3::after { content: '▾'; margin-inline-start: auto; color: var(--muted); font-size: 13px; transition: transform .15s; }
+  .card.foldable.folded > h3::after { transform: rotate(-90deg); }
+  [dir=rtl] .card.foldable.folded > h3::after { transform: rotate(90deg); }
+  .card.folded > *:not(h3) { display: none !important; }
+  .card.folded { padding-top: 13px; padding-bottom: 13px; }
+  .card.folded > h3 { margin-bottom: 0; }
 
   label.fld { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin: 10px 0 5px; }
   input[type=number], input[type=text], input[type=month], select, textarea {
@@ -293,6 +302,15 @@
   #printArea .pr-sig div{flex:1;border-top:1px solid #000;padding-top:4px;font-size:10.5px;text-align:center}
   #printArea .he{unicode-bidi:isolate;direction:rtl}
 }
+/* Узкие телефоны: чуть плотнее, чтобы ничего не вылезало за экран (v1.15.1) */
+@media (max-width: 380px){
+  main{padding:12px 10px 20px}
+  .card{padding:14px 12px}
+  .row3{gap:6px}
+  .row2{gap:8px}
+  .seg button{font-size:11px;padding:8px 1px}
+  .topbar h1{font-size:16px}
+}
 </style>
 </head>
 <body>
@@ -333,6 +351,10 @@
       <h3 data-i18n="emp.calc.h"></h3>
       <div class="hint" data-i18n="emp.calc.hint"></div>
 
+      <!-- v1.15.1: профиль свёрнут в details — разгрузка главной карточки;
+           при первом запуске (нет сохранённого профиля) открывается сам, см. init -->
+      <details class="exp" id="empProf">
+        <summary data-i18n="emp.prof.t"></summary>
       <label class="fld" data-i18n="emp.fld.status"></label>
       <div class="seg" id="empStatus">
         <button data-v="resident" class="on" data-i18n="st.resident"></button>
@@ -459,6 +481,7 @@
       <label class="check"><input type="checkbox" id="profHish"> <span data-i18n="prof.hish"></span> <button type="button" class="qmark" data-note="hishHintNote">?</button></label>
       <div class="note qnote" id="hishHintNote" data-i18n-html="prof.hish.hint"></div>
       <div class="note warn" id="hishGateNote" style="display:none"></div>
+      </details>
 
       <label class="fld" data-i18n="emp.fld.gross"></label>
       <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
@@ -494,7 +517,7 @@
       <button class="btn ghost" id="visaClearBtn" style="display:none" onclick="clearVisa()" data-i18n="visa.clear"></button>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="ot.h"></h3>
       <div class="hint" data-i18n-html="ot.hint"></div>
       <div class="row3">
@@ -519,7 +542,7 @@
       <div class="note" data-i18n-html="ot.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="quiz.h"></h3>
       <div class="hint" data-i18n="quiz.hint"></div>
       <div id="rightsQuiz"></div>
@@ -556,7 +579,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3><span data-i18n="contract.h"></span> <span class="pill">β</span></h3>
       <div class="hint" data-i18n="contract.hint"></div>
       <textarea id="ctText" rows="6" data-i18n-ph="contract.ph" style="resize:vertical;min-height:110px"></textarea>
@@ -568,14 +591,14 @@
       <div class="note" data-i18n="contract.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="f101.h"></h3>
       <div class="hint" data-i18n="f101.hint"></div>
       <button class="btn ghost" onclick="f101Build()" data-i18n="f101.btn"></button>
       <div id="f101Out" style="display:none"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3><span data-i18n="tlush.h"></span> <span class="pill">β</span></h3>
       <div class="hint" data-i18n="tlush.hint"></div>
       <input type="file" id="tlFile" accept="image/*,application/pdf" style="display:none">
@@ -586,7 +609,7 @@
       <div class="note" data-i18n="tlush.note"></div>
     </div>
 
-    <div class="card" id="ltCard">
+    <div class="card fold" id="ltCard">
       <h3 data-i18n="lt.h"></h3>
       <div class="hint" data-i18n="lt.hint"></div>
       <div>
@@ -603,7 +626,7 @@
       <div class="note" data-i18n="lt.note"></div>
     </div>
 
-    <div class="card" id="offersCard">
+    <div class="card fold" id="offersCard">
       <h3 data-i18n="of.h"></h3>
       <div class="hint" data-i18n="of.hint"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -629,7 +652,7 @@
       <div id="ofOut"></div>
     </div>
 
-    <div class="card" id="holCard">
+    <div class="card fold" id="holCard">
       <h3 data-i18n="hol.h"></h3>
       <div class="hint" data-i18n="hol.hint"></div>
       <label class="fld" data-i18n="hol.conf"></label>
@@ -643,7 +666,7 @@
       <div class="note qnote open" data-i18n-html="hol.rules"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="fired.h"></h3>
       <div class="hint" data-i18n="fired.hint"></div>
       <label class="fld" data-i18n="fired.paytype"></label>
@@ -669,7 +692,7 @@
       <div class="note warn" data-i18n-html="fired.unemp"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="rights.h"></h3>
       <div class="hint" data-i18n="rights.hint"></div>
       <details class="acc"><summary data-i18n="acc.tlush.t"></summary><div class="body" data-i18n-html="acc.tlush.body"></div></details>
@@ -741,7 +764,7 @@
       <div class="note qnote open" data-i18n-html="tb.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="wh.h"></h3>
       <div class="hint" data-i18n="wh.hint"></div>
       <div class="row2">
@@ -887,7 +910,7 @@
       <div class="note" data-i18n-html="self.save.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="inc.h"></h3>
       <div class="hint" data-i18n="inc.hint"></div>
       <div class="row3">
@@ -915,7 +938,7 @@
       <div class="note" data-i18n="inc.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="ej.h"></h3>
       <div class="hint" data-i18n="ej.hint"></div>
       <div class="row3">
@@ -944,14 +967,14 @@
       <div class="note" data-i18n="ej.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="zr.h"></h3>
       <div class="hint" data-i18n="zr.hint"></div>
       <div id="zrOut"></div>
       <details class="acc"><summary data-i18n="zr.who.t"></summary><div class="body" data-i18n-html="zr.who.b"></div></details>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="blm.h"></h3>
       <div class="hint" data-i18n="blm.hint"></div>
       <label class="fld" data-i18n="blm.base"></label>
@@ -960,7 +983,7 @@
       <div class="note" data-i18n-html="blm.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="ivc.h"></h3>
       <div class="hint" data-i18n="ivc.hint"></div>
       <label class="fld" data-i18n="ivc.sum"></label>
@@ -969,7 +992,7 @@
       <div id="ivcOut"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="pr.h"></h3>
       <div class="hint" data-i18n="pr.hint"></div>
       <div class="row2">
@@ -991,7 +1014,7 @@
       <div class="note" data-i18n-html="pr.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="sp.h"></h3>
       <div class="hint" data-i18n="sp.hint"></div>
       <label class="fld" data-i18n="sp.inc"></label>
@@ -1008,7 +1031,7 @@
       <div class="ad-place"><span data-i18n="ads.place"></span><a href="mailto:dimollia@gmail.com?subject=Heshbon%2B%20Ads" data-i18n="ads.placeCta"></a></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="vat.h"></h3>
       <div class="row2">
         <div>
@@ -1024,13 +1047,13 @@
       <div class="note" data-i18n-html="vat.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="cmp.h"></h3>
       <div data-i18n-html="cmp.table"></div>
       <div class="note" data-i18n="cmp.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="esek.h"></h3>
       <div class="hint" data-i18n="esek.hint"></div>
       <div id="ekBox" style="margin-bottom:10px">
@@ -1044,14 +1067,14 @@
       <details class="acc"><summary data-i18n="esek.s25.t"></summary><div class="body" data-i18n-html="esek.s25.body"></div></details>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="dl.h"></h3>
       <div id="seDeadlines"></div>
       <label class="check" style="margin-top:8px"><input type="checkbox" id="selfPush"> <span data-i18n="dl.push"></span></label>
       <div class="note" data-i18n="dl.note"></div>
     </div>
 
-    <div class="card">
+    <div class="card fold">
       <h3 data-i18n="exp.h"></h3>
       <details class="acc"><summary data-i18n="exp.home.t"></summary><div class="body" data-i18n-html="exp.home.body"></div></details>
       <details class="acc"><summary data-i18n="exp.car.t"></summary><div class="body" data-i18n-html="exp.car.body"></div></details>
@@ -1126,7 +1149,7 @@
 
 </div>
 
-<script src="i18n.js?v=1150"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1151"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1148,7 +1171,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.15.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.15.1'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -2190,6 +2213,7 @@ function tbCompare() {
 function ltFromCmp() { // из сверки — к письму о недоплате (карточка писем в «Зарплате»)
   document.querySelectorAll('#empSub button').forEach(b => b.classList.toggle('on', b.dataset.v === 'sal'));
   empSubShow('sal');
+  unfoldCard(document.getElementById('ltCard')); // карточка писем по умолчанию свёрнута (v1.15.1)
   ltShow('pay');
   document.getElementById('ltCard').scrollIntoView({block: 'start'});
 }
@@ -3338,6 +3362,35 @@ function joinWait(plan, btn) {
   btn.disabled = true;
 }
 
+// ======= Сворачиваемые карточки (v1.15.1): второстепенные закрыты, интерфейс дышит =======
+const FOLDS_KEY = 'heshbon_folds';
+function cardFoldKey(card) {
+  const h = card.querySelector(':scope > h3');
+  if (!h) return null;
+  const el = h.matches('[data-i18n]') ? h : h.querySelector('[data-i18n]');
+  return el ? el.dataset.i18n : null;
+}
+function unfoldCard(el) { // программное открытие (переходы вроде «сверка → письмо»)
+  const card = el && el.closest ? el.closest('.card') : null;
+  if (card) card.classList.remove('folded');
+}
+(function initFolds() {
+  let st = {};
+  try { st = JSON.parse(localStorage.getItem(FOLDS_KEY) || '{}'); } catch (e) {}
+  document.querySelectorAll('.card.fold').forEach(card => {
+    const key = cardFoldKey(card);
+    if (!key) return;
+    card.classList.add('foldable');
+    card.classList.toggle('folded', st[key] !== 1); // по умолчанию свёрнута; 1 = пользователь оставил открытой
+    card.querySelector(':scope > h3').addEventListener('click', e => {
+      if (e.target.closest('button, a, input, select, .qmark')) return; // клики по контролам в заголовке — не тумблер
+      const folded = card.classList.toggle('folded');
+      st[key] = folded ? 0 : 1;
+      try { localStorage.setItem(FOLDS_KEY, JSON.stringify(st)); } catch (e2) {}
+    });
+  });
+})();
+
 // ======= Табы =======
 document.querySelectorAll('nav.tabbar button').forEach(b => b.onclick = () => {
   document.querySelectorAll('nav.tabbar button').forEach(x => x.classList.remove('on'));
@@ -3378,6 +3431,8 @@ fillAliyahSelects();
 fillVisaSelects();
 loadProf();
 loadSelfProf(); // после loadProf: миграция v1.14 копирует профиль работника в профиль самозанятого
+// первый запуск (профиля ещё нет) — блок профиля раскрыт, чтобы его заполнили; дальше живёт свёрнутым
+if (!localStorage.getItem(PROF_KEY)) document.getElementById('empProf').open = true;
 loadSettings();
 whLoad();
 updateHello();
