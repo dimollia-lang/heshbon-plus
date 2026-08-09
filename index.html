@@ -216,6 +216,11 @@
   .ai-chip { display: inline-block; margin: 3px 4px 3px 0; padding: 7px 11px; font-size: 12.5px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; color: var(--text); cursor: pointer; }
   .ai-answer { margin-top: 10px; font-size: 13px; background: var(--accent-soft); border-radius: 10px; padding: 11px 13px; line-height: 1.55; display: none; }
   .ai-ask { display: flex; gap: 8px; margin-top: 10px; }
+  .ai-ask .ai-clear { flex: 0 0 auto; width: 40px; border: 1.5px solid var(--border); background: var(--bg); color: var(--muted); border-radius: 10px; font-size: 14px; cursor: pointer; }
+  /* v1.16: брутто выделено как нетто, только красным — «от него идёт расчёт» (фидбек 09.08) */
+  .fld-gross { color: var(--red); font-size: 13px; font-weight: 800; }
+  input.gross-big { border-color: var(--red); color: var(--red); font-weight: 800; font-size: 20px; }
+  input.gross-big:focus { border-color: var(--red); }
   .ai-ask input { flex: 1; }
   .ai-ask button { flex-shrink: 0; padding: 0 16px; background: var(--accent); color: #fff; border: 0; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
@@ -415,7 +420,7 @@
 
       <div class="row2">
         <div>
-          <label class="fld" data-i18n="prof.industry"></label>
+          <label class="fld"><span data-i18n="prof.industry"></span> <button type="button" class="qmark" data-note="indHelpNote">?</button></label>
           <select id="profIndustry">
             <option value="general" data-i18n="prof.ind.general"></option>
             <option value="cleaning" data-i18n="prof.ind.cleaning"></option>
@@ -430,6 +435,7 @@
           <input type="number" id="profTenure" value="1" step="0.5" min="0" inputmode="decimal">
         </div>
       </div>
+      <div class="note qnote" id="indHelpNote" data-i18n-html="ind.help"></div>
       <div id="kidsBox">
         <div class="fld" data-i18n="prof.kids.h"></div>
         <div class="row3">
@@ -460,6 +466,9 @@
             <input type="number" id="profKids18" value="0" step="1" min="0" inputmode="numeric">
           </div>
         </div>
+        <!-- v1.16: ребёнок с инвалидностью — +2 балла за каждого ДОПОЛНИТЕЛЬНО к возрастным (ст. 45, кользхут 09.08.2026) -->
+        <label class="fld" data-i18n="prof.kidsDis"></label>
+        <input type="number" id="profKidsDis" value="0" step="1" min="0" inputmode="numeric">
         <div class="note" id="kidsMigrateNote" style="display:none" data-i18n="prof.kids.migrate"></div>
       </div>
       <label class="fld" data-i18n="prof.extra"></label>
@@ -483,11 +492,12 @@
       <div class="note warn" id="hishGateNote" style="display:none"></div>
       </details>
 
-      <label class="fld" data-i18n="emp.fld.gross"></label>
-      <input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
-
+      <!-- v1.16 (фидбек 09.08): пенсия выше, а брутто-поле выделено и стоит вплотную к нетто -->
       <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span> <button type="button" class="qmark" data-note="pensHintNote">?</button></label>
       <div class="note qnote" id="pensHintNote" data-i18n-html="emp.chk.pension.hint"></div>
+
+      <label class="fld fld-gross" data-i18n="emp.fld.gross"></label>
+      <input type="number" id="empGross" class="gross-big" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
 
       <div class="result-hero">
         <span class="lbl" data-i18n="emp.net.lbl"></span>
@@ -570,6 +580,7 @@
       </div>
       <div class="ai-ask">
         <input type="text" id="aiEmpQ" data-i18n-ph="ai.free.ph">
+        <button type="button" class="ai-clear" onclick="aiClear('aiEmpQ','aiAnsEmp')" title="✕">✕</button>
         <button onclick="aiAsk('aiEmpQ','aiAnsEmp')" data-i18n="ai.free.btn"></button>
       </div>
       <div class="ai-answer" id="aiAnsEmp"></div>
@@ -662,6 +673,9 @@
         <option value="chr" data-i18n="hol.c.chr"></option>
         <option value="none" data-i18n="hol.c.none"></option>
       </select>
+      <div class="note" data-i18n="hol.conf.hint"></div>
+      <label class="fld" data-i18n="hol.year"></label>
+      <select id="holYear" onchange="holRender()"></select>
       <div id="holList"></div>
       <div class="note qnote open" data-i18n-html="hol.rules"></div>
     </div>
@@ -872,6 +886,8 @@
               <input type="number" id="seKids18" value="0" step="1" min="0" inputmode="numeric">
             </div>
           </div>
+          <label class="fld" data-i18n="prof.kidsDis"></label>
+          <input type="number" id="seKidsDis" value="0" step="1" min="0" inputmode="numeric">
         </div>
         <label class="fld" data-i18n="prof.extra"></label>
         <div class="exgrid" id="seExGrid">
@@ -1108,6 +1124,8 @@
         <button class="btn" onclick="joinWait('pro', this)" data-i18n="prem.cta"></button>
       </div>
       <div class="note" data-i18n="prem.note"></div>
+      <!-- v1.16 (фидбек 09.08): автопродление, возвраты при сбоях, отключение автосписаний, контакт -->
+      <div class="note" data-i18n-html="prem.legal"></div>
       <button class="btn ghost" onclick="document.getElementById('premModal').style.display='none'" data-i18n="prem.close"></button>
     </div>
   </div>
@@ -1138,6 +1156,8 @@
         <a href="https://dimollia-lang.github.io/heshbon-plus/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a>
         · <span id="setVersion"></span>
       </div>
+      <label class="fld" style="margin-top:16px" data-i18n="set.support.t"></label>
+      <div class="note" data-i18n-html="set.support.b"></div>
       <button class="btn" onclick="document.getElementById('setModal').style.display='none'" data-i18n="set.close"></button>
     </div>
   </div>
@@ -1149,7 +1169,7 @@
 
 </div>
 
-<script src="i18n.js?v=1151"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1160"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1171,7 +1191,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.15.1'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.16.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1272,7 +1292,8 @@ function olehBonus(m) {
 // два select вместо input type=month — Android WebView календарь месяца не поддерживает.
 // Заполняет обе пары: профиль работника (aliyahM/Y) и профиль самозанятого (seAliyahM/Y)
 function fillAliyahSelects() {
-  const MON = t('months');
+  // полные названия месяцев (фидбек 09.08); короткие months остаются для дедлайнов/бейджей
+  const MON = (I18N[LANG] && I18N[LANG]['months.full']) || t('months');
   const mHtml = MON.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
   const nowY = new Date().getFullYear();
   let ys = '';
@@ -1303,11 +1324,20 @@ function kidsPtsFor(g, pre) {
        + n('Kids3') * 3.5      // 3 года
        + n('Kids45') * 2.5     // 4–5 лет
        + n('Kids617') * (mom ? 2 : 1)     // 6–17 лет
-       + n('Kids18') * (mom ? 0.5 : 0);   // год, когда ребёнку исполняется 18
+       + n('Kids18') * (mom ? 0.5 : 0)    // год, когда ребёнку исполняется 18
+       + n('KidsDis') * 2;     // ребёнок с инвалидностью: +2 доп. к возрастным (ст. 45; одному из родителей, кользхут 09.08.2026)
 }
 // видимая разбивка пунктов: «базовые — 2,75 пункта, … итого — N» (общая для обоих профилей)
-// v1.15: «другие основания» — чекбоксы с баллами (kolzchut, сверено с FACTS воркера 07.08.2026)
-const EX_VALS = { Ba: 1, Ma: 0.5, Dip: 0.5, Alim: 1, Spouse: 1 };
+// v1.15: «другие основания» — чекбоксы с баллами. v1.16 факт-фикс (кользхут 09.08.2026):
+// профдиплом (1700+ часов, окончившим с 2023) = 1 балл/год на срок учёбы (макс 3), было 0.5;
+// BA и диплом НЕ суммируются (взаимоисключение в обработчике exGrid); MA сочетается с любым.
+const EX_VALS = { Ba: 1, Ma: 0.5, Dip: 1, Alim: 1, Spouse: 1 };
+// BA ↔ профдиплом: закон разрешает только одну из льгот — включение одной снимает другую
+function exExclusive(prefix, changedId) {
+  const g = id => document.getElementById(prefix + id);
+  if (changedId === prefix + 'ExBa' && g('ExBa').checked) g('ExDip').checked = false;
+  if (changedId === prefix + 'ExDip' && g('ExDip').checked) g('ExBa').checked = false;
+}
 function exPoints(prefix) {
   const g = id => document.getElementById(prefix + id);
   let s = 0;
@@ -1480,7 +1510,7 @@ function saveProf() {
       am: aliyahM.value, ay: aliyahY.value,
       ind: profIndustry.value, ten: profTenure.value, gross: empGross.value,
       kB: profKidsB.value, k12: profKids12.value, k3: profKids3.value,
-      k45: profKids45.value, k617: profKids617.value, k18: profKids18.value,
+      k45: profKids45.value, k617: profKids617.value, k18: profKids18.value, kDis: profKidsDis.value,
       nm: profName.value, ex: profExtraPts.value, exq: exSave('prof'), hish: profHish.checked,
       // работающий пенсионер (v1.14)
       ret: empRetiree.checked ? 1 : 0, rk: segVal('retKitzba'), ra: segVal('retAge'), rn: retNewJob.checked ? 1 : 0
@@ -1507,6 +1537,7 @@ function loadProf() {
     if (p.kB != null) {
       profKidsB.value = p.kB; profKids12.value = p.k12; profKids3.value = p.k3;
       profKids45.value = p.k45; profKids617.value = p.k617; profKids18.value = p.k18;
+      if (p.kDis != null) profKidsDis.value = p.kDis; // v1.16: дети с инвалидностью
     } else {
       const old0 = +(p.k0 != null ? p.k0 : 0), old6 = +(p.k6 != null ? p.k6 : (p.kids != null ? p.kids : 0));
       profKids12.value = old0;   // старое «до 6» = 4,5 пункта → бакет 1–2 года, чтобы сумма не прыгнула
@@ -1554,10 +1585,11 @@ profIndustry.addEventListener('change', () => {
   calcOT(); calcFired(); updEmpPoints(); // updEmpPoints пересчитает и б1-сиуд некудот, и гейт, и нетто, и сохранит профиль
 });
 profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; autoHish(); updateHishGate(); calcFired(); calcEmp(); saveProf(); });
-['profKidsB', 'profKids12', 'profKids3', 'profKids45', 'profKids617', 'profKids18']
+['profKidsB', 'profKids12', 'profKids3', 'profKids45', 'profKids617', 'profKids18', 'profKidsDis']
   .forEach(id => document.getElementById(id).addEventListener('input', () => updEmpPoints()));
 profExtraPts.addEventListener('input', () => updEmpPoints());
-document.getElementById('profExGrid').addEventListener('change', () => {
+document.getElementById('profExGrid').addEventListener('change', e => {
+  exExclusive('prof', e.target.id); // BA ↔ профдиплом: только одна из льгот
   document.getElementById('profExDemT').style.display = document.getElementById('profExDem').checked ? '' : 'none';
   updEmpPoints();
 });
@@ -2264,13 +2296,27 @@ function holRender() {
   const conf = localStorage.getItem('heshbon_conf') || 'jew';
   document.getElementById('holConf').value = conf;
   const box = document.getElementById('holList');
-  if (conf === 'mus') { box.innerHTML = '<div class="note" style="margin-top:8px">' + t('hol.mus.note') + '</div>'; return; }
-  if (conf === 'none') { box.innerHTML = '<div class="note" style="margin-top:8px">' + t('hol.none.note') + '</div>'; return; }
+  const ysel = document.getElementById('holYear');
+  if (conf === 'mus') { ysel.style.display = 'none'; box.innerHTML = '<div class="note" style="margin-top:8px">' + t('hol.mus.note') + '</div>'; return; }
+  if (conf === 'none') { ysel.style.display = 'none'; box.innerHTML = '<div class="note" style="margin-top:8px">' + t('hol.none.note') + '</div>'; return; }
   const list = conf === 'chr' ? HOL_CHR : HOL_JEW;
-  const today = tbISO(new Date());
-  const up = list.filter(h => h[0] >= today).slice(0, 4);
-  box.innerHTML = up.length
-    ? '<div style="margin-top:8px">' + up.map(h => row(t(h[1]), tbDM(h[0]) + '.' + h[0].slice(0, 4))).join('') + '</div>'
+  // v1.16 (фидбек 09.08): показываем весь выбранный год (в т.ч. прошлое — для сверки старых тлушей),
+  // праздники на шаббат НЕ прячем — помечаем: отдельный дмей хаг за них обычно не положен (прецедент)
+  ysel.style.display = '';
+  const years = [...new Set(list.map(h => h[0].slice(0, 4)))].sort();
+  const keep = ysel.value;
+  ysel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+  ysel.value = years.includes(keep) ? keep : (years.includes(String(new Date().getFullYear())) ? String(new Date().getFullYear()) : years[0]);
+  const rows = list.filter(h => h[0].slice(0, 4) === ysel.value);
+  let hasSat = false;
+  box.innerHTML = rows.length
+    ? '<div style="margin-top:8px">' + rows.map(h => {
+        const sat = new Date(h[0] + 'T00:00:00').getDay() === 6;
+        if (sat) hasSat = true;
+        return row(t(h[1]) + (sat ? ' <span style="color:var(--red);font-size:11px;font-weight:700">· ' + t('hol.shabbat') + '</span>' : ''),
+                   tbDM(h[0]) + '.' + h[0].slice(0, 4));
+      }).join('') + '</div>' +
+      (hasSat ? '<div class="note" style="margin-top:6px">' + t('hol.shabbat.note') + '</div>' : '')
     : '<div class="note" style="margin-top:8px">' + t('hol.none.note') + '</div>';
 }
 function holSoonNote() { // «сегодня/завтра праздник» — для статуса в табеле
@@ -2440,6 +2486,14 @@ const AI_TOPICS = [
   {kw: ['минимал','minimum','מינימום','почасов','wage'], key: 'quiz.minw.bad'},
   {kw: ['тлуш','расчетн','расчётн','payslip','tlush','תלוש'], key: 'ai.emp.a1'},
 ];
+// сброс вопроса и ответа одним нажатием (фидбек 09.08: раньше текст приходилось стирать вручную)
+function aiClear(inputId, targetId) {
+  const q = document.getElementById(inputId), a = document.getElementById(targetId);
+  q.value = '';
+  a.style.display = 'none';
+  a.innerHTML = '';
+  q.focus();
+}
 function aiAsk(inputId, targetId) {
   const q = document.getElementById(inputId).value.trim();
   const target = document.getElementById(targetId);
@@ -2900,7 +2954,7 @@ function saveSelfProf() {
       st: segVal('seStatus'), g: segVal('seGender'),
       am: seAliyahM.value, ay: seAliyahY.value,
       kB: seKidsB.value, k12: seKids12.value, k3: seKids3.value,
-      k45: seKids45.value, k617: seKids617.value, k18: seKids18.value,
+      k45: seKids45.value, k617: seKids617.value, k18: seKids18.value, kDis: seKidsDis.value,
       ex: seExtraPts.value, exq: exSave('se'), man: seManual ? 1 : 0, pts: sePoints.value
     }));
   } catch (e) {}
@@ -2913,7 +2967,7 @@ function loadSelfProf() {
     if (!p) p = { st: segVal('empStatus'), g: segVal('empGender'),
       am: aliyahM.value, ay: aliyahY.value,
       kB: profKidsB.value, k12: profKids12.value, k3: profKids3.value,
-      k45: profKids45.value, k617: profKids617.value, k18: profKids18.value,
+      k45: profKids45.value, k617: profKids617.value, k18: profKids18.value, kDis: profKidsDis.value,
       ex: profExtraPts.value };
     if (p.st) setSegVal('seStatus', p.st);
     if (p.g) setSegVal('seGender', p.g);
@@ -2925,6 +2979,7 @@ function loadSelfProf() {
     if (p.k45 != null) seKids45.value = p.k45;
     if (p.k617 != null) seKids617.value = p.k617;
     if (p.k18 != null) seKids18.value = p.k18;
+    if (p.kDis != null) seKidsDis.value = p.kDis;
     if (p.ex != null) seExtraPts.value = p.ex;
     exLoad('se', p.exq);
     seManual = !!p.man;
@@ -2972,10 +3027,11 @@ function updSelfPoints(keepManual) {
 segInit('seStatus', () => updSelfPoints());
 segInit('seGender', () => updSelfPoints());
 ['seAliyahM', 'seAliyahY'].forEach(id => document.getElementById(id).addEventListener('change', () => updSelfPoints()));
-['seKidsB', 'seKids12', 'seKids3', 'seKids45', 'seKids617', 'seKids18']
+['seKidsB', 'seKids12', 'seKids3', 'seKids45', 'seKids617', 'seKids18', 'seKidsDis']
   .forEach(id => document.getElementById(id).addEventListener('input', () => updSelfPoints()));
 document.getElementById('seExtraPts').addEventListener('input', () => updSelfPoints());
-document.getElementById('seExGrid').addEventListener('change', () => {
+document.getElementById('seExGrid').addEventListener('change', e => {
+  exExclusive('se', e.target.id); // BA ↔ профдиплом: только одна из льгот
   document.getElementById('seExDemT').style.display = document.getElementById('seExDem').checked ? '' : 'none';
   updSelfPoints();
 });
