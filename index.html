@@ -419,7 +419,6 @@
           <input type="number" id="empPoints" step="0.25" value="2.25" inputmode="decimal">
         </div>
       </div>
-      <div class="note" id="nkBreak" style="display:none"></div>
       <div class="note qnote" id="ptsHelpNote" data-i18n-html="ai.t.morepoints"></div>
 
       <div class="row2">
@@ -435,11 +434,12 @@
           </select>
         </div>
         <div>
-          <label class="fld" data-i18n="prof.tenure"></label>
+          <label class="fld"><span data-i18n="prof.tenure"></span> <button type="button" class="qmark" data-note="tenureHintNote">?</button></label>
           <input type="number" id="profTenure" value="1" step="0.5" min="0" inputmode="decimal">
         </div>
       </div>
       <div class="note qnote" id="indHelpNote" data-i18n-html="ind.help"></div>
+      <div class="note qnote" id="tenureHintNote" data-i18n="prof.tenure.hint"></div>
       <div id="kidsBox">
         <div class="fld" data-i18n="prof.kids.h"></div>
         <div class="row3">
@@ -920,7 +920,6 @@
           <input type="number" id="sePoints" step="0.25" value="2.25" inputmode="decimal">
         </div>
       </div>
-      <div class="note" id="seNkBreak" style="display:none"></div>
       <div class="note" data-i18n="self.pts.hint"></div>
       <div class="result-hero">
         <span class="lbl" data-i18n="self.save.lbl"></span>
@@ -1173,7 +1172,7 @@
 
 </div>
 
-<script src="i18n.js?v=1160"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1162"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1195,7 +1194,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.16.1'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.16.2'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1331,7 +1330,6 @@ function kidsPtsFor(g, pre) {
        + n('Kids18') * (mom ? 0.5 : 0)    // год, когда ребёнку исполняется 18
        + n('KidsDis') * 2;     // ребёнок с инвалидностью: +2 доп. к возрастным (ст. 45; одному из родителей, кользхут 09.08.2026)
 }
-// видимая разбивка пунктов: «базовые — 2,75 пункта, … итого — N» (общая для обоих профилей)
 // v1.15: «другие основания» — чекбоксы с баллами. v1.16 факт-фикс (кользхут 09.08.2026):
 // профдиплом (1700+ часов, окончившим с 2023) = 1 балл/год на срок учёбы (макс 3), было 0.5;
 // BA и диплом НЕ суммируются (взаимоисключение в обработчике exGrid); MA сочетается с любым.
@@ -1363,14 +1361,7 @@ function exLoad(prefix, o) {
   g('ExDemT').style.display = g('ExDem').checked ? '' : 'none';
   for (const k in EX_VALS) g('Ex' + k).checked = !!o[k];
 }
-function nkBreakHtml(base, olehPts, kidsPts, extraPts, pts) {
-  const parts = [t('nk.base') + ' — ' + pluralN(base, 'plural.pts')];
-  if (olehPts) parts.push(t('nk.oleh') + ' — ' + pluralN(olehPts, 'plural.pts'));
-  if (kidsPts) parts.push(t('nk.kids') + ' — ' + pluralN(kidsPts, 'plural.pts'));
-  if (extraPts) parts.push(t('nk.extra') + ' — ' + pluralN(extraPts, 'plural.pts'));
-  return parts.join(', ') + ', ' + t('nk.total') + ' — <b>' + pluralN(pts, 'plural.pts') +
-         '</b> · ' + t('nk.each');
-}
+// v1.16.2: разбивка некудот удалена по просьбе Дмитрия (дублировала итог; цена пункта — в справке «?»)
 function updEmpPoints(keepManual) {
   const st = segVal('empStatus'), g = segVal('empGender');
   if (!keepManual) ptsManual = false; // смена статуса/пола/даты сбрасывает ручной режим
@@ -1400,12 +1391,6 @@ function updEmpPoints(keepManual) {
   }
   const pts = base + olehPts + kidsPts + extraPts;
   document.getElementById('olehInfo').innerHTML = info;
-  // видимая разбивка пунктов — чтобы было видно, что дети/доп. учтены (фидбек 26.07)
-  const nb = document.getElementById('nkBreak');
-  if (hasPoints && !ptsManual) {
-    nb.style.display = '';
-    nb.innerHTML = nkBreakHtml(base, olehPts, kidsPts, extraPts, pts);
-  } else nb.style.display = 'none';
   if (ptsManual) {
     document.getElementById('nkAuto').textContent = t('nk.manual');
   } else {
@@ -3015,15 +3000,11 @@ function updSelfPoints(keepManual) {
   }
   const pts = base + olehPts + kidsPts + extraPts;
   document.getElementById('seOlehInfo').innerHTML = info;
-  const nb = document.getElementById('seNkBreak');
   if (seManual) {
-    nb.style.display = 'none';
     document.getElementById('seNkAuto').textContent = t('nk.manual');
   } else {
     sePoints.value = pts;
     document.getElementById('seNkAuto').textContent = t('nk.auto');
-    if (hasKids) { nb.style.display = ''; nb.innerHTML = nkBreakHtml(base, olehPts, kidsPts, extraPts, pts); }
-    else nb.style.display = 'none';
   }
   saveSelfProf();
   calcSelf(); incRender(); // сумма «отложи» и журнал доходов читают sePoints
@@ -3043,7 +3024,6 @@ document.getElementById('seIncome').addEventListener('input', calcSelf);
 document.getElementById('sePoints').addEventListener('input', () => {
   seManual = true; // ручной override: сохраняется и переживает перезапуск
   document.getElementById('seNkAuto').textContent = t('nk.manual');
-  document.getElementById('seNkBreak').style.display = 'none';
   saveSelfProf();
   calcSelf();
 });
