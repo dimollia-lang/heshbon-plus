@@ -130,6 +130,10 @@
   input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  /* v1.16.1 (фидбек 09.08, скрин): подписи в рядах бывают разной высоты — колонку делаем
+     flex-столбцом, подпись растягиваем, контролы прижимаются к низу и стоят в одну линию */
+  .row2 > div, .row3 > div { display: flex; flex-direction: column; }
+  .row2 > div > .fld, .row3 > div > .fld { flex: 1 0 auto; }
 
   .seg { display: flex; background: var(--bg); border-radius: 10px; padding: 3px; gap: 3px; border: 1px solid var(--border); }
   .seg button {
@@ -1191,7 +1195,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.16.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.16.1'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
