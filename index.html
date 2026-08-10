@@ -55,7 +55,8 @@
     --shadow: 0 1px 3px rgba(0,0,0,.4);
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+  body { overflow-x: hidden; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: var(--bg); color: var(--text);
@@ -619,7 +620,7 @@
     </div>
 
     <div class="card fold">
-      <h3><span data-i18n="contract.h"></span> <span class="pill">β</span></h3>
+      <h3><span data-i18n="contract.h"></span> <span class="pill" data-i18n="beta"></span></h3>
       <div class="hint" data-i18n="contract.hint"></div>
       <textarea id="ctText" rows="6" data-i18n-ph="contract.ph" style="resize:vertical;min-height:110px"></textarea>
       <input type="file" id="ctFiles" accept="image/*,application/pdf" multiple style="display:none">
@@ -638,7 +639,7 @@
     </div>
 
     <div class="card fold">
-      <h3><span data-i18n="tlush.h"></span> <span class="pill">β</span></h3>
+      <h3><span data-i18n="tlush.h"></span> <span class="pill" data-i18n="beta"></span></h3>
       <div class="hint" data-i18n="tlush.hint"></div>
       <input type="file" id="tlFile" accept="image/*,application/pdf" style="display:none">
       <button class="btn ghost" onclick="document.getElementById('tlFile').click()" data-i18n="tlush.pick"></button>
@@ -656,6 +657,15 @@
         <span class="ai-chip" onclick="ltShow('pay')" data-i18n="lt.t.pay"></span>
         <span class="ai-chip" onclick="ltShow('pension')" data-i18n="lt.t.pension"></span>
         <span class="ai-chip" onclick="ltShow('delay')" data-i18n="lt.t.delay"></span>
+        <span class="ai-chip" onclick="ltShow('resign')" data-i18n="lt.t.resign"></span>
+        <span class="ai-chip" onclick="ltShow('ishur')" data-i18n="lt.t.ishur"></span>
+        <span class="ai-chip" onclick="ltShow('t106')" data-i18n="lt.t.t106"></span>
+        <span class="ai-chip" onclick="ltShow('hours')" data-i18n="lt.t.hours"></span>
+        <span class="ai-chip" onclick="ltShow('vacation')" data-i18n="lt.t.vacation"></span>
+        <span class="ai-chip" onclick="ltShow('miluim')" data-i18n="lt.t.miluim"></span>
+        <span class="ai-chip" onclick="ltShow('havraa')" data-i18n="lt.t.havraa"></span>
+        <span class="ai-chip" onclick="ltShow('warn')" data-i18n="lt.t.warn"></span>
+        <span class="ai-chip" onclick="ltShow('worse')" data-i18n="lt.t.worse"></span>
       </div>
       <!-- v1.18 (фидбек 10.08): имя в ивритском письме — на иврите; автотранслитерация с правкой вручную -->
       <label class="fld" data-i18n="lt.name"></label>
@@ -1177,6 +1187,7 @@
         <button data-v="light" data-i18n="set.theme.light"></button>
         <button data-v="dark" data-i18n="set.theme.dark"></button>
       </div>
+      <div class="note" data-i18n="set.theme.hint"></div>
       <label class="fld" data-i18n="set.font"></label>
       <div class="seg" id="setFont">
         <button data-v="1" class="on" data-i18n="set.font.n"></button>
@@ -1205,7 +1216,7 @@
 
 </div>
 
-<script src="i18n.js?v=1180"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1190"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1227,7 +1238,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.18.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.19.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -2195,7 +2206,17 @@ const LT_HE = {
   tlush: p => 'לכבוד המעסיק,\n\nבהתאם לחוק הגנת השכר, תלוש שכר יש למסור לעובד עד ה-9 בחודש. אבקש למסור לי את תלוש/י השכר עבור: ' + p.month + '.\n\nאודה לטיפולכם בהקדם.\n\nבכבוד רב,\n' + p.name,
   pay: p => 'לכבוד המעסיק,\n\nלפי הרישום האישי שלי, בחודש ' + p.month + ' עבדתי ' + p.hours + ' שעות. לפי חישובי, השכר ששולם אינו תואם את שעות העבודה (הפרש משוער: ' + p.diff + ' ₪). אבקש לבדוק את החישוב ולשלם את ההפרש בשכר הקרוב, בהתאם לחוק הגנת השכר ולחוק שכר מינימום.\n\nאשמח לקבל פירוט שעות מלא בתלוש.\n\nבכבוד רב,\n' + p.name,
   pension: p => 'לכבוד המעסיק,\n\nאבקש לקבל אישור הפקדות לקרן הפנסיה/קופת הגמל שלי לחודשים האחרונים, בהתאם לצו ההרחבה לפנסיה חובה. ככל שקיימים פערים בין הניכויים בתלוש לבין ההפקדות בפועל — אבקש להסדירם בהקדם.\n\nבכבוד רב,\n' + p.name,
-  delay: p => 'לכבוד המעסיק,\n\nשכר חודש ' + p.month + ' טרם שולם. לפי חוק הגנת השכר יש לשלם את השכר עד ה-9 בחודש; לאחר מועד זה מדובר בהלנת שכר המזכה בפיצוי. אבקש לשלם את השכר באופן מיידי.\n\nבכבוד רב,\n' + p.name
+  delay: p => 'לכבוד המעסיק,\n\nשכר חודש ' + p.month + ' טרם שולם. לפי חוק הגנת השכר יש לשלם את השכר עד ה-9 בחודש; לאחר מועד זה מדובר בהלנת שכר המזכה בפיצוי. אבקש לשלם את השכר באופן מיידי.\n\nבכבוד רב,\n' + p.name,
+  // v1.19 (список тем от Марины 10.08) — самые частые обращения работника к работодателю
+  resign: p => 'לכבוד המעסיק,\n\nהריני להודיע על התפטרותי מהעבודה. בהתאם לחוק הודעה מוקדמת לפיטורים ולהתפטרות, אני נותן/ת הודעה מוקדמת כנדרש; יום עבודתי האחרון יהיה ____.\n\nאודה על שיתוף הפעולה לאורך התקופה ואבקש לקבל גמר חשבון הכולל פדיון חופשה, דמי הבראה ויתר הזכויות, וכן אישור העסקה ומכתב שחרור לקופת הגמל/קרן הפנסיה.\n\nבכבוד רב,\n' + p.name,
+  ishur: p => 'לכבוד המעסיק,\n\nאבקש לקבל אישור העסקה הכולל את תקופת העבודה, התפקיד והיקף המשרה. האישור נדרש לי לצורך הצגה במוסד לביטוח לאומי/בנק/רשות המסים.\n\nאודה לקבלתו בהקדם.\n\nבכבוד רב,\n' + p.name,
+  t106: p => 'לכבוד המעסיק,\n\nאבקש לקבל טופס 106 עבור שנת המס ____ . הטופס נדרש לי לצורך בדיקת החזר מס והגשת דיווח לרשות המסים.\n\nאודה לקבלתו בהקדם.\n\nבכבוד רב,\n' + p.name,
+  hours: p => 'לכבוד המעסיק,\n\nאבקש הבהרה לגבי תלוש השכר לחודש ' + p.month + ': פירוט שעות העבודה והשעות הנוספות, יתרת ימי החופשה ויתרת ימי המחלה. ככל שנפלה טעות בחישוב — אבקש לתקנה בתלוש הקרוב.\n\nבכבוד רב,\n' + p.name,
+  vacation: p => 'לכבוד המעסיק,\n\nאבקש לאשר לי חופשה שנתית בתאריכים ____ עד ____ (סה״כ ____ ימים), על חשבון ימי החופשה הצבורים שלי.\n\nאודה לאישורכם.\n\nבכבוד רב,\n' + p.name,
+  miluim: p => 'לכבוד המעסיק,\n\nהריני להודיע כי קיבלתי צו קריאה לשירות מילואים לתאריכים ____ עד ____ . מצורף העתק הצו.\n\nלאחר השירות אעביר את האישורים הנדרשים לצורך תגמולי מילואים מהמוסד לביטוח לאומי. יובהר כי בתקופת השירות ו-30 יום לאחריו חל איסור פיטורים ללא היתר.\n\nבכבוד רב,\n' + p.name,
+  havraa: p => 'לכבוד המעסיק,\n\nלפי הרישום שלי טרם שולמו לי דמי הבראה עבור השנה החולפת. דמי הבראה משולמים לעובד לאחר שנת עבודה מלאה, לפי מספר הימים הנגזר מהוותק ולפי התעריף המעודכן.\n\nאבקש לבדוק ולשלם את המגיע בשכר הקרוב.\n\nבכבוד רב,\n' + p.name,
+  warn: p => 'לכבוד המעסיק,\n\nמכתב התראה לפני נקיטת הליכים.\n\nלמיטב ידיעתי טרם הוסדרו הנושאים הבאים: ____ (למשל: תשלום שכר/הפרשות לפנסיה/תשלום שעות נוספות). אבקש להסדיר זאת תוך 7 ימים ממועד מכתב זה.\n\nככל שהנושא לא יוסדר, אאלץ לפנות לבית הדין לעבודה ולממונה על חוק עבודה במשרד העבודה. מכתב זה נשלח בניסיון להסדיר את העניין בדרכי נועם.\n\nבכבוד רב,\n' + p.name,
+  worse: p => 'לכבוד המעסיק,\n\nלאחרונה חלה הרעה מוחשית בתנאי העסקתי: ____ (למשל: הפחתת שכר/צמצום היקף משרה/שינוי חד-צדדי בתפקיד או במשמרות).\n\nבהתאם לסעיף 11(א) לחוק פיצויי פיטורים, אני מבקש/ת לתקן את המצב ולהחזיר את התנאים לקדמותם תוך 14 יום. אחרת אאלץ לשקול סיום העסקה בנסיבות המזכות בפיצויי פיטורים.\n\nבכבוד רב,\n' + p.name
 };
 // Транслитерация кириллицы в ивритское письмо для подписи под документом (v1.18).
 // Правила как в бытовой практике: гласные «а/е» в середине не пишутся, о/у → ו, и/ы → י,
@@ -2642,7 +2663,10 @@ function aiFetch(body, ms) {
   return fetch(AI_URL, opt).then(r => {
     if (timer) clearTimeout(timer);
     if (!r.ok) return r.json().catch(() => ({})).then(j => {
-      const e = new Error('http'); e.http = r.status; e.code = j && (j.error || j.code); throw e;
+      const e = new Error('http'); e.http = r.status;
+      e.code = j && j.error;        // 'upstream' | 'too_big' | 'no_answer'
+      e.up = j && j.code;           // код самого Anthropic: 429/529 = перегрузка
+      throw e;
     });
     return r.json();
   }, e => { if (timer) clearTimeout(timer); throw e; });
@@ -2651,7 +2675,10 @@ function aiErrText(e) {
   if (e && e.name === 'AbortError') return t('ai.err.timeout');
   if (e && e.http) {
     if (e.code === 'too_big') return t('ai.err.big');
-    return tf('ai.err.server', {c: e.http});
+    // 429/500/529 у Anthropic = перегрузка; воркер уже сделал 3 попытки — просим повторить позже
+    if (e.code === 'upstream' && [429, 500, 502, 503, 529].includes(+e.up)) return t('ai.err.busy');
+    if (e.code === 'no_answer') return t('ai.err.busy');
+    return tf('ai.err.server', {c: e.up || e.http});
   }
   return t('ai.online.err'); // fetch не дошёл — действительно нет связи
 }
@@ -2994,7 +3021,18 @@ function applyTheme(v) {
   if (v === 'light' || v === 'dark') document.documentElement.dataset.theme = v;
   else delete document.documentElement.dataset.theme;
 }
-function applyFont(v) { document.body.style.zoom = (v === '1' || !v) ? '' : v; }
+// v1.19 (жалоба 10.08 «на крупном шрифте страница плавает и растягивается вширь»):
+// body.zoom масштабирует и ширину — контейнер вылезал за экран и появлялась горизонтальная прокрутка.
+// Масштабируем только текст (font-size корня), ширина остаётся по экрану.
+// v1.19 (жалоба 10.08 «на крупном шрифте страница плавает и тянется вширь»): zoom масштабирует
+// и ширину body — в WebView это давало горизонтальную прокрутку. Компенсируем шириной 100/k vw:
+// после масштабирования получается ровно ширина экрана.
+function applyFont(v) {
+  const k = (v === '1' || !v) ? 1 : parseFloat(v) || 1;
+  document.body.style.zoom = k === 1 ? '' : k;
+  document.body.style.width = k === 1 ? '' : (100 / k) + 'vw';
+  document.body.classList.toggle('zoomed', k !== 1);
+}
 function openSettings() { document.getElementById('setModal').style.display = 'flex'; }
 segInit('setTheme', v => { localStorage.setItem('heshbon_theme', v); applyTheme(v); });
 segInit('setFont', v => { localStorage.setItem('heshbon_font', v); applyFont(v); });
