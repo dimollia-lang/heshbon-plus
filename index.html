@@ -512,6 +512,11 @@
         <!-- v1.21 (сверка с симулятором налоговой): 6–17 и год 18-летия зависят от опеки, а не от пола -->
         <label class="check"><input type="checkbox" id="profKidsCustody" checked> <span data-i18n="prof.kids.custody"></span> <button type="button" class="qmark" data-note="custodyNote">?</button></label>
         <div class="note qnote" id="custodyNote" data-i18n-html="prof.kids.custody.hint"></div>
+        <!-- v1.21.1: ниюд некудот — перенос одного балла за новорождённого на следующий год -->
+        <label class="check"><input type="checkbox" id="profKidsDefer"> <span data-i18n="prof.kids.defer"></span> <button type="button" class="qmark" data-note="deferNote">?</button></label>
+        <label class="check"><input type="checkbox" id="profKidsDeferGot"> <span data-i18n="prof.kids.defergot"></span></label>
+        <div class="note qnote" id="deferNote" data-i18n-html="prof.kids.defer.hint"></div>
+        <div class="note" data-i18n-html="prof.kids.widower"></div>
         <div class="note" id="kidsMigrateNote" style="display:none" data-i18n="prof.kids.migrate"></div>
       </div>
       <label class="fld" data-i18n="prof.extra"></label>
@@ -962,6 +967,8 @@
           <label class="fld" data-i18n="prof.kidsDis"></label>
           <input type="number" id="seKidsDis" value="0" step="1" min="0" inputmode="numeric">
           <label class="check"><input type="checkbox" id="seKidsCustody" checked> <span data-i18n="prof.kids.custody"></span></label>
+          <label class="check"><input type="checkbox" id="seKidsDefer"> <span data-i18n="prof.kids.defer"></span></label>
+          <label class="check"><input type="checkbox" id="seKidsDeferGot"> <span data-i18n="prof.kids.defergot"></span></label>
         </div>
         <label class="fld" data-i18n="prof.extra"></label>
         <div class="exgrid" id="seExGrid">
@@ -1246,7 +1253,7 @@
 
 </div>
 
-<script src="i18n.js?v=1210"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1211"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1268,7 +1275,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.21.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.21.1'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1401,7 +1408,12 @@ function kidsPtsFor(g, pre) {
   const n = id => Math.max(0, +document.getElementById(pre + id).value || 0);
   const el = document.getElementById(pre + 'KidsCustody');
   const custody = !el || el.checked; // по умолчанию дети живут с пользователем
-  return n('KidsB') * 2.5      // год рождения ребёнка
+  // v1.21.1 «ниюд некудот» (симулятор рашут а-мисим): в год родов можно отложить ОДИН балл
+  // на следующий налоговый год; тогда в следующем году (ребёнку 1) он прибавляется.
+  const defer = document.getElementById(pre + 'KidsDefer'), got = document.getElementById(pre + 'KidsDeferGot');
+  const shift = (defer && defer.checked && n('KidsB') > 0 ? -1 : 0) + (got && got.checked && n('Kids12') > 0 ? 1 : 0);
+  return shift
+       + n('KidsB') * 2.5      // год рождения ребёнка
        + n('Kids12') * 4.5     // 1–2 года
        + n('Kids3') * 3.5      // 3 года
        + n('Kids45') * 2.5     // 4–5 лет
@@ -1581,6 +1593,7 @@ function saveProf() {
       kB: profKidsB.value, k12: profKids12.value, k3: profKids3.value,
       k45: profKids45.value, k617: profKids617.value, k18: profKids18.value, kDis: profKidsDis.value,
       kcust: profKidsCustody.checked ? 1 : 0,
+      kdef: profKidsDefer.checked ? 1 : 0, kdefg: profKidsDeferGot.checked ? 1 : 0,
       nm: profName.value, ex: profExtraPts.value, exq: exSave('prof'), hish: profHish.checked,
       // работающий пенсионер (v1.14)
       ret: empRetiree.checked ? 1 : 0, rk: segVal('retKitzba'), ra: segVal('retAge'), rn: retNewJob.checked ? 1 : 0
@@ -1609,6 +1622,8 @@ function loadProf() {
       profKids45.value = p.k45; profKids617.value = p.k617; profKids18.value = p.k18;
       if (p.kDis != null) profKidsDis.value = p.kDis; // v1.16: дети с инвалидностью
       if (p.kcust != null) profKidsCustody.checked = !!p.kcust; // v1.21: опека
+      if (p.kdef != null) profKidsDefer.checked = !!p.kdef;     // v1.21.1: ниюд
+      if (p.kdefg != null) profKidsDeferGot.checked = !!p.kdefg;
     } else {
       const old0 = +(p.k0 != null ? p.k0 : 0), old6 = +(p.k6 != null ? p.k6 : (p.kids != null ? p.kids : 0));
       profKids12.value = old0;   // старое «до 6» = 4,5 пункта → бакет 1–2 года, чтобы сумма не прыгнула
@@ -1658,7 +1673,8 @@ profIndustry.addEventListener('change', () => {
 profTenure.addEventListener('input', () => { fTenure.value = profTenure.value; autoHish(); updateHishGate(); calcFired(); calcEmp(); saveProf(); });
 ['profKidsB', 'profKids12', 'profKids3', 'profKids45', 'profKids617', 'profKids18', 'profKidsDis']
   .forEach(id => document.getElementById(id).addEventListener('input', () => updEmpPoints()));
-document.getElementById('profKidsCustody').addEventListener('change', () => updEmpPoints());
+['profKidsCustody', 'profKidsDefer', 'profKidsDeferGot']
+  .forEach(id => document.getElementById(id).addEventListener('change', () => updEmpPoints()));
 profExtraPts.addEventListener('input', () => updEmpPoints());
 document.getElementById('profExGrid').addEventListener('change', e => {
   exExclusive('prof', e.target.id); // BA ↔ профдиплом: только одна из льгот
@@ -3191,6 +3207,7 @@ function saveSelfProf() {
       kB: seKidsB.value, k12: seKids12.value, k3: seKids3.value,
       k45: seKids45.value, k617: seKids617.value, k18: seKids18.value, kDis: seKidsDis.value,
       kcust: seKidsCustody.checked ? 1 : 0,
+      kdef: seKidsDefer.checked ? 1 : 0, kdefg: seKidsDeferGot.checked ? 1 : 0,
       ex: seExtraPts.value, exq: exSave('se'), man: seManual ? 1 : 0, pts: sePoints.value
     }));
   } catch (e) {}
@@ -3217,6 +3234,8 @@ function loadSelfProf() {
     if (p.k18 != null) seKids18.value = p.k18;
     if (p.kDis != null) seKidsDis.value = p.kDis;
     if (p.kcust != null) seKidsCustody.checked = !!p.kcust;
+    if (p.kdef != null) seKidsDefer.checked = !!p.kdef;
+    if (p.kdefg != null) seKidsDeferGot.checked = !!p.kdefg;
     if (p.ex != null) seExtraPts.value = p.ex;
     exLoad('se', p.exq);
     seManual = !!p.man;
@@ -3262,7 +3281,8 @@ segInit('seGender', () => updSelfPoints());
 ['seAliyahM', 'seAliyahY'].forEach(id => document.getElementById(id).addEventListener('change', () => updSelfPoints()));
 ['seKidsB', 'seKids12', 'seKids3', 'seKids45', 'seKids617', 'seKids18', 'seKidsDis']
   .forEach(id => document.getElementById(id).addEventListener('input', () => updSelfPoints()));
-document.getElementById('seKidsCustody').addEventListener('change', () => updSelfPoints());
+['seKidsCustody', 'seKidsDefer', 'seKidsDeferGot']
+  .forEach(id => document.getElementById(id).addEventListener('change', () => updSelfPoints()));
 document.getElementById('seExtraPts').addEventListener('input', () => updSelfPoints());
 document.getElementById('seExGrid').addEventListener('change', e => {
   exExclusive('se', e.target.id); // BA ↔ профдиплом: только одна из льгот
