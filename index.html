@@ -72,7 +72,7 @@
     background: var(--card);
     border-bottom: 1px solid var(--border);
     padding: 12px 14px 10px;
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap; row-gap: 8px;
   }
   /* В APK (file://) WebView на Android 15 рисует под статус-баром:
      опускаем шапку ниже часов/батареи — env() плюс гарантированный минимум */
@@ -87,6 +87,11 @@
   }
   .topbar h1 { font-size: 17px; font-weight: 700; letter-spacing: -.2px; }
   .topbar .sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  /* v1.17: шапка переносится на две строки, если не влезает (на 375px не влезала: название
+     и приветствие сжимались в ноль). Языки уезжают во вторую строку, приветствие остаётся видимым. */
+  .topbar .tt { flex: 1 1 120px; min-width: 120px; }
+  .topbar .tt h1, .topbar .tt .sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topbar .gear-btn, .topbar .logo, .topbar .star-btn, .topbar .langs { flex: 0 0 auto; }
   .langs { margin-inline-start: auto; display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
   .langs button {
     border: 0; background: transparent; color: var(--muted); cursor: pointer; font-family: inherit;
@@ -222,9 +227,21 @@
   .ai-ask { display: flex; gap: 8px; margin-top: 10px; }
   .ai-ask .ai-clear { flex: 0 0 auto; width: 40px; border: 1.5px solid var(--border); background: var(--bg); color: var(--muted); border-radius: 10px; font-size: 14px; cursor: pointer; }
   /* v1.16: брутто выделено как нетто, только красным — «от него идёт расчёт» (фидбек 09.08) */
-  .fld-gross { color: var(--red); font-size: 13px; font-weight: 800; }
-  input.gross-big { border-color: var(--red); color: var(--red); font-weight: 800; font-size: 20px; }
-  input.gross-big:focus { border-color: var(--red); }
+  /* v1.17: брутто в том же «герое», что и нетто, но красным — подпись слева, сумма справа.
+     Поле остаётся вводимым: input внутри .val, без рамки, ширина по содержимому. */
+  .result-hero.gross { background: color-mix(in srgb, var(--red) 9%, transparent); border-color: color-mix(in srgb, var(--red) 30%, transparent); margin-top: 4px; flex-wrap: nowrap; }
+  .result-hero.gross .lbl { flex: 1 1 auto; }
+  .result-hero.gross .lbl, .result-hero.gross .val { color: var(--red); }
+  .result-hero.gross .val { display: inline-flex; align-items: baseline; gap: 4px; }
+  .result-hero.gross .val input {
+    width: 6.2ch; padding: 0; border: 0; border-bottom: 2px dashed color-mix(in srgb, var(--red) 45%, transparent);
+    border-radius: 0; background: transparent; color: var(--red);
+    font: inherit; font-size: 26px; font-weight: 800; letter-spacing: -.5px; text-align: end;
+    font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate;
+  }
+  .result-hero.gross .val input:focus { border-bottom-color: var(--red); outline: none; }
+  .result-hero.gross .val input::-webkit-outer-spin-button,
+  .result-hero.gross .val input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .ai-ask input { flex: 1; }
   .ai-ask button { flex-shrink: 0; padding: 0 16px; background: var(--accent); color: #fff; border: 0; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
@@ -326,8 +343,10 @@
 <div class="app">
 
   <header class="topbar">
+    <!-- v1.17 (фидбек Марины 10.08): шестерёнка первой слева — раньше уезжала за край экрана -->
+    <button class="gear-btn" onclick="openSettings()" aria-label="Settings">⚙️</button>
     <div class="logo">₪</div>
-    <div>
+    <div class="tt">
       <h1>Хешбон+</h1>
       <div class="sub" data-i18n="sub"></div>
     </div>
@@ -337,7 +356,6 @@
       <button data-l="en">EN</button>
       <button data-l="he">עב</button>
     </div>
-    <button class="gear-btn" onclick="openSettings()" aria-label="Settings">⚙️</button>
   </header>
 
   <main>
@@ -494,14 +512,16 @@
       <label class="check"><input type="checkbox" id="profHish"> <span data-i18n="prof.hish"></span> <button type="button" class="qmark" data-note="hishHintNote">?</button></label>
       <div class="note qnote" id="hishHintNote" data-i18n-html="prof.hish.hint"></div>
       <div class="note warn" id="hishGateNote" style="display:none"></div>
-      </details>
-
-      <!-- v1.16 (фидбек 09.08): пенсия выше, а брутто-поле выделено и стоит вплотную к нетто -->
+      <!-- v1.17 (фидбек Марины 10.08): пенсия-галочка живёт в профиле рядом с иштальмутом -->
       <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span> <button type="button" class="qmark" data-note="pensHintNote">?</button></label>
       <div class="note qnote" id="pensHintNote" data-i18n-html="emp.chk.pension.hint"></div>
+      </details>
 
-      <label class="fld fld-gross" data-i18n="emp.fld.gross"></label>
-      <input type="number" id="empGross" class="gross-big" data-i18n-ph="ph.gross" inputmode="decimal" value="9500">
+      <!-- v1.17: брутто и нетто — единый стиль «подпись слева, сумма справа», брутто красным -->
+      <div class="result-hero gross">
+        <span class="lbl" data-i18n="emp.fld.gross"></span>
+        <span class="val"><input type="number" id="empGross" data-i18n-ph="ph.gross" inputmode="decimal" value="9500"> <span>₪</span></span>
+      </div>
 
       <div class="result-hero">
         <span class="lbl" data-i18n="emp.net.lbl"></span>
@@ -1172,7 +1192,7 @@
 
 </div>
 
-<script src="i18n.js?v=1162"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1170"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1194,7 +1214,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.16.2'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.17.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
