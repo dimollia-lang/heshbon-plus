@@ -243,6 +243,18 @@
   .result-hero.gross .val input:focus { border-bottom-color: var(--red); outline: none; }
   /* плейсхолдер («сумма») мелким шрифтом — не спорит с крупной цифрой */
   .result-hero.gross .val input::placeholder { font-size: 13px; font-weight: 600; opacity: .55; }
+  /* v1.20: календарь праздников — месяцы сеткой, праздничные дни красным */
+  .holcal { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 10px; margin: 10px 0 4px; }
+  .hm { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 8px 6px; }
+  .hm-t { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .hm-d, .hm-g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+  .hm-d b { font-size: 9px; color: var(--muted); text-align: center; font-weight: 600; }
+  .hm-g i { font-style: normal; font-size: 10.5px; text-align: center; padding: 3px 0; border-radius: 5px; color: var(--text); }
+  .hm-g i.sb { color: var(--muted); }
+  .hm-g i.hd { background: color-mix(in srgb, var(--red) 16%, transparent); color: var(--red); font-weight: 800; }
+  .hm-g i.td { outline: 1.5px solid var(--accent); }
+  .holcal-lg .hd { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: -1px;
+                   background: color-mix(in srgb, var(--red) 16%, transparent); border: 1px solid var(--red); margin-inline-end: 5px; }
   .result-hero.gross .val input::-webkit-outer-spin-button,
   .result-hero.gross .val input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .ai-ask input { flex: 1; }
@@ -559,6 +571,13 @@
     <div class="card fold">
       <h3 data-i18n="ot.h"></h3>
       <div class="hint" data-i18n-html="ot.hint"></div>
+      <!-- v1.20 (вопрос Марины 10.08 «откуда берётся ставка»): видно, как она получена, и
+           можно переключиться на почасовую оплату — тогда делить брутто на 182 неправильно -->
+      <label class="fld" data-i18n="ot.paytype"></label>
+      <div class="seg" id="otPayType">
+        <button data-v="m" class="on" data-i18n="ot.pt.month"></button>
+        <button data-v="h" data-i18n="ot.pt.hour"></button>
+      </div>
       <div class="row3">
         <div>
           <label class="fld" data-i18n="ot.rate"></label>
@@ -577,6 +596,7 @@
         <span class="lbl" data-i18n="ot.sum"></span>
         <span class="val" id="otSum" style="font-size:22px">—</span>
       </div>
+      <div class="note" id="otRateSrc"></div>
       <div class="note" id="otSynced" data-i18n-html="ot.synced"></div>
       <div class="note" data-i18n-html="ot.note"></div>
     </div>
@@ -722,6 +742,7 @@
       <div class="note" data-i18n="hol.conf.hint"></div>
       <label class="fld" data-i18n="hol.year"></label>
       <select id="holYear" onchange="holRender()"></select>
+      <div id="holCal"></div>
       <div id="holList"></div>
       <div class="note qnote open" data-i18n-html="hol.rules"></div>
     </div>
@@ -1216,7 +1237,7 @@
 
 </div>
 
-<script src="i18n.js?v=1190"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1200"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1238,7 +1259,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.19.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.20.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1677,16 +1698,37 @@ function calcOT() {
   document.getElementById('otSynced').style.display = sum > 0 ? '' : 'none';
   calcEmp(); // доплата сразу уходит в расчёт нетто выше
 }
-// ставка по умолчанию = брутто ÷ 182, но не ниже отраслевой минималки; ручной ввод её фиксирует
+// Ставка часа. При окладе = брутто ÷ 182, но не ниже минимума отрасли; при почасовой оплате
+// делить оклад на 182 бессмысленно — ставка вводится руками, приложение лишь проверяет минимум.
+// v1.20: под полем печатается, ОТКУДА взялась ставка (вопрос Марины «отрасль не подтягивается»).
 let otRateManual = false;
-function syncOtRate() {
-  if (otRateManual) return;
-  const floor = profIndustry.value === 'cleaning' ? CLEAN_HOUR
-              : profIndustry.value === 'security' ? SEC_HOUR : MIN_HOUR;
-  const own = (+empGross.value || 0) / 182;
-  otRate.value = Math.max(floor, Math.round(own * 100) / 100).toFixed(2);
+function otFloor() {
+  return profIndustry.value === 'cleaning' ? CLEAN_HOUR
+       : profIndustry.value === 'security' ? SEC_HOUR : MIN_HOUR;
 }
-otRate.addEventListener('input', () => { otRateManual = true; calcOT(); });
+function syncOtRate() {
+  const hourly = document.getElementById('otPayType') && segVal('otPayType') === 'h';
+  const floor = otFloor(), own = (+empGross.value || 0) / 182;
+  if (!otRateManual && !hourly) otRate.value = Math.max(floor, Math.round(own * 100) / 100).toFixed(2);
+  const src = document.getElementById('otRateSrc');
+  if (!src) return;
+  const cur = +otRate.value || 0;
+  const ind = profIndustry.value === 'general' ? '' : ' (' + document.querySelector('#profIndustry option[value="' + profIndustry.value + '"]').textContent + ')';
+  if (hourly || otRateManual) {
+    src.innerHTML = t('ot.src.manual') +
+      (cur > 0 && cur < floor - 0.005 ? '<br><b style="color:var(--red)">' + tf('ot.src.below', {f: floor.toFixed(2), i: ind}) + '</b>'
+                                      : '<br>' + tf('ot.src.okmin', {f: floor.toFixed(2), i: ind}));
+  } else {
+    src.innerHTML = own >= floor
+      ? tf('ot.src.gross', {g: Math.round(own * 100) / 100})
+      : tf('ot.src.floor', {f: floor.toFixed(2), i: ind, g: Math.round(own * 100) / 100});
+  }
+}
+otRate.addEventListener('input', () => { otRateManual = true; syncOtRate(); calcOT(); });
+segInit('otPayType', () => { // переключение оклад/почасовая: при возврате на оклад ставка снова считается
+  if (segVal('otPayType') === 'm') otRateManual = false;
+  syncOtRate(); calcOT();
+});
 ['ot125','ot150'].forEach(id => document.getElementById(id).addEventListener('input', calcOT));
 
 // ======= Норма рабочего времени =======
@@ -2406,6 +2448,7 @@ function holRender() {
   const keep = ysel.value;
   ysel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
   ysel.value = years.includes(keep) ? keep : (years.includes(String(new Date().getFullYear())) ? String(new Date().getFullYear()) : years[0]);
+  holCalendar(list, ysel.value); // v1.20: месячная сетка с красными праздничными днями
   const rows = list.filter(h => h[0].slice(0, 4) === ysel.value);
   let hasSat = false;
   box.innerHTML = rows.length
@@ -2417,6 +2460,32 @@ function holRender() {
       }).join('') + '</div>' +
       (hasSat ? '<div class="note" style="margin-top:6px">' + t('hol.shabbat.note') + '</div>' : '')
     : '<div class="note" style="margin-top:8px">' + t('hol.none.note') + '</div>';
+}
+// v1.20 (просьба Марины 10.08): календарь года — праздники красным, шаббаты приглушены,
+// сегодняшний день в рамке. Рисуем только месяцы, в которых есть праздники: экран телефона узкий.
+function holCalendar(list, year) {
+  const box = document.getElementById('holCal');
+  if (!box) return;
+  const hol = {};
+  list.filter(h => h[0].slice(0, 4) === year).forEach(h => { hol[h[0]] = t(h[1]); });
+  const months = [...new Set(Object.keys(hol).map(d => +d.slice(5, 7)))].sort((a, b) => a - b);
+  if (!months.length) { box.innerHTML = ''; return; }
+  const MON = (I18N[LANG] && I18N[LANG]['months.full']) || t('months');
+  const dow = t('tb.print.days').split('|'); // вс..сб, уже локализованы
+  const today = tbISO(new Date());
+  box.innerHTML = '<div class="holcal">' + months.map(m => {
+    const first = new Date(+year, m - 1, 1), days = new Date(+year, m, 0).getDate();
+    let cells = '';
+    for (let i = 0; i < first.getDay(); i++) cells += '<i></i>'; // отступ до первого дня недели
+    for (let d = 1; d <= days; d++) {
+      const iso = year + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+      const cls = [hol[iso] ? 'hd' : '', new Date(+year, m - 1, d).getDay() === 6 ? 'sb' : '', iso === today ? 'td' : ''].filter(Boolean).join(' ');
+      cells += '<i class="' + cls + '"' + (hol[iso] ? ' title="' + escT(hol[iso]) + '"' : '') + '>' + d + '</i>';
+    }
+    return '<div class="hm"><div class="hm-t">' + MON[m - 1] + '</div>' +
+           '<div class="hm-d">' + dow.map(x => '<b>' + x.slice(0, 2) + '</b>').join('') + '</div>' +
+           '<div class="hm-g">' + cells + '</div></div>';
+  }).join('') + '</div><div class="note holcal-lg"><span class="hd"></span> ' + t('hol.cal.leg') + '</div>';
 }
 function holSoonNote() { // «сегодня/завтра праздник» — для статуса в табеле
   const conf = localStorage.getItem('heshbon_conf') || 'jew';
