@@ -72,7 +72,7 @@
     background: var(--card);
     border-bottom: 1px solid var(--border);
     padding: 12px 14px 10px;
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap; row-gap: 8px;
+    display: flex; align-items: center; gap: 7px;
   }
   /* В APK (file://) WebView на Android 15 рисует под статус-баром:
      опускаем шапку ниже часов/батареи — env() плюс гарантированный минимум */
@@ -87,16 +87,16 @@
   }
   .topbar h1 { font-size: 17px; font-weight: 700; letter-spacing: -.2px; }
   .topbar .sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
-  /* v1.17: шапка переносится на две строки, если не влезает (на 375px не влезала: название
-     и приветствие сжимались в ноль). Языки уезжают во вторую строку, приветствие остаётся видимым. */
-  .topbar .tt { flex: 1 1 120px; min-width: 120px; }
+  /* v1.18 (фидбек 10.08): вся шапка в ОДНУ строку — размеры ужаты, языки снова справа.
+     На узких экранах у кнопки подписки остаётся только звёздочка (текст прячется). */
+  .topbar .tt { flex: 1 1 80px; min-width: 80px; }
   .topbar .tt h1, .topbar .tt .sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .topbar .gear-btn, .topbar .logo, .topbar .star-btn, .topbar .langs { flex: 0 0 auto; }
-  .langs { margin-inline-start: auto; display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
+  .langs { margin-inline-start: auto; display: flex; gap: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 2px; }
   .langs button {
     border: 0; background: transparent; color: var(--muted); cursor: pointer; font-family: inherit;
-    font-size: 13.5px; font-weight: 700; padding: 9px 12px; border-radius: 999px; letter-spacing: .3px;
-    min-width: 44px; min-height: 40px; /* палец должен попадать */
+    font-size: 12px; font-weight: 700; padding: 6px 7px; border-radius: 999px; letter-spacing: .2px;
+    min-width: 32px; min-height: 32px; /* палец должен попадать */
   }
   .langs button.on { background: var(--accent); color: #fff; }
   main { flex: 1; padding: 16px 14px 24px; }
@@ -240,6 +240,8 @@
     font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate;
   }
   .result-hero.gross .val input:focus { border-bottom-color: var(--red); outline: none; }
+  /* плейсхолдер («сумма») мелким шрифтом — не спорит с крупной цифрой */
+  .result-hero.gross .val input::placeholder { font-size: 13px; font-weight: 600; opacity: .55; }
   .result-hero.gross .val input::-webkit-outer-spin-button,
   .result-hero.gross .val input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .ai-ask input { flex: 1; }
@@ -274,8 +276,10 @@
   .ad-place { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); border-top: 1px dashed var(--border); margin-top: 10px; padding-top: 7px; }
   .ad-place a { color: var(--accent); font-weight: 700; text-decoration: none; white-space: nowrap; }
 
-  .star-btn { border: 0; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 12px; font-weight: 800; padding: 9px 12px; border-radius: 999px; cursor: pointer; font-family: inherit; white-space: nowrap; min-height: 40px; }
-  .gear-btn { border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 17px; min-width: 42px; min-height: 40px; border-radius: 999px; cursor: pointer; font-family: inherit; padding: 0 10px; }
+  .star-btn { border: 0; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 11.5px; font-weight: 800; padding: 8px 10px; border-radius: 999px; cursor: pointer; font-family: inherit; white-space: nowrap; min-height: 34px; }
+  .gear-btn { border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; min-width: 34px; min-height: 34px; border-radius: 999px; cursor: pointer; font-family: inherit; padding: 0 7px; }
+  /* совсем узкие экраны: у кнопки подписки остаётся только звезда — шапка держится в одну строку */
+  @media (max-width: 400px) { .star-btn .lbl { display: none; } }
   /* «?» — пояснение по клику, вместо простыни текста */
   .qmark { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--red); color: var(--red); background: transparent; font-size: 12.5px; font-weight: 800; cursor: pointer; flex-shrink: 0; padding: 0; font-family: inherit; vertical-align: middle; margin-inline-start: 6px; }
   .qnote { display: none; }
@@ -350,7 +354,7 @@
       <h1>Хешбон+</h1>
       <div class="sub" data-i18n="sub"></div>
     </div>
-    <button class="star-btn" onclick="document.getElementById('premModal').style.display='flex'" data-i18n="prem.btn"></button>
+    <button class="star-btn" onclick="document.getElementById('premModal').style.display='flex'">⭐<span class="lbl" data-i18n="prem.btn.short"></span></button>
     <div class="langs" id="langs">
       <button data-l="ru">RU</button>
       <button data-l="en">EN</button>
@@ -433,7 +437,8 @@
           </div>
         </div>
         <div id="pointsBox">
-          <label class="fld"><span data-i18n="emp.fld.points"></span> <span class="pill" id="nkAuto"></span> <button type="button" class="qmark" id="ptsHelp" data-note="ptsHelpNote">?</button></label>
+          <!-- v1.18: pill «авто» убрана (дублировала справку «?»), блоки пол/некудот одного размера -->
+          <label class="fld"><span data-i18n="emp.fld.points"></span> <button type="button" class="qmark" id="ptsHelp" data-note="ptsHelpNote">?</button></label>
           <input type="number" id="empPoints" step="0.25" value="2.25" inputmode="decimal">
         </div>
       </div>
@@ -505,6 +510,7 @@
         <label class="check"><input type="checkbox" id="profExDip"> <span data-i18n="nk.ex.dip"></span></label>
         <label class="check"><input type="checkbox" id="profExAlim"> <span data-i18n="nk.ex.alim"></span></label>
         <label class="check"><input type="checkbox" id="profExSpouse"> <span data-i18n="nk.ex.spouse"></span></label>
+        <label class="check"><input type="checkbox" id="profExSingle"> <span data-i18n="nk.ex.single"></span></label>
         <label class="fld" data-i18n="nk.ex.manual"></label>
         <input type="number" id="profExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
         <div class="note" data-i18n="nk.ex.note"></div>
@@ -530,13 +536,11 @@
 
       <div class="breakdown" id="empBreak"></div>
 
-      <details class="exp">
-        <summary data-i18n="emp.exp.employer"></summary>
-        <div class="breakdown" id="empEmployer"></div>
-        <div class="note" data-i18n="emp.employer.note"></div>
-      </details>
-
-      <div class="note" id="empStatusNote"></div>
+      <!-- v1.18 (фидбек 10.08): взносы работодателя больше не прячем в выпадашку — всегда видно.
+           Блок «status.*» убран: та же информация живёт в справке «?» у некудот. -->
+      <div class="fld" style="margin-top:14px" data-i18n="emp.exp.employer"></div>
+      <div class="breakdown" id="empEmployer"></div>
+      <div class="note" data-i18n="emp.employer.note"></div>
     </div>
 
     <div class="card" id="docsCard" style="display:none">
@@ -653,10 +657,18 @@
         <span class="ai-chip" onclick="ltShow('pension')" data-i18n="lt.t.pension"></span>
         <span class="ai-chip" onclick="ltShow('delay')" data-i18n="lt.t.delay"></span>
       </div>
+      <!-- v1.18 (фидбек 10.08): имя в ивритском письме — на иврите; автотранслитерация с правкой вручную -->
+      <label class="fld" data-i18n="lt.name"></label>
+      <input type="text" id="ltNameRu" maxlength="40" data-i18n-ph="lt.name.ph">
+      <label class="fld" data-i18n="lt.name.he"></label>
+      <input type="text" id="ltNameHe" maxlength="40" dir="rtl" style="text-align:right">
+      <div class="note" data-i18n="lt.name.hint"></div>
       <div id="ltOut" style="display:none">
         <div id="ltHe" dir="rtl" style="margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:10px;white-space:pre-wrap;font-size:13.5px;text-align:right"></div>
         <div class="note" id="ltTr" style="white-space:pre-wrap"></div>
         <button class="btn" onclick="ltShare(this)" data-i18n="lt.share"></button>
+        <button class="btn ghost" onclick="ltDownload()" data-i18n="lt.download"></button>
+        <button class="btn ghost" onclick="ltPrint()" data-i18n="lt.print"></button>
       </div>
       <div class="note" data-i18n="lt.note"></div>
     </div>
@@ -925,6 +937,7 @@
           <label class="check"><input type="checkbox" id="seExDip"> <span data-i18n="nk.ex.dip"></span></label>
           <label class="check"><input type="checkbox" id="seExAlim"> <span data-i18n="nk.ex.alim"></span></label>
           <label class="check"><input type="checkbox" id="seExSpouse"> <span data-i18n="nk.ex.spouse"></span></label>
+          <label class="check"><input type="checkbox" id="seExSingle"> <span data-i18n="nk.ex.single"></span></label>
           <label class="fld" data-i18n="nk.ex.manual"></label>
           <input type="number" id="seExtraPts" value="0" step="0.25" min="0" inputmode="decimal">
           <div class="note" data-i18n="nk.ex.note"></div>
@@ -1192,7 +1205,7 @@
 
 </div>
 
-<script src="i18n.js?v=1170"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1180"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1214,7 +1227,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.17.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.18.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1353,7 +1366,7 @@ function kidsPtsFor(g, pre) {
 // v1.15: «другие основания» — чекбоксы с баллами. v1.16 факт-фикс (кользхут 09.08.2026):
 // профдиплом (1700+ часов, окончившим с 2023) = 1 балл/год на срок учёбы (макс 3), было 0.5;
 // BA и диплом НЕ суммируются (взаимоисключение в обработчике exGrid); MA сочетается с любым.
-const EX_VALS = { Ba: 1, Ma: 0.5, Dip: 1, Alim: 1, Spouse: 1 };
+const EX_VALS = { Ba: 1, Ma: 0.5, Dip: 1, Alim: 1, Spouse: 1, Single: 1 };
 // BA ↔ профдиплом: закон разрешает только одну из льгот — включение одной снимает другую
 function exExclusive(prefix, changedId) {
   const g = id => document.getElementById(prefix + id);
@@ -1411,12 +1424,7 @@ function updEmpPoints(keepManual) {
   }
   const pts = base + olehPts + kidsPts + extraPts;
   document.getElementById('olehInfo').innerHTML = info;
-  if (ptsManual) {
-    document.getElementById('nkAuto').textContent = t('nk.manual');
-  } else {
-    document.getElementById('empPoints').value = pts;
-    document.getElementById('nkAuto').textContent = t('nk.auto');
-  }
+  if (!ptsManual) document.getElementById('empPoints').value = pts; // pill «авто/вручную» убрана в v1.18
   updateHishGate();
   updRetUI();
   renderVisaUI();
@@ -1503,7 +1511,6 @@ function calcEmp() {
     (hish ? row(t('employer.hish'), '+' + fmt(gross * 0.075), 'pos') : '') +
     row(t('employer.ni'), '+' + fmt(natIns(taxable, erNiRates())), 'pos') +
     (st === 's25' ? '<div class="note warn" style="margin-top:8px">' + t('employer.s25note') + '</div>' : '');
-  document.getElementById('empStatusNote').innerHTML = t('status.' + st);
 }
 segInit('empStatus', () => { autoHish(); updEmpPoints(); });   // статус влияет и на гейт иштальмута (иностранец в стройке)
 segInit('empGender', () => updEmpPoints());   // сбрасывает ручной режим некудот
@@ -1610,7 +1617,7 @@ segInit('retKitzba', () => { updRetUI(); calcEmp(); saveProf(); });
 segInit('retAge', () => { updRetUI(); calcEmp(); saveProf(); });
 document.getElementById('retNewJob').addEventListener('change', () => { updRetUI(); calcEmp(); saveProf(); });
 ['empGross','empPoints','empPension'].forEach(id => document.getElementById(id).addEventListener('input', () => {
-  if (id === 'empPoints') { ptsManual = true; document.getElementById('nkAuto').textContent = t('nk.manual'); }
+  if (id === 'empPoints') ptsManual = true;
   if (id === 'empGross') { syncOtRate(); calcOT(); return; } // calcOT сам вызовет calcEmp
   calcEmp();
 }));
@@ -1636,14 +1643,17 @@ function calcFired() {
   document.getElementById('fPitzNote').style.display = (years > 0 && years < 1) ? '' : 'none';
   const notice = gross * nd / 30;
   const vac = nn(fVac.value) * gross / 21.67;
-  const havRate = ['cleaning','security'].includes(document.getElementById('profIndustry').value) ? HAVRAA_PUB : HAVRAA_DAY;
-  const hav = nn(fHav.value) * havRate; // клининг/охрана — хавраа по гос. тарифу
+  // v1.18 (фидбек 10.08): ставка хавраа бралась из отрасли профиля молча — «2 558 ₪ за 5 дней»
+  // выглядело ошибкой. Теперь сектор виден в строке: частный 418 / гос., клининг, охрана 511,6.
+  const pub = ['cleaning', 'security'].includes(document.getElementById('profIndustry').value);
+  const havRate = pub ? HAVRAA_PUB : HAVRAA_DAY;
+  const hav = nn(fHav.value) * havRate;
   fTotal.textContent = fmt(pitz + notice + vac + hav);
   fBreak.innerHTML =
     row(t('fired.res.pitz'), '+' + fmt(pitz), 'pos') +
     row(t('fired.res.notice') + ' (' + Math.round(nd) + ')', '+' + fmt(notice), 'pos') +
     row(t('fired.res.vac'), '+' + fmt(vac), 'pos') +
-    row(t('fired.res.hav'), '+' + fmt(hav), 'pos');
+    row(t('fired.res.hav') + ' · ' + tf('fired.hav.rate', {r: havRate.toFixed(2).replace(/\.00$/, ''), s: t(pub ? 'fired.hav.pub' : 'fired.hav.priv')}), '+' + fmt(hav), 'pos');
 }
 segInit('fpType', () => calcFired());
 ['fGross','fTenure','fVac','fHav'].forEach(id => document.getElementById(id).addEventListener('input', calcFired));
@@ -2187,8 +2197,38 @@ const LT_HE = {
   pension: p => 'לכבוד המעסיק,\n\nאבקש לקבל אישור הפקדות לקרן הפנסיה/קופת הגמל שלי לחודשים האחרונים, בהתאם לצו ההרחבה לפנסיה חובה. ככל שקיימים פערים בין הניכויים בתלוש לבין ההפקדות בפועל — אבקש להסדירם בהקדם.\n\nבכבוד רב,\n' + p.name,
   delay: p => 'לכבוד המעסיק,\n\nשכר חודש ' + p.month + ' טרם שולם. לפי חוק הגנת השכר יש לשלם את השכר עד ה-9 בחודש; לאחר מועד זה מדובר בהלנת שכר המזכה בפיצוי. אבקש לשלם את השכר באופן מיידי.\n\nבכבוד רב,\n' + p.name
 };
+// Транслитерация кириллицы в ивритское письмо для подписи под документом (v1.18).
+// Правила как в бытовой практике: гласные «а/е» в середине не пишутся, о/у → ו, и/ы → י,
+// конечная «а» → ה, у м/н/п/ц — конечные формы букв.
+const HE_TR = {а:'א',б:'ב',в:'ב',г:'ג',д:'ד',е:'',ё:'יו',ж:'ז',з:'ז',и:'י',й:'י',к:'ק',л:'ל',м:'מ',н:'נ',
+  о:'ו',п:'פ',р:'ר',с:'ס',т:'ט',у:'ו',ф:'פ',х:'ח',ц:'צ',ч:'צ',ш:'ש',щ:'ש',ъ:'',ы:'י',ь:'',э:'א',ю:'יו',я:'יה'};
+const HE_FINAL = {'מ':'ם','נ':'ן','פ':'ף','צ':'ץ'};
+function heTranslit(s) {
+  return String(s || '').trim().split(/\s+/).filter(Boolean).map(word => {
+    const ch = word.toLowerCase().split('');
+    let out = '';
+    ch.forEach((c, i) => {
+      const last = i === ch.length - 1;
+      if (c === 'а') { out += (i === 0 ? 'א' : last ? 'ה' : ''); return; } // «а» внутри слова не пишется
+      if (c === 'е') { out += (i === 0 ? 'י' : ''); return; }              // Елена → ילנה
+      if (c === 'в') { out += (i === 0 ? 'ו' : 'ב'); return; }             // Волков → וולקוב, Шишканова → שישקנובה
+      if (i === 0 && (c === 'и' || c === 'о' || c === 'у')) {              // гласная в начале — с алефом
+        out += (c === 'и' ? 'אי' : 'או'); return;                          // Иванова → איבנובה, Ольга → אולגה
+      }
+      if (c === 'й' && ch[i - 1] === 'и') return;                          // Дмитрий → דמיטרי, без двойной йод
+      const m = HE_TR[c];
+      if (m === undefined) { out += /[a-z0-9'\-]/.test(c) ? c : ''; return; }
+      out += m;
+    });
+    // конечная форма последней буквы
+    const lastCh = out.slice(-1);
+    if (HE_FINAL[lastCh]) out = out.slice(0, -1) + HE_FINAL[lastCh];
+    return out;
+  }).join(' ');
+}
 function ltParams() {
-  const name = (profName.value || '').trim() || '____';
+  const he = (document.getElementById('ltNameHe').value || '').trim();
+  const name = he || (profName.value || '').trim() || '____';
   const now = new Date();
   const mdef = String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
   const p = ltPrefill || {};
@@ -2211,6 +2251,28 @@ function ltShare(btn) {
   ta.value = ltCurrent; document.body.appendChild(ta); ta.select();
   try { document.execCommand('copy'); btn.textContent = t('lt.copied'); } catch (e) {}
   ta.remove();
+}
+// v1.18: письмо можно скачать в редактируемом виде (.doc открывается Word/Google Docs) и распечатать
+function ltDocHtml() {
+  const body = escT(ltCurrent).replace(/\n/g, '<br>');
+  return '<html dir="rtl"><head><meta charset="utf-8"></head>' +
+         '<body style="font-family:Arial;font-size:14px;line-height:1.6;direction:rtl;text-align:right">' +
+         body + '</body></html>';
+}
+function ltDownload() {
+  const blob = new Blob(['﻿' + ltDocHtml()], {type: 'application/msword'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'heshbon-letter.doc';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function ltPrint() {
+  document.getElementById('printArea').innerHTML =
+    '<div class="he" style="white-space:pre-wrap;font-size:13px">' + escT(ltCurrent) + '</div>';
+  const N = window.HeshbonNative;
+  if (N && N.printPage) { try { N.printPage('Heshbon letter'); return; } catch (e) {} }
+  window.print();
 }
 
 // ======= Сверка табеля с тлушем =======
@@ -2251,6 +2313,12 @@ function tbCompare() {
   box.innerHTML = out;
   ltPrefill = issues.length ? {month: mm + '/' + yy, hours: Math.round(tot.paid * 10) / 10, diff: diff || null} : null;
 }
+// имя латиницей/кириллицей → автотранслит в ивритское поле, пока его не правили руками
+let ltNameManual = false;
+document.getElementById('ltNameHe').addEventListener('input', () => { ltNameManual = true; });
+document.getElementById('ltNameRu').addEventListener('input', () => {
+  if (!ltNameManual) document.getElementById('ltNameHe').value = heTranslit(document.getElementById('ltNameRu').value);
+});
 function ltFromCmp() { // из сверки — к письму о недоплате (карточка писем в «Зарплате»)
   document.querySelectorAll('#empSub button').forEach(b => b.classList.toggle('on', b.dataset.v === 'sal'));
   empSubShow('sal');
@@ -2277,8 +2345,9 @@ function calcOffers() {
   const out = document.getElementById('ofOut');
   if (!(r[0].g > 0) || !(r[1].g > 0)) { out.innerHTML = ''; return; }
   const d = r[1].tot - r[0].tot;
+  // метки офферов берём из словаря: в русском это «А»/«Б», латинская B читалась как «В» (фидбек 10.08)
   const verdict = Math.abs(d) < 50 ? t('of.eq')
-    : tf('of.win', {x: d > 0 ? 'B' : 'A', d: fmt(Math.abs(d))});
+    : tf('of.win', {x: t(d > 0 ? 'of.lb' : 'of.la'), d: fmt(Math.abs(d))});
   out.innerHTML = '<div style="margin-top:10px">' +
     row(t('of.net'), fmt(r[0].net) + ' · ' + fmt(r[1].net), 'pos') +
     row(t('of.pack'), fmt(r[0].pack) + ' · ' + fmt(r[1].pack)) +
@@ -2454,6 +2523,10 @@ const AI_TOPICS = [
   {kw: ['увол','fired','dismiss','פיטור','больничн','sick','מחלה'], key: 'qa.sickfire', prio: 3, min: 2},
   {kw: ['каблан','подрядчик','contractor','קבלן'], key: 'qa.contractor', prio: 3},
   {kw: ['сколько в час','в час платят','сколько за час','сколько стоит час','per hour','an hour','לשעה','сколько платят в'], key: 'qa.hourly', prio: 3},
+  // v1.18: частые вопросы про некудот — раньше уходили в «тема не найдена» (фидбек 10.08)
+  {kw: ['одинок','мать-одиноч','отец-одиноч','single parent','הורה יחיד','חד הורי'], key: 'qa.single', prio: 3},
+  {kw: ['некудот','пункт','баллы','балла','баллов','credit point','נקודות זיכוי','льготные налоговые'], key: 'qa.points', prio: 3},
+  {kw: ['диплом','степень','учёб','учеб','образован','ba','ma','תואר','תעודת מקצוע','studies','degree'], key: 'qa.studypoints', prio: 3},
   {kw: ['11 часов','12 часов','10 часов','13 часов','по 11','по 12','сколько часов можно','сколько часов в день','12 hours','11 hours','many hours a day','כמה שעות מותר','12 שעות','11 שעות'], key: 'qa.maxhours', prio: 3},
   {kw: ['наличным','черная зарплат','чёрная зарплат','без оформлени','не оформ','мимо кассы','без тлуша','במזומן','בלי תלוש','cash','off the books'], key: 'qa.cash', prio: 3},
   {kw: ['сократил час','сократили час','урезал','урезали','понизил','понизили','снизил ставк','снизили ставк','полставки','reduce my pay','cut my hours','הפחיתו','קיצצו','הורידו לי'], key: 'qa.cutpay', prio: 3},
@@ -2527,6 +2600,11 @@ function aiAsk(inputId, targetId) {
     const l = unList(); l.push({q, lang: LANG, ts: Date.now()});
     try { localStorage.setItem(UN_KEY, JSON.stringify(l.slice(-50))); } catch (e) {}
     unUpdate();
+    // v1.18 (фидбек 10.08 «отвечает заглушкой и отправляет жать вторую кнопку»):
+    // темы нет в офлайн-базе — сразу спрашиваем живого Claude, без лишнего клика.
+    // Типовые вопросы по-прежнему отвечаются офлайн: мгновенно, без сети и без расхода лимита.
+    const auto = target.querySelector('button');
+    if (auto && (+localStorage.getItem(aiQuotaKey()) || 0) < AI_DAILY) aiOnline(auto);
   }
 }
 // ======= Копилка неотвеченных вопросов =======
@@ -2554,6 +2632,29 @@ document.getElementById('aiEmpQ').addEventListener('keydown', e => { if (e.key =
 const AI_URL = 'https://heshbon-ai.heshbon.workers.dev';
 const AI_DAILY = 10; // дневной лимит на устройство — предсказуемый бюджет на этапе валидации
 function aiQuotaKey() { return 'heshbon_ai_' + new Date().toISOString().slice(0, 10); }
+// v1.18 (жалоба 10.08 «пишет „нет сети“, хотя сеть есть»): единый запрос к воркеру с таймаутом
+// и РАЗЛИЧИМЫМИ ошибками — ответ сервера с кодом, обрыв по времени и настоящий сетевой сбой.
+function aiFetch(body, ms) {
+  const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), ms || 60000) : 0;
+  const opt = { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) };
+  if (ctrl) opt.signal = ctrl.signal;
+  return fetch(AI_URL, opt).then(r => {
+    if (timer) clearTimeout(timer);
+    if (!r.ok) return r.json().catch(() => ({})).then(j => {
+      const e = new Error('http'); e.http = r.status; e.code = j && (j.error || j.code); throw e;
+    });
+    return r.json();
+  }, e => { if (timer) clearTimeout(timer); throw e; });
+}
+function aiErrText(e) {
+  if (e && e.name === 'AbortError') return t('ai.err.timeout');
+  if (e && e.http) {
+    if (e.code === 'too_big') return t('ai.err.big');
+    return tf('ai.err.server', {c: e.http});
+  }
+  return t('ai.online.err'); // fetch не дошёл — действительно нет связи
+}
 // Статус для AI-режимов воркера. Воркер режет status до 24 символов, поэтому пенсионерские
 // уточнения — компактными токенами, которые FACTS воркера узнаёт: '+kitzba' (получает кицбат
 // зикна), '+pens62-67/67-70/70+' (пенс. возраст без кицбы), '+exempt67' (принят после 67
@@ -2576,9 +2677,7 @@ function aiOnline(btn) {
     btn.replaceWith(n); return;
   }
   btn.disabled = true; btn.textContent = t('ai.online.wait');
-  fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ q, lang: LANG, status: aiStatus() }) })
-    .then(r => r.ok ? r.json() : Promise.reject(0))
+  aiFetch({ q, lang: LANG, status: aiStatus() })
     .then(d => {
       if (!d.answer) throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
@@ -2589,10 +2688,10 @@ function aiOnline(btn) {
           .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
       btn.replaceWith(div);
     })
-    .catch(() => {
+    .catch(e => {
       btn.disabled = false; btn.textContent = t('ai.online.btn');
-      const n = document.createElement('div'); n.className = 'note warn'; n.textContent = t('ai.online.err');
-      btn.after(n); setTimeout(() => n.remove(), 5000);
+      const n = document.createElement('div'); n.className = 'note warn'; n.textContent = aiErrText(e);
+      btn.after(n); setTimeout(() => n.remove(), 6000);
     });
 }
 
@@ -2663,9 +2762,7 @@ function aiContract() {
     req.imgs = ctPages.map(p => ({img: p.b64, media: p.media}));
     if (txt) req.q = txt.slice(0, 1500);
   } else req.q = txt.slice(0, 6000);
-  fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(req) })
-    .then(r => r.ok ? r.json() : Promise.reject(0))
+  aiFetch(req, 120000) // фото листов читаются дольше — свой таймаут
     .then(d => {
       if (!d.answer) throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
@@ -2675,9 +2772,9 @@ function aiContract() {
           .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
       btn.disabled = false; btn.textContent = t('contract.btn');
     })
-    .catch(() => {
+    .catch(e => {
       btn.disabled = false; btn.textContent = t('contract.btn');
-      target.style.display = 'block'; target.textContent = t('ai.online.err');
+      target.style.display = 'block'; target.textContent = aiErrText(e);
     });
 }
 
@@ -2779,12 +2876,10 @@ function tlushScan() {
   if (used >= AI_DAILY) { ans.style.display = 'block'; ans.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
   btn.disabled = true; btn.textContent = t('tlush.wait');
   const st = tlStore();
-  fetch(AI_URL, { method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ mode: 'tlush', img: tlSel.b64, media: tlSel.media,
+  aiFetch({ mode: 'tlush', img: tlSel.b64, media: tlSel.media,
       prev: st.last ? st.last.f : null, lang: LANG, status: aiStatus(), // пенсионерские токены — сверка не требует БЛ/пенсию там, где их законно нет
       sector: profIndustry.value !== 'general' ? profIndustry.value : null, // отраслевая сверка (цав архава)
-      tenure: +profTenure.value || null }) })
-    .then(r => r.ok ? r.json() : Promise.reject(0))
+      tenure: +profTenure.value || null }, 120000)
     .then(d => {
       if (!d.data || typeof d.data.analysis !== 'string') throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); localStorage.setItem(tlMonthKey(), mUsed + 1); } catch (e) {}
@@ -2792,9 +2887,9 @@ function tlushScan() {
       tlRender(d.data);
       tlSave(d.data);
     })
-    .catch(() => {
+    .catch(e => {
       btn.disabled = false; btn.textContent = t('tlush.btn');
-      ans.style.display = 'block'; ans.textContent = t('ai.online.err');
+      ans.style.display = 'block'; ans.textContent = aiErrText(e);
     });
 }
 
