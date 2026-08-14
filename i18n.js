@@ -372,7 +372,7 @@ ru: {
 "set.privacy":"Политика конфиденциальности",
 "set.about":"О приложении",
 "set.support.t":"Поддержка и подписка",
-"set.support.b":"Вопросы по работе приложения, сбоям и возвратам: <a href=\"mailto:dimollia@gmail.com\">dimollia@gmail.com</a>.<br>Подписка (после запуска в Google Play) — с автопродлением; отключение: Google Play → профиль → «Платежи и подписки».<br>Политика конфиденциальности — выше.",
+"set.support.b":"Вопросы по работе приложения, сбоям и возвратам: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>Подписка (после запуска в Google Play) — с автопродлением; отключение: Google Play → профиль → «Платежи и подписки».<br>Политика конфиденциальности — выше.",
 "plural.viol":"возможное нарушение|возможных нарушения|возможных нарушений",
 "plural.pts":"пункт|пункта|пунктов",
 "nk.unit":"пунктов",
@@ -686,7 +686,7 @@ ru: {
  "prem.pro.n":"Pro — для специалистов","prem.pro.p":"49 ₪/мес","prem.pro.f":"<li>Всё из Premium</li><li>Карточка в каталоге специалистов (адвокаты · бухгалтеры)</li><li>Лиды: клиенты из приложения в вашем городе</li>",
  "prem.cta":"Подписаться — оплата с релиза","prem.joined":"✅ Записали! Первый месяц — в подарок","prem.close":"Закрыть",
  "prem.note":"Сейчас идёт пробный период — все функции открыты. Оплата 14,90 ₪/мес включится с запуском в Google Play; записавшимся сейчас — первый месяц в подарок.",
-"prem.legal":"Подписка (после запуска в Google Play) продлевается автоматически. Отключить автосписание: Google Play → профиль → «Платежи и подписки» → Хешбон+ → Отменить. Если из-за технического сбоя приложение работало некорректно — напишите нам: разберёмся, вернём оплату или продлим доступ. Возврат при простой смене решения после начала цифровой услуги регулируется правилами Google Play. Поддержка: <a href=\"mailto:dimollia@gmail.com\">dimollia@gmail.com</a>. Полные условия использования опубликуем при запуске оплаты.",
+"prem.legal":"Подписка (после запуска в Google Play) продлевается автоматически. Отключить автосписание: Google Play → профиль → «Платежи и подписки» → Хешбон+ → Отменить. Если из-за технического сбоя приложение работало некорректно — напишите нам: разберёмся, вернём оплату или продлим доступ. Возврат при простой смене решения после начала цифровой услуги регулируется правилами Google Play. Поддержка: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>. Полные условия использования опубликуем при запуске оплаты.",
  "disclaimer":"Хешбон+ — информационно-справочный инструмент. Не является налоговой или юридической консультацией и не заменяет лицензированного йоэц мас / роэ хешбон. Ставки и пороги: <b>2026</b> (минималка 04.2026, хавраа 06.2026, БЛ-реформа 2025–26, ступени 01.2026). Ставки обновляются онлайн автоматически — актуальную дату видно в футере."
 },
 // ================================================================== EN
@@ -1061,7 +1061,7 @@ en: {
 "set.privacy":"Privacy Policy",
 "set.about":"About",
 "set.support.t":"Support & subscription",
-"set.support.b":"Questions about the app, faults and refunds: <a href=\"mailto:dimollia@gmail.com\">dimollia@gmail.com</a>.<br>The subscription (once live on Google Play) auto-renews; cancel in Google Play → profile → “Payments & subscriptions”.<br>Privacy policy — above.",
+"set.support.b":"Questions about the app, faults and refunds: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>The subscription (once live on Google Play) auto-renews; cancel in Google Play → profile → “Payments & subscriptions”.<br>Privacy policy — above.",
 "plural.viol":"possible violation|possible violations|possible violations",
 "plural.pts":"point|points|points",
 "nk.unit":"points",
@@ -1375,7 +1375,7 @@ en: {
  "prem.pro.n":"Pro — for professionals","prem.pro.p":"₪49/mo","prem.pro.f":"<li>Everything in Premium</li><li>A card in the specialists directory (lawyers · accountants)</li><li>Leads: app users in your city</li>",
  "prem.cta":"Subscribe — billing starts at launch","prem.joined":"✅ You're in! First month on us","prem.close":"Close",
  "prem.note":"Trial period is on — everything is open right now. The ₪14.90/mo billing starts with the Google Play release; subscribe now and your first month is free of charge.",
-"prem.legal":"The subscription (once live on Google Play) renews automatically. To stop auto-charges: Google Play → profile → “Payments & subscriptions” → Heshbon+ → Cancel. If a technical fault made the app work incorrectly — write to us: we will sort it out and refund or extend your access. Refunds for a simple change of mind after a digital service has started are governed by Google Play rules. Support: <a href=\"mailto:dimollia@gmail.com\">dimollia@gmail.com</a>. Full terms of use will be published when payments launch.",
+"prem.legal":"The subscription (once live on Google Play) renews automatically. To stop auto-charges: Google Play → profile → “Payments & subscriptions” → Heshbon+ → Cancel. If a technical fault made the app work incorrectly — write to us: we will sort it out and refund or extend your access. Refunds for a simple change of mind after a digital service has started are governed by Google Play rules. Support: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>. Full terms of use will be published when payments launch.",
  "disclaimer":"Heshbon+ is an informational tool. It is not tax or legal advice and does not replace a licensed tax advisor / CPA. Rates & thresholds: <b>2026</b> (min. wage 04.2026, havra'a 06.2026, NI reform 2025–26, brackets 01.2026). Rates update online automatically — the current date is shown in the footer."
 },
 // ================================================================== HE
@@ -1750,7 +1750,7 @@ he: {
 "set.privacy":"מדיניות פרטיות",
 "set.about":"אודות",
 "set.support.t":"תמיכה ומנוי",
-"set.support.b":"שאלות על האפליקציה, תקלות והחזרים: <a href=\"mailto:dimollia@gmail.com\">dimollia@gmail.com</a>.<br>המנוי (לאחר ההשקה ב-Google Play) מתחדש אוטומטית; ביטול: Google Play ← פרופיל ← «תשלומים ומינויים».<br>מדיניות הפרטיות — למעלה.",
+"set.support.b":"שאלות על האפליקציה, תקלות והחזרים: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>המנוי (לאחר ההשקה ב-Google Play) מתחדש אוטומטית; ביטול: Google Play ← פרופיל ← «תשלומים ומינויים».<br>מדיניות הפרטיות — למעלה.",
 "plural.viol":"הפרה אפשרית|הפרות אפשריות|הפרות אפשריות",
 "plural.pts":"נקודה|נקודות|נקודות",
 "nk.unit":"נקודות",
@@ -2064,7 +2064,7 @@ he: {
  "prem.pro.n":"Pro — לאנשי מקצוע","prem.pro.p":"49 ₪ לחודש","prem.pro.f":"<li>כל מה שב-Premium</li><li>כרטיס במדריך המומחים (עו״ד · רו״ח)</li><li>לידים: משתמשים מהאפליקציה בעיר שלך</li>",
  "prem.cta":"להירשם — החיוב מתחיל בהשקה","prem.joined":"✅ נרשמת! החודש הראשון עלינו","prem.close":"סגור",
  "prem.note":"כרגע תקופת ניסיון — הכול פתוח. חיוב של 14.90 ₪ לחודש יתחיל עם ההשקה ב-Google Play; לנרשמים עכשיו — החודש הראשון מתנה.",
-"prem.legal":"המנוי (לאחר ההשקה ב-Google Play) מתחדש אוטומטית. ביטול החיוב: Google Play ← פרופיל ← «תשלומים ומינויים» ← חשבון+ ← ביטול. אם תקלה טכנית גרמה לאפליקציה לעבוד לא נכון — כתבו לנו: נבדוק, נחזיר את התשלום או נאריך את הגישה. החזר בשל שינוי דעה אחרי תחילת שירות דיגיטלי כפוף לכללי Google Play. תמיכה: <a href=\"mailto:dimollia@gmail.com\">dimollia@gmail.com</a>. תנאי שימוש מלאים יפורסמו עם השקת התשלום.",
+"prem.legal":"המנוי (לאחר ההשקה ב-Google Play) מתחדש אוטומטית. ביטול החיוב: Google Play ← פרופיל ← «תשלומים ומינויים» ← חשבון+ ← ביטול. אם תקלה טכנית גרמה לאפליקציה לעבוד לא נכון — כתבו לנו: נבדוק, נחזיר את התשלום או נאריך את הגישה. החזר בשל שינוי דעה אחרי תחילת שירות דיגיטלי כפוף לכללי Google Play. תמיכה: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>. תנאי שימוש מלאים יפורסמו עם השקת התשלום.",
  "disclaimer":"חשבון+ הוא כלי מידע בלבד. אינו ייעוץ מס או ייעוץ משפטי ואינו מחליף יועץ מס / רו״ח מוסמך. שיעורים וספים: <b>2026</b> (מינימום 04.2026, הבראה 06.2026, רפורמת ב״ל 2025–26, מדרגות 01.2026). השיעורים מתעדכנים אונליין אוטומטית — התאריך העדכני מופיע בתחתית העמוד."
 }
 };
