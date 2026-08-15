@@ -1,0 +1,28 @@
+Heshbon+ (Хешбон+ / חשבון+) — Proprietary License
+Copyright (c) 2026 Heshbon+ (heshbonplus.il@gmail.com). All rights reserved.
+
+This repository is published only to host the public web version of the
+Heshbon+ app on GitHub Pages. Publication does NOT grant any license.
+
+You may NOT, without prior written permission of the copyright owner:
+  - copy, reproduce, modify, translate or create derivative works of the code,
+    texts, checklists, rate/rule data, UI design, images or other materials;
+  - redistribute, sell, rent, sublicense or host copies of the app or its parts;
+  - use the name, logo or trade dress "Heshbon+ / Хешбон+ / חשבון+";
+  - call the Heshbon+ backend (Cloudflare Worker) from third-party clients.
+
+Permitted: viewing the source, personal non-commercial use of the hosted app,
+and short quotations with attribution and a link to the original.
+
+Protected under the Israeli Copyright Act, 5768-2007, the Commercial Torts Law,
+5759-1999, and international treaties. Governing law: State of Israel.
+See terms.html and privacy.html for the terms of use and privacy policy.
+
+--- РУ ---
+Хешбон+ — проприетарная лицензия. © 2026 Heshbon+. Все права защищены.
+Репозиторий открыт исключительно для размещения публичной веб-версии на
+GitHub Pages; публикация не является лицензией. Без письменного разрешения
+запрещено копировать, изменять, распространять, продавать код, тексты, данные,
+дизайн и материалы, использовать название/логотип и обращаться к нашему серверу
+из сторонних клиентов. Разрешено личное некоммерческое использование и краткое
+цитирование со ссылкой. Закон об авторском праве Израиля 2007 г.

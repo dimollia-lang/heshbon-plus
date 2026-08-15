@@ -1,3 +1,4 @@
+// © 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved. Proprietary — see LICENSE and terms.html.
 // Хешбон+ — словари RU / EN / HE. Ставки и цифры 2026 одинаковы во всех языках.
 const I18N = {
 // ================================================================== RU
@@ -68,7 +69,8 @@ ru: {
 "ivc.i.cash.ok":"Наличные в пределах лимита {n} — допустимо.",
 "ivc.i.req":"Реквизиты на счёте: слова «хешбонит мас», номер тика поставщика, дата, ваши данные, НДС отдельной строкой.",
 "ivc.i.sup":"Поставщик — действующий осек мурше? Бесплатная проверка в реестре рашут а-мисим:",
-"ivc.sum":"Сумма счёта (с НДС), ₪",
+"ivc.sum":"Сумма счёта (с НДС), ₪",
+
 "zr.better.norm":"Осек заир выгоднее: +{d} признанных расходов, и ни одного чека собирать не надо.",
 "zr.better.real":"Ваши реальные расходы больше норматива на {d} — обычный режим выгоднее, заир не нужен.",
 "zr.close":"Разница всего {d} — почти паритет. Заир даст тот же вычет, но избавит от чеков.",
@@ -130,7 +132,8 @@ ru: {
 "ek.bl":"Битуах леуми: форма 6101 — статус ацмаи",
 "ek.book":"Учёт: выбрать сервис квитанций (хешбонит/квала)",
 "ek.pens":"Пенсия ацмаи: открыть/обновить фонд (обязательна)",
-"ek.done":"✅ Всё готово — вы официально в деле. Дедлайны отчётности — в карточке ниже.",
+"ek.done":"✅ Всё готово — вы официально в деле. Дедлайны отчётности — в карточке ниже.",
+
 "gl.h":"📖 Глоссарий тлуша: что значит каждая строка",
 "gl.hint":"Откройте свой тлуш рядом и сверяйся построчно.",
 "gl.gross.t":"Брутто (שכר יסוד / ברוטו)",
@@ -370,9 +373,11 @@ ru: {
 "wh.hint":"Самый частый вопрос: «сколько часов в неделю я вообще должен работать, вычитают ли мне обед и с какого часа идут переработки». Ответь на вопросы — посчитаю. Работаете неполную неделю (3–4 смены) — это нормально: норма дня зависит от режима предприятия (5- или 6-дневка), а не от числа ваших смен.",
 "wh.h":"⏱ Какая у меня норма часов",
 "set.privacy":"Политика конфиденциальности",
+"set.terms":"Условия использования",
 "set.about":"О приложении",
 "set.support.t":"Поддержка и подписка",
-"set.support.b":"Вопросы по работе приложения, сбоям и возвратам: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>Подписка (после запуска в Google Play) — с автопродлением; отключение: Google Play → профиль → «Платежи и подписки».<br>Политика конфиденциальности — выше.",
+"set.support.b":"Вопросы по работе приложения, сбоям и возвратам: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>Подписка (после запуска в Google Play) — с автопродлением; отключение: Google Play → профиль → «Платежи и подписки».<br>Политика конфиденциальности — выше.",
+
 "plural.viol":"возможное нарушение|возможных нарушения|возможных нарушений",
 "plural.pts":"пункт|пункта|пунктов",
 "nk.unit":"пунктов",
@@ -392,7 +397,8 @@ ru: {
 "prof.kidsB":"В год рождения",
 "prof.kids.h":"Ваши дети в Израиле — сколько каждого возраста (возраст в этом налоговом году)",
  "fired.unemp":"💼 <b>Сразу после увольнения — бюро занятости.</b> Зарегистрируйтесь в лишкат таасука (לשכת התעסוקה — служба занятости) <b>в первый же свободный день</b>: пособие по безработице (дмей автала, דמי אבטלה) начисляется только со дня регистрации, дни до неё сгорают. Онлайн: <a href='https://www.taasuka.gov.il' target='_blank' style='color:inherit;font-weight:700'>taasuka.gov.il</a>, затем заявление в Битуах Леуми. Условие: взносы 12 из последних 18 месяцев; ушли сам без уважительной причины — карантин 90 дней. ⚠️ Автала положена резидентам Израиля; на визах Б1 и 2(а)5 пособие не выплачивается.",
- "fired.pitz.under1":"⚠️ Стаж меньше года — пицуим (פיצויי פיטורים — выходное пособие) по закону ещё не положены, поэтому строка = 0. Но: если вас уволили незадолго до конца первого года (ориентир — последние ~3 месяца) без реальной причины, закон считает это увольнением ради ухода от пицуим (ст. 3 закона) — их можно взыскать через суд.", 
+ "fired.pitz.under1":"⚠️ Стаж меньше года — пицуим (פיצויי פיטורים — выходное пособие) по закону ещё не положены, поэтому строка = 0. Но: если вас уволили незадолго до конца первого года (ориентир — последние ~3 месяца) без реальной причины, закон считает это увольнением ради ухода от пицуим (ст. 3 закона) — их можно взыскать через суд.",
+ 
  "nk.ex.dembel":"Демобилизация (действует 36 мес. после службы)",
  "nk.ex.dembelFull":"полная служба (+2)",
  "nk.ex.dembelPart":"частичная служба (+1)",
@@ -406,7 +412,8 @@ ru: {
 "nk.ex.teen":"Мне 16–18 лет (работающий подросток, +1)",
  "nk.ex.manual":"Прочее (баллы вручную)",
  "nk.ex.note":"Это поле — только для редких оснований, которых нет в списке выше, и по справке из налоговой.",
-  
+ 
+ 
  "hish.gate.constr":"🏗 Стройка: керен иштальмут положен рабочим стройплощадки после 3 лет стажа В ОТРАСЛИ (прорабам и крановщикам — с 1-го дня; офисным сотрудникам — не положен). Включай галочку, если строка השתלמות уже есть в тлуше.",
  "hish.gate.foreign":"🏗 Иностранным рабочим стройки (Б1/2а5) керен иштальмут не открывают — вместо него после 3 лет отраслевого стажа положена денежная надбавка «халаф иштальмут» (חלף השתלמות). Проверьте её в тлуше; нет — требуйте.",
  "set.h":"⚙️ Настройки",
@@ -488,7 +495,8 @@ ru: {
  "esek.s25.body":"<p><b>Да, можно — и теудат зеут для этого не нужен.</b> Налоговая открывает тик осек по загранпаспорту и синей бумаге, присваивая учётный номер вместо ТЗ. Так легально работают, например, многие курьеры доставки со статусом 2(а)5 — как самозанятые.</p><p><b>Как на практике:</b> лично в отделении маам/мс ахнаса или через бухгалтера/йоэц мас — представитель сильно упрощает дело, потому что клерки не всегда знают процедуру для иностранцев. Эсек патур: оборот до 122 833 ₪/год (2026), НДС не начисляете, отчёт раз в год.</p><p><b>Битуах леуми:</b> ацмаи-нерезидент платит только 0,37%/0,94% (страхование материнства) — но и права почти не копятся: ни автала, ни государственной пенсии. Пенсию откладывайте сам.</p><p><b>Вариант без тика:</b> компании-хешбонит выставляют счета за вас за комиссию ~5% — легально, но читайте условия.</p><p>⚠️ Если «стать самозанятым» предложил единственный заказчик, у которого вы работаете по его графику и его инструментами, — это фиктивная самозанятость и потеря прав: спросите у AI про «наняли как эсек патур».</p>",
  "dir":"ltr","locale":"ru-RU","title":"Хешбон+ — бухгалтерия Израиля в кармане",
  "sub":"Бухгалтерия Израиля в кармане",
- "tab.emp":"Работник","tab.self":"Самозанятый",
+ "tab.emp":"Работник","tab.self":"Самозанятый",
+
  "emp.title":"👷 Работник","emp.desc":"Зарплата, отчисления и права — для граждан, олим и иностранных работников (Б1 и «синяя бумага»).",
  "emp.calc.h":"Калькулятор нетто-зарплаты","emp.calc.hint":"Введите брутто из трудового договора или тлуша — увидите, сколько денег должно прийти на руки и структуру удержаний.",
 "emp.prof.t":"👤 Мой профиль — статус, дети, некудот",
@@ -511,7 +519,8 @@ ru: {
  "status.s25":"«Синяя бумага» 2(а)5: работать де-факто можно — БАГАЦ запретил наказывать работодателей, и <b>все трудовые права действуют полностью</b>. Мас бриют нет (обязательная частная страховка). ⚠️ Пенсия+пицуим 12,5% положены даже если пенсионный фонд отказал (траст-счёт или выплата) — частая точка обмана; депозитная система 16% с 2020 фактически не работает. Детали — в «Правах» ниже.",
  "oleh.ask":"Укажите дату алии — посчитаю льготные пункты.",
  "oleh.expired":"С алии прошло {m} мес — льгота олим закончилась (действует 54 мес = 4,5 года), остались базовые пункты.",
- "oleh.active":"Месяц <b>{m}</b> с алии → <b>+{b} некудот олим</b> к базовым {base}. Схема: год 1 → +1 · мес 13–30 → +3 · мес 31–42 → +2 · мес 43–54 → +1. Льгота до {end}.",
+ "oleh.active":"Месяц <b>{m}</b> с алии → <b>+{b} некудот олим</b> к базовым {base}. Схема: год 1 → +1 · мес 13–30 → +3 · мес 31–42 → +2 · мес 43–54 → +1. Льгота до {end}.",
+
  "quiz.h":"✅ Чекап: не нарушают ли ваши права?","quiz.hint":"Ответь на вопросы — покажу, где вас, возможно, обманывают, и что с этим делать. Многие даже не знают, что им недоплачивают.",
  "quiz.btn":"Показать результат","quiz.yes":"Да","quiz.no":"Нет","quiz.dk":"Не знаю",
  "quiz.tlush.q":"Вы получаете тлуш (расчётный лист) каждый месяц?","quiz.tlush.bad":"Тлуш обязаны выдать до 9-го числа следующего месяца. Если работодатель этого не делает — он нарушает закон, и за это положен штраф. Требуйте тлуш письменно: без него невозможно проверить отчисления.",
@@ -537,7 +546,8 @@ ru: {
  "quizres.found":"Найдено {n} {w}</b> — вот что важно знать:",
  "quizres.check":"🔍 Стоит проверить: ",
  "quizres.where":"Куда обращаться",
- "quizres.whereText":"Кав ла-Овед (бесплатно, есть русскоязычные) · Управление регулирования и инфорсмента Минтруда · суд по трудовым спорам. Сроки исков: зарплата и пицуим — до 7 лет, отпуск — только 3 года, пеня за задержку зарплаты — около года. Подробности — в карточке «Разбор тлуша и права» ниже.",
+ "quizres.whereText":"Кав ла-Овед (бесплатно, есть русскоязычные) · Управление регулирования и инфорсмента Минтруда · суд по трудовым спорам. Сроки исков: зарплата и пицуим — до 7 лет, отпуск — только 3 года, пеня за задержку зарплаты — около года. Подробности — в карточке «Разбор тлуша и права» ниже.",
+
  "ai.emp.h":"AI-защитник прав <span class='pill'>скоро</span>","ai.emp.hint":"Подскажет, что спросить у работодателя, как проверить тлуш и как отстоять свои права — на простом языке. Примеры:",
  "ai.emp.c1":"Что проверить в тлуше первым делом?","ai.emp.c2":"Мне не платят сверхурочные — что сказать?","ai.emp.c3":"Работодатель держит мой паспорт","ai.emp.c4":"Меня увольняют — что мне положено?","ai.emp.c5":"Как доказать свои рабочие часы?",
  "ai.emp.flavor":"AI-защитник отвечает простым языком: что именно проверить в тлуше, какими словами говорить с работодателем и куда жаловаться. Нажмите готовый вопрос или напишите свой.",
@@ -584,7 +594,8 @@ ru: {
  "qa.hourly":"<b>Минимум в час (с 04.2026):</b> взрослые — <b>35,40 ₪</b> · подростки: до 16 — 26,07 / 16–17 — 27,94 / 17–18 — 30,92 · клининг — <b>39,11</b> · охрана — <b>39,11</b> · стройка — по разрядам (дарга 3 — 6 900 ₪/мес) · институциональный кейтеринг — 113% минималки · ночью день короче (7 ч), сверх — 125%/150%. Напишите свою сферу — уточню ставку.",
 "qa.studypoints":"Баллы за учёбу дают с года, СЛЕДУЮЩЕГО за годом окончания — задним числом внутри того же года их не начислят.\n\nСколько: BA — 1 балл (окончившим с 2023 — на число лет учёбы, максимум 3 года; 2014–2022 — на 1 год); MA — 0,5 балла (с 2023 — на 2 года); профдиплом гос. образца от 1700 часов — 1 балл на срок учёбы, максимум 3 года. BA и профдиплом не суммируются — выбирается одна льгота, MA сочетается с любой.\n\nКак получить: тофес 101 у работодателя + форма 119 с копией диплома. Если год уже прошёл без баллов — подайте на возврат налога, его считают до 6 лет назад.",
 "qa.points":"Некудот зикуй — это льготные налоговые баллы, каждый уменьшает налог на 242 ₪ в месяц (2 904 ₪ в год). Базовые: мужчина 2,25 · женщина 2,75 (резиденты, олим и виза А5).\n\nСверх базовых дают: за детей по возрастам (до года 2,5 · 1–2 года 4,5 · 3 года 3,5 · 4–5 лет 2,5 · 6–17 мама 2 / папа 1), ребёнок с инвалидностью +2, оле хадаш до 54 месяцев с алии, за степень или профдиплом, алименты, неработающий супруг, одинокий родитель.\n\nВсё это считает калькулятор в разделе «Мой профиль» — откройте справку «?» рядом с полем некудот. Право реализуется через тофес 101 при найме и каждый январь.",
-"qa.single":"Да, одинокому родителю положен дополнительный балл (+1 к некудот зикуй), а также сами детские баллы по возрастам — и при раздельном проживании родителей их получают оба.\n\nЧто делать: отметить статус в тофес 101 у работодателя и приложить подтверждение (свидетельство о разводе / решение суда / справка о матери-одиночке). Если баллы не начисляли — переплату возвращают до 6 лет назад через возврат налога.\n\nОтдельно проверьте право на маанак авода (доплату работающим родителям) и пособия Битуах Леуми для одиноких родителей.",
+"qa.single":"Да, одинокому родителю положен дополнительный балл (+1 к некудот зикуй), а также сами детские баллы по возрастам — и при раздельном проживании родителей их получают оба.\n\nЧто делать: отметить статус в тофес 101 у работодателя и приложить подтверждение (свидетельство о разводе / решение суда / справка о матери-одиночке). Если баллы не начисляли — переплату возвращают до 6 лет назад через возврат налога.\n\nОтдельно проверьте право на маанак авода (доплату работающим родителям) и пособия Битуах Леуми для одиноких родителей.",
+
  "ot.h":"Сверхурочные и проверка минималки","ot.hint":"Первые 2 сверхурочных часа в день — 125%, дальше — 150%. Минималка с <b>01.04.2026</b>: <b>6 443,85 ₪/мес</b> (35,40 ₪/час).",
  "ot.rate":"Ставка часа, ₪",
 "ot.pt.hour":"Почасовая",
@@ -596,7 +607,8 @@ ru: {
 "ot.src.below":"⚠️ Это ниже минимума{i}: {f} ₪/час. Проверьте договор и тлуш.",
 "ot.src.manual":"Ставка задана вручную — приложение её не пересчитывает.",
 "ot.src.floor":"Подставлен минимум{i}: {f} ₪/час. Из вашего брутто вышло бы {g} ₪/час — ниже минимума, поэтому расчёт идёт по нему.",
-"ot.src.gross":"Ставка посчитана из брутто: {g} ₪/час (брутто ÷ 182 часа месячной нормы).",
+"ot.src.gross":"Ставка посчитана из брутто: {g} ₪/час (брутто ÷ 182 часа месячной нормы).",
+
  "rights.h":"Разбор тлуша и права","rights.hint":"Что означают строки в зарплатной ведомости и что вам положено по закону.",
  "acc.tlush.t":"📄 Главные строки тлуша",
  "acc.tlush.body":"<ul><li><b>שכר יסוד (схар есод)</b> — базовая зарплата до надбавок.</li><li><b>ברוטו (брутто)</b> — всё начисленное до вычетов.</li><li><b>מס הכנסה (мас ахнаса)</b> — подоходный налог.</li><li><b>ביטוח לאומי / בריאות</b> — соцстрах и налог на здоровье.</li><li><b>נקודות זיכוי (некудот зикуй)</b> — налоговые льготные пункты: каждый уменьшает налог на 242 ₪/мес.</li><li><b>נטו (нетто)</b> — сумма на руки.</li><li><b>צבירת חופשה / מחלה</b> — накопленные дни отпуска и больничных: проверяй, что они растут!</li></ul>",
@@ -614,7 +626,8 @@ ru: {
  "acc.nesiot.body":"<p><b>Дмей несиот (דמי נסיעות)</b> — оплата дороги на работу и обратно. Правила (2026):</p><ul><li>Платится за каждый <b>фактически отработанный день</b>: за дни болезни и отпуска несиот не положены.</li><li>Размер: стоимость самого дешёвого общественного транспорта, но <b>не более 22,60 ₪ в день</b> (≈497 ₪ при 22 рабочих днях в месяц).</li><li>Как вы добираетесь — не важно: автобус, поезд или личная машина, право одно и то же.</li><li>НЕ положено: если работодатель организует бесплатную подвозку или вы живёте совсем рядом с работой (примерно до 500 м).</li></ul><p>Ищите строку «נסיעות» в тлуше. Ездите на работу, а строки нет — это недоплата, взыскивается вместе с другими долгами по зарплате.</p>",
  "acc.maanak.t":"💵 Маанак авода — доплата от государства","acc.injury.t":"🩹 Травма на работе (теунат авода)","acc.harass.t":"🛡 Домогательства на работе",
  "acc.complain.t":"⚖️ Куда обращаться, если права нарушают",
- "acc.complain.body":"<ul><li><b>Кав ла-Овед (קו לעובד)</b> — бесплатная помощь работникам, включая иностранных и просителей убежища; есть русскоязычные консультанты. kavlaoved.org.il</li><li><b>Управление регулирования и инфорсмента Минтруда</b> — жалоба на работодателя (анонимность возможна), штрафы для нарушителей.</li><li><b>Суд по трудовым спорам (בית דין לעבודה)</b> — иски по зарплате можно подать за период до 7 лет назад; часто достаточно письма-предупреждения от юриста.</li><li><b>Истадрут / профсоюз</b> — если на предприятии есть представительство.</li></ul><p><b>Главное правило:</b> храните все тлуши, договор и свой учёт часов (фото табеля, заметки) — это доказательства. Отсутствие письменного договора не лишает прав: они гарантированы законом.</p>",
+ "acc.complain.body":"<ul><li><b>Кав ла-Овед (קו לעובד)</b> — бесплатная помощь работникам, включая иностранных и просителей убежища; есть русскоязычные консультанты. kavlaoved.org.il</li><li><b>Управление регулирования и инфорсмента Минтруда</b> — жалоба на работодателя (анонимность возможна), штрафы для нарушителей.</li><li><b>Суд по трудовым спорам (בית דין לעבודה)</b> — иски по зарплате можно подать за период до 7 лет назад; часто достаточно письма-предупреждения от юриста.</li><li><b>Истадрут / профсоюз</b> — если на предприятии есть представительство.</li></ul><p><b>Главное правило:</b> храните все тлуши, договор и свой учёт часов (фото табеля, заметки) — это доказательства. Отсутствие письменного договора не лишает прав: они гарантированы законом.</p>",
+
  "acc.fire.t":"🚪 Увольнение и уход с работы",
  "acc.fire.body":"<p><b>Ходаа мукдемет (הודעה מוקדמת — предуведомление):</b> уволить «с сегодня» нельзя. В 1-й год срок растёт со стажем (от пары дней до ~3 недель), после года при месячной оплате — 30 дней. Не дали доработать — эти дни оплачиваются деньгами.</p><p><b>Шимуа (שימוע — слушание перед увольнением):</b> письменное приглашение с причинами, время подготовиться, право прийти с представителем, протокол. Без шимуа увольнение можно оспорить.</p><p><b>Уходите сам, но пицуим сохраняются</b> — когда уход приравнен к увольнению (התפטרות בדין מפוטר): существенное ухудшение условий или невыплаты; <b>переезд</b>: из-за свадьбы — в населённый пункт супруга в 40+ км от прежнего жилья (и новое жильё дальше от работы, чем старое), из-за развода — на 40+ км, в с/х поселение или город развития, из-за перевода супруга-военнослужащего/госслужащего на 40+ км; здоровье ваше или семьи; уход за новорождённым (первые 9 месяцев). ⚠️ Два условия: письменно предупредить о причине и дать шанс исправить; доказательства (аренда, арнона, справки) — на вам.</p><p><b>При расчёте проверьте:</b> пицуим, пидьон хуфша, остаток хавраа, справку о периоде работы (14 дней) — и в первый свободный день зарегистрируйтесь в бюро занятости (подробнее — в калькуляторе увольнения выше).</p>",
  "acc.family.t":"🤰 Беременность и родители",
@@ -644,7 +657,8 @@ ru: {
  "exp.car.t":"🚗 Автомобиль","exp.car.body":"<p>Топливо, страховка, обслуживание — признаются частично (стандартно 45% расходов). Учёт ведётся по фактическим документам.</p>",
  "exp.phone.t":"📱 Связь и техника","exp.phone.body":"<p>Телефон и оборудование — в деловой доле. Техника дороже порога амортизируется по годам, а не списывается сразу.</p>",
  "exp.edu.t":"🎓 Обучение и профлитература","exp.edu.body":"<p>Повышение квалификации в текущей профессии — признаётся; обучение новой профессии — как правило, нет.</p>",
- "exp.warn":"⚠️ Финальное решение о признании расхода — за налоговым управлением. Доли выше — распространённая практика, не гарантия.", 
+ "exp.warn":"⚠️ Финальное решение о признании расхода — за налоговым управлением. Доли выше — распространённая практика, не гарантия.",
+ 
  "ai.acct.h":"AI-помощник <span class='pill'>скоро</span>","ai.acct.hint":"Поиск по базе законов, инструкций налогового управления и Битуах Леуми — с ссылками на источники. Примеры вопросов:",
  "ai.acct.c1":"Можно ли списать кофе с клиентом?","ai.acct.c2":"Новый порог хешбонит Исраэль?","ai.acct.c3":"Некудот зикуй для олим в 2026?","ai.acct.c4":"Штраф за просрочку отчёта НДС?",
  "links.h":"Официальные источники",
@@ -757,7 +771,8 @@ en: {
 "ivc.i.cash.ok":"Cash within the {n} limit — allowed.",
 "ivc.i.req":"The invoice must show: the words tax invoice (heshbonit mas), the supplier's file number, date, your details, VAT broken out on its own line.",
 "ivc.i.sup":"Is the supplier an active osek murshe? Free check in the Tax Authority registry:",
-"ivc.sum":"Invoice amount (incl. VAT), ₪",
+"ivc.sum":"Invoice amount (incl. VAT), ₪",
+
 "zr.better.norm":"Osek zair wins: +{d} of recognized expenses, and zero receipts to collect.",
 "zr.better.real":"Your real expenses beat the norm by {d} — the regular route is better, skip zair.",
 "zr.close":"The gap is only {d} — near parity. Zair gives the same deduction without the paperwork.",
@@ -819,7 +834,8 @@ en: {
 "ek.bl":"National Insurance: form 6101 — self-employed status",
 "ek.book":"Bookkeeping: pick an invoicing service (heshbonit/kabala)",
 "ek.pens":"Self-employed pension: open/update a fund (mandatory)",
-"ek.done":"✅ All set — you're officially in business. Reporting deadlines are in the card below.",
+"ek.done":"✅ All set — you're officially in business. Reporting deadlines are in the card below.",
+
 "gl.h":"📖 Payslip glossary: what every line means",
 "gl.hint":"Open your payslip next to this and go line by line.",
 "gl.gross.t":"Gross (שכר יסוד / ברוטו)",
@@ -1059,9 +1075,11 @@ en: {
 "wh.hint":"The most common question: «how many hours a week am I supposed to work, is my lunch deducted, and when does overtime start». Answer the questions and I will work it out. Working a partial week (3–4 shifts) is fine: the day norm comes from the company mode (5- or 6-day week), not from your shift count.",
 "wh.h":"⏱ What is my hours norm",
 "set.privacy":"Privacy Policy",
+"set.terms":"Terms of Use",
 "set.about":"About",
 "set.support.t":"Support & subscription",
-"set.support.b":"Questions about the app, faults and refunds: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>The subscription (once live on Google Play) auto-renews; cancel in Google Play → profile → “Payments & subscriptions”.<br>Privacy policy — above.",
+"set.support.b":"Questions about the app, faults and refunds: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>The subscription (once live on Google Play) auto-renews; cancel in Google Play → profile → “Payments & subscriptions”.<br>Privacy policy — above.",
+
 "plural.viol":"possible violation|possible violations|possible violations",
 "plural.pts":"point|points|points",
 "nk.unit":"points",
@@ -1081,7 +1099,8 @@ en: {
 "prof.kidsB":"Born this year",
 "prof.kids.h":"Your children in Israel — how many of each age (age in this tax year)",
  "fired.unemp":"💼 <b>Right after dismissal — the Employment Service.</b> Register at lishkat taasuka (לשכת התעסוקה) <b>on your first free day</b>: unemployment benefit (dmey avtala, דמי אבטלה) counts only from the day you register — earlier days are lost. Online: <a href='https://www.taasuka.gov.il' target='_blank' style='color:inherit;font-weight:700'>taasuka.gov.il</a>, then file with Bituach Leumi. Requirement: 12 contribution months out of the last 18; quitting without a recognized cause = a 90-day penalty. ⚠️ Avtala is for Israeli residents; B1 and 2(a)5 visa holders don't receive it.",
- "fired.pitz.under1":"⚠️ Under one year of tenure — severance (פיצויי פיטורים) isn't due yet by law, so the line shows 0. But: if you were fired shortly before finishing the first year (roughly the last ~3 months) without a real cause, the law presumes it was done to dodge severance (sec. 3) — you can claim it in court.", 
+ "fired.pitz.under1":"⚠️ Under one year of tenure — severance (פיצויי פיטורים) isn't due yet by law, so the line shows 0. But: if you were fired shortly before finishing the first year (roughly the last ~3 months) without a real cause, the law presumes it was done to dodge severance (sec. 3) — you can claim it in court.",
+ 
  "nk.ex.dembel":"Discharged soldier (valid 36 months after service)",
  "nk.ex.dembelFull":"full service (+2)",
  "nk.ex.dembelPart":"partial service (+1)",
@@ -1095,7 +1114,8 @@ en: {
 "nk.ex.teen":"I am 16–18 years old (working teenager, +1)",
  "nk.ex.manual":"Other (points, manual)",
  "nk.ex.note":"This field is only for rare grounds that are not in the list above, confirmed by a tax-office letter.",
-  
+ 
+ 
  "hish.gate.constr":"🏗 Construction: keren hishtalmut is owed to site workers after 3 years of INDUSTRY seniority (foremen and crane operators — from day 1; office staff — not covered). Tick the box if the השתלמות line already exists in your payslip.",
  "hish.gate.foreign":"🏗 Foreign construction workers (B1/2a5) don't get a fund — instead, after 3 years of industry seniority they're owed the cash supplement «chalaf hishtalmut» (חלף השתלמות). Check your payslip; missing — demand it.",
  "set.h":"⚙️ Settings",
@@ -1177,7 +1197,8 @@ en: {
  "esek.s25.body":"<p><b>Yes, you can — and no Israeli ID is needed.</b> The Tax Authority opens an osek file with your passport and the blue paper, assigning a taxpayer number instead of a teudat zehut. That is how many delivery couriers with 2(a)5 status legally work as self-employed.</p><p><b>In practice:</b> in person at a VAT/income-tax office, or through an accountant/tax adviser — a representative makes it much easier, since clerks don't always know the procedure for foreigners. Osek patur: turnover up to ₪122,833/yr (2026), no VAT charged, one report a year.</p><p><b>National Insurance:</b> a self-employed non-resident pays only 0.37%/0.94% (maternity insurance) — but almost no rights accrue either: no unemployment benefit, no state pension. Save for retirement yourself.</p><p><b>No-file option:</b> invoicing companies bill your clients for a ~5% fee — legal, but read the terms.</p><p>⚠️ If «going self-employed» was proposed by a single client whose schedule and tools you work with — that is fictitious self-employment and a loss of rights: ask the AI about «hired as osek patur».</p>",
  "dir":"ltr","locale":"en-US","title":"Heshbon+ — Israeli payroll & tax in your pocket",
  "sub":"Israeli payroll & tax in your pocket",
- "tab.emp":"Employee","tab.self":"Self-employed",
+ "tab.emp":"Employee","tab.self":"Self-employed",
+
  "emp.title":"👷 Employee","emp.desc":"Salary, deductions and rights — for citizens, new immigrants and foreign workers (B1 visa and 2(a)5 “blue paper”).",
  "emp.calc.h":"Net salary calculator","emp.calc.hint":"Enter the gross from your contract or payslip — see how much should reach your hands and the structure of the deductions.",
 "emp.prof.t":"👤 My profile — status, children, credit points",
@@ -1200,7 +1221,8 @@ en: {
  "status.s25":"2(a)5 “blue paper”: you can work de facto — the Supreme Court barred sanctions against employers, and <b>all labor rights apply in full</b>. No health tax (mandatory private insurance instead). ⚠️ Pension+severance of 12.5% are owed even if a pension fund refused you (trust account or payout) — a common scam; the 16% deposit scheme has been effectively dead since 2020. Details in “Rights” below.",
  "oleh.ask":"Enter your aliyah date and I'll calculate the bonus points.",
  "oleh.expired":"{m} months since aliyah — the immigrant benefit has ended (it runs 54 months = 4.5 years); basic points remain.",
- "oleh.active":"Month <b>{m}</b> since aliyah → <b>+{b} immigrant points</b> on top of the basic {base}. Scheme: year 1 → +1 · months 13–30 → +3 · months 31–42 → +2 · months 43–54 → +1. Benefit until {end}.",
+ "oleh.active":"Month <b>{m}</b> since aliyah → <b>+{b} immigrant points</b> on top of the basic {base}. Scheme: year 1 → +1 · months 13–30 → +3 · months 31–42 → +2 · months 43–54 → +1. Benefit until {end}.",
+
  "quiz.h":"Checkup: are your rights being violated?","quiz.hint":"Answer the questions — I'll show where you might be getting cheated and what to do about it. Many people don't even know they're being underpaid.",
  "quiz.btn":"Show result","quiz.yes":"Yes","quiz.no":"No","quiz.dk":"Not sure",
  "quiz.tlush.q":"Do you get a payslip (tlush) every month?","quiz.tlush.bad":"The payslip must be issued by the 9th of the following month. If your employer does not do it, they are breaking the law and can be fined. Ask for it in writing — without a payslip you cannot check your deductions.",
@@ -1226,7 +1248,8 @@ en: {
  "quizres.found":"Found {n} {w}</b> — here is what matters:",
  "quizres.check":"🔍 Worth checking: ",
  "quizres.where":"Where to get help",
- "quizres.whereText":"Kav LaOved (free, multilingual) · the Labor Ministry's Enforcement Administration · the labor court. Claim deadlines: wages & severance — up to 7 years, vacation — only 3 years, wage-delay penalty — about a year. More in the “Payslip & rights” card below.",
+ "quizres.whereText":"Kav LaOved (free, multilingual) · the Labor Ministry's Enforcement Administration · the labor court. Claim deadlines: wages & severance — up to 7 years, vacation — only 3 years, wage-delay penalty — about a year. More in the “Payslip & rights” card below.",
+
  "ai.emp.h":"AI rights defender <span class='pill'>soon</span>","ai.emp.hint":"It will tell you what to ask your employer, how to read your payslip and how to stand up for your rights — in plain language. Examples:",
  "ai.emp.c1":"What should I check in my payslip first?","ai.emp.c2":"I'm not paid overtime — what do I say?","ai.emp.c3":"My employer keeps my passport","ai.emp.c4":"I'm being fired — what am I owed?","ai.emp.c5":"How do I prove my working hours?",
  "ai.emp.flavor":"The AI defender answers in plain language: what exactly to check on your payslip, what words to use with your employer and where to complain. Tap a ready question or type your own.",
@@ -1273,7 +1296,8 @@ en: {
  "qa.hourly":"<b>Minimum per hour (since 04.2026):</b> adults — <b>₪35.40</b> · teens: under 16 — 26.07 / 16–17 — 27.94 / 17–18 — 30.92 · cleaning — <b>39.11</b> · security — <b>39.11</b> · construction — by grade (grade 3 — 6,900 ₪/month) · institutional catering — 113% of the minimum · at night the day is shorter (7 h), beyond it — 125%/150%. Tell me your field and I will pin down the rate.",
 "qa.studypoints":"Study points start in the year FOLLOWING graduation — they are never granted retroactively inside the same year.\n\nHow many: BA — 1 point (2023+ graduates: one per study year, max 3 years; 2014–2022: 1 year); MA — 0.5 point (2023+: 2 years); a state professional diploma of 1,700+ hours — 1 point for the study period, max 3 years. BA and the professional diploma do not add up — you pick one; MA combines with either.\n\nHow to claim: Form 101 with the employer + Form 119 with a diploma copy. If a year passed without the points, file for a tax refund — it is calculated up to 6 years back.",
 "qa.points":"Credit points (nekudot zikuy) reduce the tax itself: each one is worth ₪242 per month (₪2,904 a year). Base: men 2.25 · women 2.75 (residents, olim and A/5 visa holders).\n\nOn top of that: children by age (under 1: 2.5 · 1–2: 4.5 · 3: 3.5 · 4–5: 2.5 · 6–17: mother 2 / father 1), a child with a disability +2, oleh chadash for up to 54 months from aliyah, a degree or professional diploma, alimony, a non-working spouse, single parent.\n\nThe calculator in «My profile» counts all of it — open the «?» help next to the credit-points field. The right is claimed via Form 101 at hiring and every January.",
-"qa.single":"Yes — a single parent gets an extra credit point (+1), on top of the age-based child points; when the parents live apart, both are entitled to them.\n\nWhat to do: mark the status on Form 101 with your employer and attach proof (divorce certificate / court decision / single-parent certificate). If the points were never applied, the overpaid tax is refundable up to 6 years back.\n\nAlso check your right to the work grant (maanak avoda) and National Insurance benefits for single parents.",
+"qa.single":"Yes — a single parent gets an extra credit point (+1), on top of the age-based child points; when the parents live apart, both are entitled to them.\n\nWhat to do: mark the status on Form 101 with your employer and attach proof (divorce certificate / court decision / single-parent certificate). If the points were never applied, the overpaid tax is refundable up to 6 years back.\n\nAlso check your right to the work grant (maanak avoda) and National Insurance benefits for single parents.",
+
  "ot.h":"Overtime & minimum wage check","ot.hint":"First 2 overtime hours a day — 125%, then 150%. Minimum wage since <b>01.04.2026</b>: <b>₪6,443.85/month</b> (₪35.40/hour).",
  "ot.rate":"Hourly rate, ₪",
 "ot.pt.hour":"Hourly",
@@ -1285,7 +1309,8 @@ en: {
 "ot.src.below":"⚠️ This is below the minimum{i}: ₪{f}/hour. Check your contract and payslip.",
 "ot.src.manual":"The rate is set manually — the app does not recalculate it.",
 "ot.src.floor":"The minimum{i} is applied: ₪{f}/hour. Your gross would give ₪{g}/hour — below the minimum, so the minimum is used.",
-"ot.src.gross":"The rate comes from your gross: ₪{g}/hour (gross ÷ 182 monthly norm hours).",
+"ot.src.gross":"The rate comes from your gross: ₪{g}/hour (gross ÷ 182 monthly norm hours).",
+
  "rights.h":"Payslip breakdown & rights","rights.hint":"What the lines in your payslip mean and what the law entitles you to.",
  "acc.tlush.t":"📄 Key payslip lines",
  "acc.tlush.body":"<ul><li><b>שכר יסוד (base salary)</b> — pay before supplements.</li><li><b>ברוטו (gross)</b> — everything accrued before deductions.</li><li><b>מס הכנסה</b> — income tax.</li><li><b>ביטוח לאומי / בריאות</b> — National Insurance and health tax.</li><li><b>נקודות זיכוי (credit points)</b> — each point cuts your tax by ₪242/month.</li><li><b>נטו (net)</b> — what you get in hand.</li><li><b>צבירת חופשה / מחלה</b> — accrued vacation and sick days: make sure they grow!</li></ul>",
@@ -1303,7 +1328,8 @@ en: {
  "acc.nesiot.body":"<p><b>Dmey nesiot (דמי נסיעות)</b> — commuting reimbursement. The rules (2026):</p><ul><li>Paid for each <b>day actually worked</b>: no travel pay for sick or vacation days.</li><li>Amount: the cheapest public-transport fare, capped at <b>22.60 ₪ per day</b> (≈497 ₪ for 22 working days).</li><li>How you commute doesn't matter — bus, train or your own car, the entitlement is the same.</li><li>NOT owed when the employer runs a free shuttle, or you live within ~500 m of work.</li></ul><p>Look for the «נסיעות» line in your payslip. If you commute and it's missing — that's underpayment, recoverable like any wage debt.</p>",
  "acc.maanak.t":"💵 Work grant — money from the state","acc.injury.t":"🩹 Injury at work (teunat avoda)","acc.harass.t":"🛡 Workplace harassment",
  "acc.complain.t":"⚖️ Where to turn if your rights are violated",
- "acc.complain.body":"<ul><li><b>Kav LaOved (קו לעובד)</b> — free help for workers, including foreign workers and asylum seekers; multilingual. kavlaoved.org.il</li><li><b>The Labor Ministry's Regulation & Enforcement Administration</b> — complaints against employers (anonymity possible), fines for violators.</li><li><b>The labor court (בית דין לעבודה)</b> — wage claims can go up to 7 years back; often a lawyer's warning letter is enough.</li><li><b>Histadrut / trade union</b> — if your workplace has representation.</li></ul><p><b>The golden rule:</b> keep all payslips, your contract and your own record of hours (timesheet photos, notes) — that's evidence. Not having a written contract does not strip your rights: the law guarantees them.</p>",
+ "acc.complain.body":"<ul><li><b>Kav LaOved (קו לעובד)</b> — free help for workers, including foreign workers and asylum seekers; multilingual. kavlaoved.org.il</li><li><b>The Labor Ministry's Regulation & Enforcement Administration</b> — complaints against employers (anonymity possible), fines for violators.</li><li><b>The labor court (בית דין לעבודה)</b> — wage claims can go up to 7 years back; often a lawyer's warning letter is enough.</li><li><b>Histadrut / trade union</b> — if your workplace has representation.</li></ul><p><b>The golden rule:</b> keep all payslips, your contract and your own record of hours (timesheet photos, notes) — that's evidence. Not having a written contract does not strip your rights: the law guarantees them.</p>",
+
  "acc.fire.t":"🚪 Dismissal and resignation",
  "acc.fire.body":"<p><b>Hodaa mukdemet (הודעה מוקדמת — advance notice):</b> «fired as of today» is illegal. In year one the notice grows with tenure (a few days up to ~3 weeks); after a year, monthly-paid — 30 days. Not allowed to work it — it's paid out in money.</p><p><b>Shimua (שימוע — pre-dismissal hearing):</b> written invitation stating reasons, time to prepare, right to bring a representative, minutes taken. Without it the dismissal is contestable.</p><p><b>Quitting but KEEPING severance</b> — when resignation counts as dismissal (התפטרות בדין מפוטר): material worsening of conditions or unpaid wages; <b>relocation</b>: due to marriage — to the spouse's town 40+ km from your old home (with the new home farther from work than the old one), due to divorce — 40+ km, to an agricultural settlement or development town, or due to a military/state-employed spouse's transfer 40+ km; your or family health; caring for a newborn (first 9 months). ⚠️ Two conditions: notify the employer of the reason in writing and give a chance to fix it; the burden of proof (lease, arnona, certificates) is on you.</p><p><b>At settlement check:</b> severance, vacation payout, remaining havraa, the employment certificate (14 days) — and register at the Employment Service on your first free day (see the dismissal calculator above).</p>",
  "acc.family.t":"🤰 Pregnancy and parents",
@@ -1333,7 +1359,8 @@ en: {
  "exp.car.t":"🚗 Car","exp.car.body":"<p>Fuel, insurance, maintenance — partially deductible (standard 45%). Based on actual documents.</p>",
  "exp.phone.t":"📱 Phone & equipment","exp.phone.body":"<p>Phone and equipment — in their business share. Equipment above the threshold is depreciated over years, not expensed at once.</p>",
  "exp.edu.t":"🎓 Training & professional literature","exp.edu.body":"<p>Upskilling in your current profession is deductible; training for a new profession — generally not.</p>",
- "exp.warn":"⚠️ The final decision on deductibility rests with the Tax Authority. The shares above are common practice, not a guarantee.", 
+ "exp.warn":"⚠️ The final decision on deductibility rests with the Tax Authority. The shares above are common practice, not a guarantee.",
+ 
  "ai.acct.h":"AI assistant <span class='pill'>soon</span>","ai.acct.hint":"Search across laws, Tax Authority guidance and National Insurance — with source links. Example questions:",
  "ai.acct.c1":"Can I deduct coffee with a client?","ai.acct.c2":"The new Israel Invoice threshold?","ai.acct.c3":"Immigrant credit points in 2026?","ai.acct.c4":"Penalty for a late VAT report?",
  "links.h":"Official sources",
@@ -1446,7 +1473,8 @@ he: {
 "ivc.i.cash.ok":"מזומן בגבול {n} — מותר.",
 "ivc.i.req":"על החשבונית: המילים חשבונית מס, מספר העוסק של הספק, תאריך, הפרטים שלך, מע״מ בשורה נפרדת.",
 "ivc.i.sup":"הספק עוסק מורשה פעיל? בדיקה חינם במרשם רשות המסים:",
-"ivc.sum":"סכום החשבונית (כולל מע״מ), ₪",
+"ivc.sum":"סכום החשבונית (כולל מע״מ), ₪",
+
 "zr.better.norm":"עוסק זעיר משתלם: +{d} הוצאות מוכרות, ואפס קבלות לאסוף.",
 "zr.better.real":"ההוצאות האמיתיות שלך גבוהות מהנורמטיב ב-{d} — המסלול הרגיל עדיף.",
 "zr.close":"הפרש של {d} בלבד — כמעט תיקו. הזעיר ייתן אותו ניכוי בלי ניירת.",
@@ -1508,7 +1536,8 @@ he: {
 "ek.bl":"ביטוח לאומי: טופס 6101 — מעמד עצמאי",
 "ek.book":"הנהלת חשבונות: לבחור שירות קבלות (חשבונית/קבלה)",
 "ek.pens":"פנסיית עצמאי: לפתוח/לעדכן קרן (חובה)",
-"ek.done":"✅ הכול מוכן — אתה רשמית בעסק. מועדי הדיווח — בכרטיס למטה.",
+"ek.done":"✅ הכול מוכן — אתה רשמית בעסק. מועדי הדיווח — בכרטיס למטה.",
+
 "gl.h":"📖 מילון התלוש: מה אומרת כל שורה",
 "gl.hint":"פתח את התלוש שלך ליד והשווה שורה-שורה.",
 "gl.gross.t":"ברוטו (שכר יסוד)",
@@ -1748,9 +1777,11 @@ he: {
 "wh.hint":"השאלה הנפוצה ביותר: «כמה שעות בשבוע אני אמור לעבוד, האם מנכים לי הפסקת צהריים, ומאיזו שעה מתחילות שעות נוספות». ענה על השאלות ואחשב. עבודה בשבוע חלקי (3–4 משמרות) — תקין: תקן היום נקבע לפי מתכונת המפעל (5 או 6 ימים), לא לפי מספר המשמרות שלך.",
 "wh.h":"⏱ מהי נורמת השעות שלי",
 "set.privacy":"מדיניות פרטיות",
+"set.terms":"תנאי שימוש",
 "set.about":"אודות",
 "set.support.t":"תמיכה ומנוי",
-"set.support.b":"שאלות על האפליקציה, תקלות והחזרים: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>המנוי (לאחר ההשקה ב-Google Play) מתחדש אוטומטית; ביטול: Google Play ← פרופיל ← «תשלומים ומינויים».<br>מדיניות הפרטיות — למעלה.",
+"set.support.b":"שאלות על האפליקציה, תקלות והחזרים: <a href=\"mailto:heshbonplus.il@gmail.com\">heshbonplus.il@gmail.com</a>.<br>המנוי (לאחר ההשקה ב-Google Play) מתחדש אוטומטית; ביטול: Google Play ← פרופיל ← «תשלומים ומינויים».<br>מדיניות הפרטיות — למעלה.",
+
 "plural.viol":"הפרה אפשרית|הפרות אפשריות|הפרות אפשריות",
 "plural.pts":"נקודה|נקודות|נקודות",
 "nk.unit":"נקודות",
@@ -1770,7 +1801,8 @@ he: {
 "prof.kidsB":"בשנת הלידה",
 "prof.kids.h":"הילדים שלך בישראל — כמה בכל גיל (הגיל בשנת המס הנוכחית)",
  "fired.unemp":"💼 <b>מיד אחרי פיטורים — לשכת התעסוקה.</b> הירשם <b>ביום הפנוי הראשון</b>: דמי אבטלה נספרים רק מיום הרישום — הימים שלפני נשרפים. אונליין: <a href='https://www.taasuka.gov.il' target='_blank' style='color:inherit;font-weight:700'>taasuka.gov.il</a>, ואז תביעה בביטוח לאומי. תנאי: 12 חודשי ביטוח מתוך 18 האחרונים; התפטרות בלי סיבה מוכרת = 90 ימי המתנה. ⚠️ דמי אבטלה — לתושבי ישראל; מחזיקי ב/1 ו-2(א)5 אינם זכאים.",
- "fired.pitz.under1":"⚠️ ותק של פחות משנה — עדיין אין זכאות לפיצויי פיטורים, לכן השורה = 0. אבל: פוטרת סמוך לסוף השנה הראשונה (בערך 3 החודשים האחרונים) בלי סיבה אמיתית? החוק מניח שפוטרת כדי להתחמק מפיצויים (סעיף 3) — אפשר לתבוע אותם.", 
+ "fired.pitz.under1":"⚠️ ותק של פחות משנה — עדיין אין זכאות לפיצויי פיטורים, לכן השורה = 0. אבל: פוטרת סמוך לסוף השנה הראשונה (בערך 3 החודשים האחרונים) בלי סיבה אמיתית? החוק מניח שפוטרת כדי להתחמק מפיצויים (סעיף 3) — אפשר לתבוע אותם.",
+ 
  "nk.ex.dembel":"חייל/ת משוחרר/ת (בתוקף 36 חודשים מהשחרור)",
  "nk.ex.dembelFull":"שירות מלא (+2)",
  "nk.ex.dembelPart":"שירות חלקי (+1)",
@@ -1784,7 +1816,8 @@ he: {
 "nk.ex.teen":"אני בן/בת 16–18 (נער/ה עובד/ת, +1)",
  "nk.ex.manual":"אחר (נקודות, ידני)",
  "nk.ex.note":"השדה הזה מיועד רק לעילות נדירות שאינן ברשימה שלמעלה, לפי אישור מפקיד השומה.",
-  
+ 
+ 
  "hish.gate.constr":"🏗 בניין: קרן השתלמות מגיעה לפועלי אתר אחרי 3 שנות ותק בענף (מנהלי עבודה ומפעילי עגורן — מהיום הראשון; עובדי משרד — לא). סמן אם שורת השתלמות כבר קיימת בתלוש.",
  "hish.gate.foreign":"🏗 לעובדי בניין זרים (ב/1, 2א5) לא פותחים קרן — במקומה, אחרי 3 שנות ותק בענף, מגיעה תוספת «חלף השתלמות» בכסף. בדוק בתלוש; חסרה — דרוש.",
  "set.h":"⚙️ הגדרות",
@@ -1866,7 +1899,8 @@ he: {
  "esek.s25.body":"<p><b>כן, אפשר — ולא צריך ת״ז בשביל זה.</b> רשות המסים פותחת תיק עוסק לפי דרכון והרישיון הכחול, ומקצה מספר רישום במקום ת״ז. כך עובדים באופן חוקי, למשל, שליחי משלוחים רבים במעמד 2(א)5 — כעצמאים.</p><p><b>איך בפועל:</b> באופן אישי במשרד מע״מ/מס הכנסה או דרך רואה חשבון/יועץ מס — מייצג מקל מאוד, כי הפקידים לא תמיד מכירים את הנוהל לזרים. עוסק פטור: מחזור עד 122,833 ₪ בשנה (2026), בלי לגבות מע״מ, דיווח פעם בשנה.</p><p><b>ביטוח לאומי:</b> עצמאי שאינו תושב משלם רק 0.37%/0.94% (ביטוח אימהות) — אבל גם כמעט לא נצברות זכויות: בלי אבטלה, בלי קצבת זקנה. חיסכון לפנסיה — באחריותך.</p><p><b>אפשרות בלי תיק:</b> חברות חשבונית מוציאות חשבוניות ללקוחות שלך תמורת ~5% — חוקי, אבל קרא את התנאים.</p><p>⚠️ אם את ה«עצמאות» הציע מזמין יחיד שאתה עובד אצלו לפי הלו״ז שלו ובכלים שלו — זו עצמאות פיקטיבית ואובדן זכויות: שאל את ה-AI על «הועסקתי כעוסק פטור».</p>",
  "dir":"rtl","locale":"he-IL","title":"חשבון+ — הנהלת חשבונות ישראלית בכיס",
  "sub":"הנהלת חשבונות ישראלית בכיס",
- "tab.emp":"עובד","tab.self":"עצמאי",
+ "tab.emp":"עובד","tab.self":"עצמאי",
+
  "emp.title":"👷 עובד","emp.desc":"שכר, ניכויים וזכויות — לאזרחים, עולים ועובדים זרים (אשרת ב/1 ומחזיקי 2(א)5).",
  "emp.calc.h":"מחשבון שכר נטו","emp.calc.hint":"הזן את הברוטו מהחוזה או מהתלוש — תראה כמה כסף אמור להגיע לידיים ואת מבנה הניכויים.",
 "emp.prof.t":"👤 הפרופיל שלי — סטטוס, ילדים, נקודות זיכוי",
@@ -1889,7 +1923,8 @@ he: {
  "status.s25":"«נייר כחול» 2(א)5: מותר לעבוד דה-פקטו — בג״ץ אסר לקנוס מעסיקים, ו<b>כל זכויות העבודה חלות במלואן</b>. אין מס בריאות (חובה ביטוח פרטי). ⚠️ פנסיה+פיצויים 12.5% מגיעים גם אם קרן הפנסיה סירבה (חשבון נאמנות או תשלום) — נקודת הונאה נפוצה; מערכת הפיקדון 16% לא פועלת בפועל מאז 2020. פרטים ב«זכויות» למטה.",
  "oleh.ask":"הזן תאריך עלייה — אחשב את נקודות הזיכוי.",
  "oleh.expired":"עברו {m} חודשים מהעלייה — הטבת העולה הסתיימה (תקפה 54 חודשים = 4.5 שנים), נשארו נקודות בסיס.",
- "oleh.active":"חודש <b>{m}</b> מהעלייה → <b>+{b} נקודות עולה</b> בנוסף ל-{base} הבסיסיות. המדרג: שנה 1 → +1 · חודשים 13–30 → +3 · 31–42 → +2 · 43–54 → +1. ההטבה עד {end}.",
+ "oleh.active":"חודש <b>{m}</b> מהעלייה → <b>+{b} נקודות עולה</b> בנוסף ל-{base} הבסיסיות. המדרג: שנה 1 → +1 · חודשים 13–30 → +3 · 31–42 → +2 · 43–54 → +1. ההטבה עד {end}.",
+
  "quiz.h":"בדיקה: האם מפרים את הזכויות שלך?","quiz.hint":"ענה על השאלות — אראה איפה ייתכן שמרמים אותך ומה לעשות. רבים בכלל לא יודעים שמשלמים להם פחות.",
  "quiz.btn":"הצג תוצאה","quiz.yes":"כן","quiz.no":"לא","quiz.dk":"לא יודע",
  "quiz.tlush.q":"אתה מקבל תלוש שכר כל חודש?","quiz.tlush.bad":"חובה למסור תלוש עד ה־9 בחודש העוקב. אם המעסיק לא עושה זאת — הוא מפר את החוק, ויש על כך קנס. דרוש תלוש בכתב: בלעדיו אי אפשר לבדוק את ההפרשות.",
@@ -1915,7 +1950,8 @@ he: {
  "quizres.found":"נמצאו {n} {w}</b> — הנה מה שחשוב לדעת:",
  "quizres.check":"🔍 כדאי לבדוק: ",
  "quizres.where":"לאן לפנות",
- "quizres.whereText":"קו לעובד (חינם, במגוון שפות) · מינהל ההסדרה והאכיפה במשרד העבודה · בית הדין לעבודה. התיישנות: שכר ופיצויים — עד 7 שנים, חופשה — 3 שנים בלבד, פיצוי הלנה — כשנה. פרטים בכרטיס «פענוח תלוש וזכויות» למטה.",
+ "quizres.whereText":"קו לעובד (חינם, במגוון שפות) · מינהל ההסדרה והאכיפה במשרד העבודה · בית הדין לעבודה. התיישנות: שכר ופיצויים — עד 7 שנים, חופשה — 3 שנים בלבד, פיצוי הלנה — כשנה. פרטים בכרטיס «פענוח תלוש וזכויות» למטה.",
+
  "ai.emp.h":"מגן זכויות AI <span class='pill'>בקרוב</span>","ai.emp.hint":"יגיד לך מה לשאול את המעסיק, איך לקרוא את התלוש ואיך לעמוד על שלך — בשפה פשוטה. דוגמאות:",
  "ai.emp.c1":"מה לבדוק בתלוש קודם כול?","ai.emp.c2":"לא משלמים לי שעות נוספות — מה להגיד?","ai.emp.c3":"המעסיק מחזיק לי את הדרכון","ai.emp.c4":"מפטרים אותי — מה מגיע לי?","ai.emp.c5":"איך מוכיחים שעות עבודה?",
  "ai.emp.flavor":"מגן ה־AI עונה בשפה פשוטה: מה בדיוק לבדוק בתלוש, באילו מילים לדבר עם המעסיק ולאן להתלונן. לחץ על שאלה מוכנה או כתוב שאלה משלך.",
@@ -1962,7 +1998,8 @@ he: {
  "qa.hourly":"<b>מינימום לשעה (מ־04.2026):</b> מבוגרים — <b>35.40 ₪</b> · נוער: עד 16 — 26.07 / 16–17 — 27.94 / 17–18 — 30.92 · ניקיון — <b>39.11</b> · שמירה — <b>39.11</b> · בניין — לפי דרגות (דרגה 3 — 6,900 ₪ לחודש) · הסעדה מוסדית — 113% מהמינימום · בלילה היום קצר יותר (7 שע׳), ומעבר — 125%/150%. כתוב את התחום שלך ואדייק את התעריף.",
 "qa.studypoints":"נקודות על לימודים מתחילות בשנה שאחרי שנת הסיום — לא נותנים אותן רטרואקטיבית באותה שנה.\n\nכמה: תואר ראשון — נקודה 1 (מסיימי 2023 ואילך: לפי מספר שנות הלימוד, עד 3 שנים; 2014–2022: שנה אחת); תואר שני — 0.5 נקודה (מ־2023: שנתיים); תעודת מקצוע ממשלתית מ־1,700 שעות — נקודה 1 לתקופת הלימודים, עד 3 שנים. תואר ראשון ותעודת מקצוע לא מצטברים — בוחרים אחד; תואר שני מצטרף לכל אחד.\n\nאיך מממשים: טופס 101 אצל המעסיק + טופס 119 עם צילום התעודה. אם עברה שנה בלי הנקודות — מגישים בקשה להחזר מס, שמחושב עד 6 שנים אחורה.",
 "qa.points":"נקודות זיכוי מקטינות את המס עצמו: כל נקודה שווה 242 ₪ בחודש (2,904 ₪ בשנה). בסיס: גבר 2.25 · אישה 2.75 (תושבים, עולים ובעלי אשרת א/5).\n\nמעבר לזה: ילדים לפי גיל (עד שנה 2.5 · 1–2 4.5 · 3 3.5 · 4–5 2.5 · 6–17 אם 2 / אב 1), ילד עם מוגבלות +2, עולה חדש עד 54 חודשים מהעלייה, תואר או תעודת מקצוע, מזונות, בן זוג שאינו עובד, הורה יחיד.\n\nהמחשבון ב«הפרופיל שלי» סופר הכול — פתח את העזרה «?» ליד שדה הנקודות. הזכות ממומשת בטופס 101 בקבלה לעבודה ובכל ינואר.",
-"qa.single":"כן — הורה יחיד מקבל נקודת זיכוי נוספת (+1), בנוסף לנקודות על הילדים לפי גיל; כשההורים גרים בנפרד, שניהם זכאים.\n\nמה עושים: מסמנים את הסטטוס בטופס 101 אצל המעסיק ומצרפים אישור (תעודת גירושין / החלטת בית משפט / אישור הורה יחיד). אם הנקודות לא ניתנו — מס העודף מוחזר עד 6 שנים אחורה.\n\nכדאי לבדוק גם זכאות למענק עבודה ולקצבאות ביטוח לאומי להורים יחידים.",
+"qa.single":"כן — הורה יחיד מקבל נקודת זיכוי נוספת (+1), בנוסף לנקודות על הילדים לפי גיל; כשההורים גרים בנפרד, שניהם זכאים.\n\nמה עושים: מסמנים את הסטטוס בטופס 101 אצל המעסיק ומצרפים אישור (תעודת גירושין / החלטת בית משפט / אישור הורה יחיד). אם הנקודות לא ניתנו — מס העודף מוחזר עד 6 שנים אחורה.\n\nכדאי לבדוק גם זכאות למענק עבודה ולקצבאות ביטוח לאומי להורים יחידים.",
+
  "ot.h":"שעות נוספות ובדיקת שכר מינימום","ot.hint":"שעתיים נוספות ראשונות ביום — 125%, הלאה — 150%. שכר מינימום מ-<b>01.04.2026</b>: <b>6,443.85 ₪ לחודש</b> (35.40 ₪ לשעה).",
  "ot.rate":"תעריף שעה, ₪",
 "ot.pt.hour":"שכר שעתי",
@@ -1974,7 +2011,8 @@ he: {
 "ot.src.below":"⚠️ זה נמוך מהמינימום{i}: {f} ₪ לשעה. בדקו את החוזה והתלוש.",
 "ot.src.manual":"התעריף הוזן ידנית — האפליקציה לא מחשבת אותו מחדש.",
 "ot.src.floor":"הוצב המינימום{i}: {f} ₪ לשעה. מהברוטו שלכם היה יוצא {g} ₪ לשעה — נמוך מהמינימום, ולכן החישוב לפיו.",
-"ot.src.gross":"התעריף חושב מהברוטו: {g} ₪ לשעה (ברוטו ÷ 182 שעות תקן).",
+"ot.src.gross":"התעריף חושב מהברוטו: {g} ₪ לשעה (ברוטו ÷ 182 שעות תקן).",
+
  "rights.h":"פענוח תלוש וזכויות","rights.hint":"מה אומרות השורות בתלוש ומה מגיע לך לפי חוק.",
  "acc.tlush.t":"📄 שורות מרכזיות בתלוש",
  "acc.tlush.body":"<ul><li><b>שכר יסוד</b> — שכר בסיס לפני תוספות.</li><li><b>ברוטו</b> — כל מה שנצבר לפני ניכויים.</li><li><b>מס הכנסה</b> — מס על ההכנסה.</li><li><b>ביטוח לאומי / בריאות</b> — ביטוח לאומי ומס בריאות.</li><li><b>נקודות זיכוי</b> — כל נקודה מפחיתה מס ב-242 ₪ לחודש.</li><li><b>נטו</b> — הסכום ביד.</li><li><b>צבירת חופשה / מחלה</b> — ימי חופשה ומחלה שנצברו: ודא שהם גדלים!</li></ul>",
@@ -1992,7 +2030,8 @@ he: {
  "acc.nesiot.body":"<p><b>דמי נסיעות</b> — החזר הוצאות הדרך לעבודה וחזרה. הכללים (2026):</p><ul><li>משולם על כל <b>יום עבודה בפועל</b>: על ימי מחלה וחופשה לא מגיעים דמי נסיעות.</li><li>הסכום: עלות התחבורה הציבורית הזולה ביותר, עד תקרה של <b>22.60 ₪ ליום</b> (כ-497 ₪ ב-22 ימי עבודה).</li><li>איך אתה מגיע — לא משנה: אוטובוס, רכבת או רכב פרטי, הזכאות זהה.</li><li>לא מגיע: כשיש הסעה מאורגנת חינם מהמעסיק, או כשאתה גר עד כ-500 מ' מהעבודה.</li></ul><p>חפש שורת «נסיעות» בתלוש. נוסע לעבודה והשורה חסרה — זו זכות שלא שולמה, וניתן לתבוע אותה.</p>",
  "acc.maanak.t":"💵 מענק עבודה — כסף מהמדינה","acc.injury.t":"🩹 תאונת עבודה","acc.harass.t":"🛡 הטרדה בעבודה",
  "acc.complain.t":"⚖️ לאן לפנות כשמפרים זכויות",
- "acc.complain.body":"<ul><li><b>קו לעובד</b> — עזרה חינם לעובדים, כולל זרים ומבקשי מקלט; במגוון שפות. kavlaoved.org.il</li><li><b>מינהל ההסדרה והאכיפה, משרד העבודה</b> — תלונה נגד מעסיק (אפשרית אנונימיות), קנסות למפרים.</li><li><b>בית הדין לעבודה</b> — תביעות שכר עד 7 שנים אחורה; לעיתים מספיק מכתב התראה מעו״ד.</li><li><b>הסתדרות / ועד עובדים</b> — אם קיימת נציגות במקום העבודה.</li></ul><p><b>כלל הזהב:</b> שמור את כל התלושים, החוזה ורישום שעות משלך (צילומי נוכחות, הערות) — אלו ראיות. גם בלי חוזה כתוב הזכויות שלך מובטחות בחוק.</p>",
+ "acc.complain.body":"<ul><li><b>קו לעובד</b> — עזרה חינם לעובדים, כולל זרים ומבקשי מקלט; במגוון שפות. kavlaoved.org.il</li><li><b>מינהל ההסדרה והאכיפה, משרד העבודה</b> — תלונה נגד מעסיק (אפשרית אנונימיות), קנסות למפרים.</li><li><b>בית הדין לעבודה</b> — תביעות שכר עד 7 שנים אחורה; לעיתים מספיק מכתב התראה מעו״ד.</li><li><b>הסתדרות / ועד עובדים</b> — אם קיימת נציגות במקום העבודה.</li></ul><p><b>כלל הזהב:</b> שמור את כל התלושים, החוזה ורישום שעות משלך (צילומי נוכחות, הערות) — אלו ראיות. גם בלי חוזה כתוב הזכויות שלך מובטחות בחוק.</p>",
+
  "acc.fire.t":"🚪 פיטורים והתפטרות",
  "acc.fire.body":"<p><b>הודעה מוקדמת:</b> אי אפשר לפטר «מהיום». בשנה הראשונה התקופה גדלה עם הוותק (מכמה ימים עד כ-3 שבועות), אחרי שנה בשכר חודשי — 30 יום. לא נתנו לעבוד אותה — משלמים אותה בכסף.</p><p><b>שימוע לפני פיטורים:</b> הזמנה בכתב עם סיבות, זמן להתכונן, זכות לנציג, פרוטוקול. בלי שימוע — הפיטורים ניתנים לערעור.</p><p><b>מתפטר אבל שומר על הפיצויים</b> — התפטרות בדין מפוטר: הרעה מוחשית בתנאים או אי-תשלום; <b>העתקת מגורים</b>: עקב נישואים — ליישוב של בן/בת הזוג במרחק 40+ ק״מ (והבית החדש רחוק יותר מהעבודה), עקב גירושין — 40+ ק״מ, ליישוב חקלאי או עיירת פיתוח, או עקב העברת בן זוג משרת קבע/עובד מדינה 40+ ק״מ; בריאות שלך או של המשפחה; טיפול ביילוד (9 חודשים ראשונים). ⚠️ שני תנאים: להודיע בכתב על הסיבה ולתת הזדמנות לתקן; נטל ההוכחה (שכירות, ארנונה, אישורים) — עליך.</p><p><b>בגמר חשבון בדוק:</b> פיצויים, פדיון חופשה, יתרת הבראה, אישור תקופת העסקה (14 יום) — וביום הפנוי הראשון הירשם בלשכת התעסוקה (פרטים במחשבון הפיטורים למעלה).</p>",
  "acc.family.t":"🤰 הריון והורים",
@@ -2022,7 +2061,8 @@ he: {
  "exp.car.t":"🚗 רכב","exp.car.body":"<p>דלק, ביטוח, טיפולים — מוכרים חלקית (סטנדרט 45%). לפי מסמכים בפועל.</p>",
  "exp.phone.t":"📱 תקשורת וציוד","exp.phone.body":"<p>טלפון וציוד — בחלק העסקי. ציוד מעל הסף מופחת לאורך שנים ולא נרשם בבת אחת.</p>",
  "exp.edu.t":"🎓 השתלמויות וספרות מקצועית","exp.edu.body":"<p>השתלמות במקצוע הקיים — מוכרת; לימוד מקצוע חדש — בדרך כלל לא.</p>",
- "exp.warn":"⚠️ ההחלטה הסופית על הכרה בהוצאה — של רשות המסים. השיעורים למעלה הם פרקטיקה נפוצה, לא הבטחה.", 
+ "exp.warn":"⚠️ ההחלטה הסופית על הכרה בהוצאה — של רשות המסים. השיעורים למעלה הם פרקטיקה נפוצה, לא הבטחה.",
+ 
  "ai.acct.h":"עוזר AI <span class='pill'>בקרוב</span>","ai.acct.hint":"חיפוש בחוקים, הוראות רשות המסים וביטוח לאומי — עם קישורים למקורות. שאלות לדוגמה:",
  "ai.acct.c1":"אפשר להכיר בקפה עם לקוח?","ai.acct.c2":"הסף החדש של חשבונית ישראל?","ai.acct.c3":"נקודות זיכוי לעולים ב-2026?","ai.acct.c4":"קנס על איחור בדיווח מע״מ?",
  "links.h":"מקורות רשמיים",

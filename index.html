@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- © 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved. Proprietary — see LICENSE and terms.html. -->
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -1189,6 +1190,7 @@
 
   <footer class="disclaimer" data-i18n-html="disclaimer"></footer>
   <div class="disclaimer" id="ratesInfo" style="padding-top:0"></div>
+  <div class="disclaimer" id="copyright" style="padding-top:0">© 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved · <a href="https://dimollia-lang.github.io/heshbon-plus/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a> · <a href="https://dimollia-lang.github.io/heshbon-plus/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a></div>
 
   <div class="modal" id="premModal" onclick="if(event.target===this)this.style.display='none'">
     <div class="sheet">
@@ -1238,6 +1240,7 @@
       <label class="fld" style="margin-top:16px" data-i18n="set.about"></label>
       <div class="note">
         <a href="https://dimollia-lang.github.io/heshbon-plus/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a>
+        · <a href="https://dimollia-lang.github.io/heshbon-plus/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a>
         · <span id="setVersion"></span>
       </div>
       <label class="fld" style="margin-top:16px" data-i18n="set.support.t"></label>
@@ -2760,6 +2763,9 @@ document.getElementById('aiEmpQ').addEventListener('keydown', e => { if (e.key =
 
 // ======= Онлайн-AI: Cloudflare Worker → Claude (ключ на сервере, не в приложении) =======
 const AI_URL = 'https://heshbon-ai.heshbon.workers.dev';
+// v1.20 (15.08.2026): ключ клиента для воркера (защита от чужих клиентов и скриптов; сам воркер
+// дополнительно проверяет Origin и держит лимиты на IP). Ключ можно ротировать без смены URL.
+const AI_KEY = 'hpw_4EalcyHVTxevJqZxyqSMQQgJYuOT';
 const AI_DAILY = 10; // дневной лимит на устройство — предсказуемый бюджет на этапе валидации
 function aiQuotaKey() { return 'heshbon_ai_' + new Date().toISOString().slice(0, 10); }
 // v1.18 (жалоба 10.08 «пишет „нет сети“, хотя сеть есть»): единый запрос к воркеру с таймаутом
@@ -2767,7 +2773,7 @@ function aiQuotaKey() { return 'heshbon_ai_' + new Date().toISOString().slice(0,
 function aiFetch(body, ms) {
   const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
   const timer = ctrl ? setTimeout(() => ctrl.abort(), ms || 60000) : 0;
-  const opt = { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) };
+  const opt = { method: 'POST', headers: {'Content-Type': 'application/json', 'X-HP-Key': AI_KEY}, body: JSON.stringify(body) };
   if (ctrl) opt.signal = ctrl.signal;
   return fetch(AI_URL, opt).then(r => {
     if (timer) clearTimeout(timer);
