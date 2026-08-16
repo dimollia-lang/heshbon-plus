@@ -5,6 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Хешбон+ — бухгалтерия Израиля в кармане</title>
+<meta name="description" content="Хешбон+ · חשבון+ — зарплата и права работника в Израиле: чекап прав за 60 секунд, разбор тлуша с ИИ, нетто-калькулятор, сверхурочные, пенсия, льготы олим. Бесплатно, RU/EN/HE.">
+<link rel="canonical" href="https://heshbonplus.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Heshbon+ · Хешбон+ · חשבון+">
+<meta property="og:title" content="Хешбон+ — проверь зарплату и права работника в Израиле">
+<meta property="og:description" content="Чекап прав за 60 секунд, разбор тлуша с ИИ, нетто-калькулятор. Бесплатно, без регистрации. RU/EN/HE.">
+<meta property="og:url" content="https://heshbonplus.com/">
+<meta property="og:image" content="https://heshbonplus.com/play/feature-1024x500.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root {
     --bg: #f2f5fa;
@@ -1190,7 +1199,7 @@
 
   <footer class="disclaimer" data-i18n-html="disclaimer"></footer>
   <div class="disclaimer" id="ratesInfo" style="padding-top:0"></div>
-  <div class="disclaimer" id="copyright" style="padding-top:0">© 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved · <a href="https://dimollia-lang.github.io/heshbon-plus/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a> · <a href="https://dimollia-lang.github.io/heshbon-plus/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a></div>
+  <div class="disclaimer" id="copyright" style="padding-top:0">© 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved · <a href="https://heshbonplus.com/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a> · <a href="https://heshbonplus.com/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a></div>
 
   <div class="modal" id="premModal" onclick="if(event.target===this)this.style.display='none'">
     <div class="sheet">
@@ -1239,8 +1248,8 @@
       <div class="note warn" id="setNativeNote" data-i18n="set.native.only"></div>
       <label class="fld" style="margin-top:16px" data-i18n="set.about"></label>
       <div class="note">
-        <a href="https://dimollia-lang.github.io/heshbon-plus/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a>
-        · <a href="https://dimollia-lang.github.io/heshbon-plus/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a>
+        <a href="https://heshbonplus.com/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a>
+        · <a href="https://heshbonplus.com/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a>
         · <span id="setVersion"></span>
       </div>
       <label class="fld" style="margin-top:16px" data-i18n="set.support.t"></label>
@@ -2621,7 +2630,7 @@ function quizResultShow() {
   }
   document.getElementById('quizResult').innerHTML = html;
 }
-const APP_URL = 'https://dimollia-lang.github.io/heshbon-plus/'; // куда ведёт «поделиться»
+const APP_URL = 'https://heshbonplus.com/'; // куда ведёт «поделиться»
 function shareQuiz(n, btn) {
   const text = tf('share.text', {n, w: plural(n, 'plural.viol'), url: APP_URL});
   if (navigator.share) { navigator.share({text, url: APP_URL}).catch(() => {}); return; }
@@ -3716,7 +3725,7 @@ document.querySelectorAll('nav.tabbar button').forEach(b => b.onclick = () => {
 });
 
 // ======= Автообновление ставок: сперва хостинг (GitHub Pages), затем локальный фолбэк =======
-const RATES_URLS = ['https://dimollia-lang.github.io/heshbon-plus/rates.json', 'rates.json'];
+const RATES_URLS = ['https://heshbonplus.com/rates.json', 'https://dimollia-lang.github.io/heshbon-plus/rates.json', 'rates.json'];
 function showRates() {
   if (ratesVer) document.getElementById('ratesInfo').textContent = tf('rates.online', {v: ratesVer});
 }
