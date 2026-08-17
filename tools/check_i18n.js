@@ -37,4 +37,14 @@ for (const m of html.matchAll(/data-i18n="([^"]+)"/g)) {
   if (withTags.length) { console.log('  ТЕГИ В ТЕКСТОВОМ data-i18n:', k, '->', withTags.join(',')); tagBug++; }
 }
 console.log(tagBug ? 'нужен data-i18n-html: ' + tagBug : 'теги/атрибуты: ок');
-process.exit(bad || par || tagBug ? 1 : 0);
+
+// Зашитые пенсионные проценты в UI-текстах калькулятора — ЗАПРЕЩЕНЫ (инцидент 17.08.2026:
+// «6% работник / 12,5%» показывались клинеру, у которого 7% / 15,83%). Ставки приходят через {emp}/{er}/{erT}/{pitz}.
+const PENSION_UI_KEYS = ['emp.chk.pension', 'emp.chk.pension.hint', 'brk.pension', 'employer.pens', 'employer.pitz'];
+let hard = 0;
+for (const k of PENSION_UI_KEYS) for (const l of langs) {
+  const v = I18N[l][k] || '';
+  if (/\b(6|6[.,]5|12[.,]5|8[.,]33|7|7[.,]5|15[.,]83)\s?%/.test(v)) { console.log('  ЗАШИТЫЙ ПРОЦЕНТ в', l + '/' + k, '->', v.match(/[\d.,]+\s?%/g).join(' ')); hard++; }
+}
+console.log(hard ? 'зашитые пенсионные проценты: ' + hard : 'пенсионные подписи без зашитых процентов: ок');
+process.exit(bad || par || tagBug || hard ? 1 : 0);

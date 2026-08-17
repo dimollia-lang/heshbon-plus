@@ -1350,7 +1350,7 @@
 
 </div>
 
-<script src="i18n.js?v=1230"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1231"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1372,7 +1372,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.23.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.23.1'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1429,7 +1429,16 @@ function sectorPension() {
   const s = SECTOR_PENSION[ind];
   return s ? { sector: ind, ...s } : { sector: '', emp: PENSION_EMP, er: PENSION_ER, pitz: PITZUIM };
 }
-const pctS = x => (Math.round(x * 10000) / 100).toString().replace('.', ',') + '%'; // 0.0833 -> «8,33%»
+const pctS = x => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 2}).format(Math.round(x * 10000) / 100) + '%'; // 0.0833 -> «8,33%» (RU) / «8.33%» (EN/HE)
+// Подпись галочки «Пенсионные отчисления (…)» и справка под «?» — с фактическими ставками отрасли.
+// Раньше «6% работник» и «12,5% работодатель» были зашиты в текст и врали клинеру (7% / 15,83%).
+function renderPensionLabels(sp) {
+  const v = { emp: pctS(sp.emp), er: pctS(sp.er + sp.pitz), erT: pctS(sp.er), pitz: pctS(sp.pitz) };
+  const lab = document.querySelector('[data-i18n="emp.chk.pension"]');
+  if (lab) lab.textContent = tf('emp.chk.pension', v);
+  const hint = document.getElementById('pensHintNote');
+  if (hint) hint.innerHTML = tf('emp.chk.pension.hint', v) + (sp.sector ? '<br><b>' + t('sector.pens.hint.' + sp.sector) + '</b>' : '');
+}
 // Работающие пенсионеры (кользхут, 07.08.2026, 2 страницы; совпадает с FACTS воркера):
 // получает кицбат зикна — взносы работника 0 (в тлуше законно 0), работодатель 0.61/2.12%;
 // достиг пенс. возраста БЕЗ кицбы — пониженные по возрасту (62–67 / 67–70; для 70+ без кицбы
@@ -1668,6 +1677,7 @@ function calcEmp() {
   const ret = retireeState(); // работающий пенсионер: пониженные/нулевые взносы БЛ+бриют
   const ni = natIns(taxable, empNiRates());
   const sp = sectorPension(); // отраслевые ставки (клининг: 7 / 7,5 / 8,33 с первого дня — цав архава, сверено 29.07.2026)
+  renderPensionLabels(sp);    // подпись галочки и справка «?» показывают ставки ЭТОЙ отрасли, а не общие 6% / 12,5%
   const pen = hasPen ? gross * sp.emp : 0;
   const hishEmp = hish ? gross * 0.025 : 0;
   const net = taxable - tax - ni - pen - hishEmp;

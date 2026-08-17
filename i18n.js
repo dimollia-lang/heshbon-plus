@@ -3,6 +3,7 @@
 const I18N = {
 // ================================================================== RU
 ru: {
+"sector.pens.hint.cleaning":"Отрасль «клининг»: это ставки по цав архава — выше общих 6% / 12,5% и с первого дня работы. Если в тлуше стоят 6% и 6,5% — вам недоплачивают.",
 "employer.pitz.min":"(минимум; при полном покрытии ст.14 — 8,33%)",
 "sector.pens.note.cleaning":"Отрасль «клининг»: пенсия посчитана по цав архава — 7% ваша, 7,5% работодатель, пицуим 8,33%, с первого дня. Если в тлуше цифры ниже — это недоплата, см. чекап.",
 "quiz.clhish.bad":"В клининге керен иштальмут обязателен по цав архава с первого дня работы: 7,5% работодатель + 2,5% из вашей зарплаты. Отсутствие строки — это долг работодателя перед вами (7,5% брутто за каждый месяц). Фонд вы вправе выбрать сами.",
@@ -511,8 +512,8 @@ ru: {
  "emp.fld.points":"Некудот зикуй (נקודות זיכוי)","nk.auto":"авто","nk.manual":"вручную",
  "emp.fld.aliyah":"Дата репатриации (алии) — для некудот олим",
  "emp.fld.gross":"Брутто (ברוטו — до вычета налогов и сборов)","ph.gross":"сумма",
- "emp.chk.pension":"Пенсионные отчисления (6% работник)",
- "emp.chk.pension.hint":"<b>Что это:</b> обязательная пенсия. 6% вычитают из вашей зарплаты, и ещё 12,5% работодатель добавляет сверху — это не из ваших денег.<br><b>Включать галочку или нет? Откройте тлуш:</b><br>✔ есть строка פנסיה или גמל → включите;<br>✖ строки нет (первые месяцы на новом месте) → выключите, и нетто совпадёт с тлушем.<br><b>Полезно знать:</b> работодатель обязан начать отчисления максимум через 6 месяцев. А если у вас уже был активный израильский пенсионный фонд — через 3 месяца, причём задним числом с первого дня.<br><b>Тлуша нет вообще, платят по счетам?</b> Значит, вы не наёмный работник — считайте во вкладке «Самозанятый» и спросите AI про «наём через эсек патур».",
+ "emp.chk.pension":"Пенсионные отчисления ({emp} работник)",
+ "emp.chk.pension.hint":"<b>Что это:</b> обязательная пенсия. {emp} вычитают из вашей зарплаты, и ещё {er} работодатель добавляет сверху ({erT} тагмулим + {pitz} пицуим) — это не из ваших денег.<br><b>Включать галочку или нет? Откройте тлуш:</b><br>✔ есть строка פנסיה или גמל → включите;<br>✖ строки нет (первые месяцы на новом месте) → выключите, и нетто совпадёт с тлушем.<br><b>Полезно знать:</b> работодатель обязан начать отчисления максимум через 6 месяцев. А если у вас уже был активный израильский пенсионный фонд — через 3 месяца, причём задним числом с первого дня.<br><b>Тлуша нет вообще, платят по счетам?</b> Значит, вы не наёмный работник — считайте во вкладке «Самозанятый» и спросите AI про «наём через эсек патур».",
  "emp.net.lbl":"Нетто на руки (נטו — чистыми)",
  "emp.exp.employer":"Что платит работодатель сверх брутто",
  "emp.employer.note":"Эти суммы работодатель платит СВЕРХ вашего брутто — из зарплаты они не вычитаются.",
@@ -747,6 +748,7 @@ ru: {
 },
 // ================================================================== EN
 en: {
+"sector.pens.hint.cleaning":"Industry «cleaning»: these are the extension-order rates — above the general 6% / 12.5% and from day one. If the payslip shows 6% and 6.5%, you are underpaid.",
 "employer.pitz.min":"(minimum; full s.14 coverage — 8.33%)",
 "sector.pens.note.cleaning":"Industry «cleaning»: pension is calculated per the extension order — 7% yours, 7.5% employer, 8.33% severance, from day one. Lower figures on the payslip mean underpayment — see the checkup.",
 "quiz.clhish.bad":"In cleaning the keren hishtalmut is mandatory under the extension order from day one: 7.5% employer + 2.5% from your salary. A missing line is a debt the employer owes you (7.5% of gross for every month). You may choose the fund yourself.",
@@ -1255,8 +1257,8 @@ en: {
  "emp.fld.points":"Tax credit points","nk.auto":"auto","nk.manual":"manual",
  "emp.fld.aliyah":"Aliyah (repatriation) date — for immigrant points",
  "emp.fld.gross":"Gross (before taxes and deductions)","ph.gross":"amount",
- "emp.chk.pension":"Pension contributions (6% employee)",
- "emp.chk.pension.hint":"<b>What it is:</b> mandatory pension. 6% is taken from your pay, and the employer adds another 12.5% on top — not from your money.<br><b>Box on or off? Open your payslip:</b><br>✔ there is a פנסיה/גמל line → turn it ON;<br>✖ no line yet (first months at a new job) → turn it OFF and the net will match the payslip.<br><b>Good to know:</b> contributions must start within 6 months at most — or within 3 months (backdated to day one) if you already had an active Israeli pension fund.<br><b>No payslip at all — you invoice?</b> Then you're not an employee: use the Self-employed tab and ask the AI about “hired as osek patur”.",
+ "emp.chk.pension":"Pension contributions ({emp} employee)",
+ "emp.chk.pension.hint":"<b>What it is:</b> the mandatory pension. {emp} is deducted from your salary, and the employer adds another {er} on top ({erT} tagmulim + {pitz} severance) — not from your money.<br><b>Tick it or not? Open the payslip:</b><br>✔ there is a פנסיה or גמל line → tick;<br>✖ no such line (first months at a new job) → untick, and the net will match the payslip.<br><b>Worth knowing:</b> the employer must start contributions within 6 months at most. If you already had an active Israeli pension fund — within 3 months, retroactively from day one.<br><b>No payslip at all, paid against invoices?</b> Then you are not an employee — use the «Self-employed» tab and ask the AI about «hiring via osek patur».",
  "emp.net.lbl":"Net in hand (take-home)",
  "emp.exp.employer":"What the employer pays on top of gross",
  "emp.employer.note":"The employer pays these ON TOP of your gross — nothing here is deducted from your salary.",
@@ -1491,6 +1493,7 @@ en: {
 },
 // ================================================================== HE
 he: {
+"sector.pens.hint.cleaning":"ענף «ניקיון»: אלה שיעורי צו ההרחבה — מעל 6% / 12.5% הכלליים ומהיום הראשון. אם בתלוש מופיעים 6% ו־6.5% — משלמים לכם פחות מהמגיע.",
 "employer.pitz.min":"(מינימום; בכיסוי מלא לפי סעיף 14 — 8.33%)",
 "sector.pens.note.cleaning":"ענף «ניקיון»: הפנסיה חושבה לפי צו ההרחבה — 7% שלכם, 7.5% מעסיק, 8.33% פיצויים, מהיום הראשון. מספרים נמוכים יותר בתלוש = תת־תשלום, ראו את הצ׳ק־אפ.",
 "quiz.clhish.bad":"בניקיון קרן השתלמות היא חובה לפי צו ההרחבה מהיום הראשון: 7.5% מעסיק + 2.5% מהשכר שלכם. שורה חסרה היא חוב של המעסיק כלפיכם (7.5% מהברוטו לכל חודש). את הקרן אתם רשאים לבחור בעצמכם.",
@@ -1999,8 +2002,8 @@ he: {
  "emp.fld.points":"נקודות זיכוי","nk.auto":"אוטו","nk.manual":"ידני",
  "emp.fld.aliyah":"תאריך עלייה — לנקודות זיכוי לעולה",
  "emp.fld.gross":"ברוטו (לפני מסים וניכויים)","ph.gross":"סכום",
- "emp.chk.pension":"הפרשות פנסיה (6% עובד)",
- "emp.chk.pension.hint":"<b>מה זה:</b> פנסיית חובה. 6% יורדים מהשכר שלך, והמעסיק מוסיף עוד 12.5% מעל — לא מהכסף שלך.<br><b>לסמן או לא? פתח את התלוש:</b><br>✔ יש שורת פנסיה/גמל → סמן;<br>✖ אין עדיין (חודשים ראשונים במקום חדש) → כבה, והנטו יתאים לתלוש.<br><b>כדאי לדעת:</b> ההפרשות חייבות להתחיל לכל היותר אחרי 6 חודשים — או אחרי 3 חודשים (רטרואקטיבית מהיום הראשון) אם כבר הייתה לך קרן פנסיה ישראלית פעילה.<br><b>אין תלוש בכלל ואתה מוציא חשבוניות?</b> אז אינך שכיר — עבור ללשונית «עצמאי» ושאל את ה-AI על «העסקה כעוסק פטור».",
+ "emp.chk.pension":"הפרשות לפנסיה ({emp} עובד)",
+ "emp.chk.pension.hint":"<b>מה זה:</b> פנסיית חובה. {emp} מנוכים מהשכר שלכם, והמעסיק מוסיף עוד {er} מעבר ({erT} תגמולים + {pitz} פיצויים) — לא מהכסף שלכם.<br><b>לסמן או לא? פתחו את התלוש:</b><br>✔ יש שורת פנסיה או גמל → סמנו;<br>✖ אין שורה (החודשים הראשונים במקום חדש) → בטלו, והנטו יתאים לתלוש.<br><b>כדאי לדעת:</b> המעסיק חייב להתחיל הפרשות לכל היותר אחרי 6 חודשים. ואם כבר הייתה לכם קרן פנסיה ישראלית פעילה — אחרי 3 חודשים, רטרואקטיבית מהיום הראשון.<br><b>אין תלוש בכלל, משלמים לפי חשבוניות?</b> אז אתם לא שכירים — חשבו בלשונית «עצמאי» ושאלו את ה־AI על «העסקה דרך עוסק פטור».",
  "emp.net.lbl":"נטו ביד (נקי)",
  "emp.exp.employer":"מה המעסיק משלם מעבר לברוטו",
  "emp.employer.note":"את הסכומים האלה המעסיק משלם מעבר לברוטו — הם לא מנוכים מהמשכורת שלך.",
