@@ -909,6 +909,49 @@
       <div id="whOut"></div>
     </div>
     </div><!-- /empTabel -->
+    <!-- v1.22 (17.08.2026): каталог специалистов — рекламный инвентарь вместо подписки.
+       Пока партнёров нет, карточка честно говорит об этом и зовёт специалистов разместиться. -->
+  <div class="card fold" id="ptCard">
+    <h3 data-i18n="pt.h"></h3>
+    <div class="hint" data-i18n="pt.hint"></div>
+    <div id="ptList"></div>
+    <div class="note" id="ptEmpty" data-i18n="pt.empty"></div>
+    <details class="acc"><summary data-i18n="pt.join.t"></summary><div class="body">
+      <div class="note" data-i18n="pt.join.b"></div>
+      <label class="fld" data-i18n="pt.f.name"></label>
+      <input type="text" id="ptName" maxlength="60" autocomplete="off">
+      <label class="fld" data-i18n="pt.f.kind"></label>
+      <div class="seg" id="ptKind">
+        <button data-v="lawyer" class="on" data-i18n="pt.kind.lawyer"></button>
+        <button data-v="accountant" data-i18n="pt.kind.acc"></button>
+        <button data-v="other" data-i18n="pt.kind.other"></button>
+      </div>
+      <label class="fld" data-i18n="pt.f.city"></label>
+      <input type="text" id="ptCity" maxlength="40" autocomplete="off">
+      <label class="fld" data-i18n="pt.f.contact"></label>
+      <input type="text" id="ptContact" maxlength="80" autocomplete="off" placeholder="mail@example.com / 05X-XXXXXXX">
+      <button class="btn" onclick="ptJoin(this)" data-i18n="pt.join.btn"></button>
+      <div class="note" id="ptJoinMsg" style="display:none"></div>
+    </div></details>
+  </div>
+
+  <!-- Связь с аудиторией: каналы и напоминания. База контактов — основа для рекламодателей. -->
+  <div class="card fold" id="keepCard">
+    <h3 data-i18n="keep.h"></h3>
+    <div class="hint" data-i18n="keep.hint"></div>
+    <div class="chips" style="margin-bottom:10px">
+      <a class="ai-chip" href="https://t.me/heshbonplus" target="_blank" rel="noopener" onclick="statHit('tg')">✈️ Telegram</a>
+      <a class="ai-chip" href="https://whatsapp.com/channel/0029Vb96D9GHwXbHErqSpB0I" target="_blank" rel="noopener" onclick="statHit('wa')">💬 WhatsApp</a>
+      <a class="ai-chip" href="https://t.me/TlushScanBot" target="_blank" rel="noopener" onclick="statHit('bot')">🤖 @TlushScanBot</a>
+    </div>
+    <label class="fld" data-i18n="keep.f.contact"></label>
+    <input type="text" id="keepContact" maxlength="80" autocomplete="email" placeholder="mail@example.com / 05X-XXXXXXX">
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="keepAgree"> <span data-i18n="keep.agree"></span></label>
+    <button class="btn" onclick="keepJoin(this)" data-i18n="keep.btn"></button>
+    <div class="note" id="keepMsg" style="display:none"></div>
+    <div class="note" data-i18n-html="keep.legal"></div>
+  </div>
+
   </section>
 
   <!-- ================= САМОЗАНЯТЫЙ ================= -->
@@ -1191,6 +1234,7 @@
       <details class="acc"><summary data-i18n="exp.edu.t"></summary><div class="body" data-i18n-html="exp.edu.body"></div></details>
       <div class="note warn" data-i18n="exp.warn"></div>
     </div>
+
   </section>
 
   
@@ -1205,21 +1249,47 @@
     <div class="sheet">
       <h2 data-i18n="prem.title"></h2>
       <div class="sub" data-i18n="prem.sub"></div>
-      <div class="plan hot">
-        <div class="p-name" data-i18n="prem.prem.n"></div>
-        <div class="p-price" data-i18n="prem.prem.p"></div>
-        <ul data-i18n-html="prem.prem.f"></ul>
-        <button class="btn" onclick="joinWait('premium', this)" data-i18n="prem.cta"></button>
+      <div class="note" id="subMsg" style="display:none"></div>
+
+      <!-- v1.22: подписка активна — код доступа и управление -->
+      <div class="plan sub-on" style="display:none">
+        <div class="p-name" id="subStatus"></div>
+        <div class="note" data-i18n="sub.code.my"></div>
+        <div class="p-price" id="subMyCode" style="letter-spacing:.06em"></div>
+        <button class="btn ghost" onclick="subCopyCode(this)" data-i18n="sub.copy"></button>
+        <button class="btn" onclick="subPortal(this)" data-i18n="sub.manage"></button>
+        <div class="note" data-i18n="sub.code.hint"></div>
       </div>
+
+      <div class="plan hot sub-off">
+        <div class="p-name" data-i18n="prem.prem.n"></div>
+        <div class="p-price" id="premPrice" data-i18n="prem.prem.p"></div>
+        <ul data-i18n-html="prem.prem.f"></ul>
+        <button class="btn bill-only" onclick="subBuy('monthly', this)" data-i18n="sub.buy.m"></button>
+        <button class="btn ghost bill-only" onclick="subBuy('yearly', this)" data-i18n="sub.buy.y"></button>
+        <!-- пока платность выключена: всё это открыто бесплатно -->
+        <div class="note free-only" data-i18n="sub.free.b"></div>
+        <button class="btn ghost free-only" onclick="joinWait('premium', this)" data-i18n="prem.cta"></button>
+      </div>
+
+      <!-- уже платили: код с другого устройства или письмо на почту оплаты -->
+      <details class="acc sub-off bill-only"><summary data-i18n="sub.have"></summary><div class="body">
+        <input type="text" id="subCode" placeholder="HP-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <button class="btn ghost" onclick="subEnterCode()" data-i18n="sub.enter"></button>
+        <div class="note" data-i18n="sub.mail.hint"></div>
+        <input type="email" id="subEmail" placeholder="mail@example.com" autocomplete="email">
+        <button class="btn ghost" onclick="subRestoreByMail(this)" data-i18n="sub.mail.btn"></button>
+      </div></details>
       <div class="plan">
         <div class="p-name" data-i18n="prem.pro.n"></div>
         <div class="p-price" data-i18n="prem.pro.p"></div>
         <ul data-i18n-html="prem.pro.f"></ul>
         <button class="btn" onclick="joinWait('pro', this)" data-i18n="prem.cta"></button>
       </div>
-      <div class="note" data-i18n="prem.note"></div>
+      <div class="note bill-only" data-i18n="prem.note"></div>
+      <div class="note free-only" data-i18n="prem.free"></div>
       <!-- v1.16 (фидбек 09.08): автопродление, возвраты при сбоях, отключение автосписаний, контакт -->
-      <div class="note" data-i18n-html="prem.legal"></div>
+      <div class="note bill-only" data-i18n-html="prem.legal"></div>
       <button class="btn ghost" onclick="document.getElementById('premModal').style.display='none'" data-i18n="prem.close"></button>
     </div>
   </div>
@@ -1246,6 +1316,11 @@
       <label class="check" style="margin-top:6px"><input type="checkbox" id="remind10"> <span data-i18n="set.remind.chk"></span></label>
       <div class="note" data-i18n="set.remind.hint"></div>
       <div class="note warn" id="setNativeNote" data-i18n="set.native.only"></div>
+      <label class="fld" style="margin-top:16px" data-i18n="sub.set.h"></label>
+      <div class="note" id="subStatusSet"></div>
+      <button class="btn ghost sub-on bill-only" style="display:none" onclick="subPortal(this)" data-i18n="sub.manage"></button>
+      <button class="btn ghost sub-off bill-only" onclick="subOpen()" data-i18n="sub.set.buy"></button>
+
       <label class="fld" style="margin-top:16px" data-i18n="set.about"></label>
       <div class="note">
         <a href="https://heshbonplus.com/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a>
@@ -1287,7 +1362,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.21.1'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.22.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1299,6 +1374,9 @@ function applyI18n() {
   document.querySelectorAll('#langs button').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
   const ver = document.getElementById('setVersion');
   if (ver) ver.textContent = 'v' + APP_VERSION;
+  // тексты подписки собираются в коде (даты, код доступа) — перерисовываем их вслед за языком.
+  // На самом раннем вызове модуль подписки ещё не объявлен — это нормально.
+  try { subRender(); } catch (e) {}
 }
 function setLang(l) {
   LANG = l; localStorage.setItem('heshbon_lang', l);
@@ -2777,19 +2855,294 @@ const AI_URL = 'https://heshbon-ai.heshbon.workers.dev';
 const AI_KEY = 'hpw_4EalcyHVTxevJqZxyqSMQQgJYuOT';
 const AI_DAILY = 10; // дневной лимит на устройство — предсказуемый бюджет на этапе валидации
 function aiQuotaKey() { return 'heshbon_ai_' + new Date().toISOString().slice(0, 10); }
+
+/* ======= Подписка (v1.22, 17.08.2026): Stripe Checkout =======
+   Аккаунтов в приложении нет и заводить их незачем: после оплаты воркер выдаёт КОД ДОСТУПА
+   (HP-XXXX-...), он лежит в localStorage и уходит в заголовке X-HP-Lic. На другом устройстве
+   код вводят руками или получают письмом. Отмена — через Customer Portal Stripe. */
+// 17.08.2026: платность ВЫКЛЮЧЕНА до возвращения Марины из отпуска (нужен эсек/квитанции).
+// Приложение бесплатное целиком, растим базу; вся механика подписки ниже жива и включается
+// одним флагом — вместе с BILLING = "on" в wrangler.toml воркера.
+const BILLING_ON = false;
+const SUB_KEY = 'heshbon_sub';
+const DEV_KEY = 'heshbon_dev';
+let SUB = null;
+try { SUB = JSON.parse(localStorage.getItem(SUB_KEY) || 'null'); } catch (e) {}
+function devId() {
+  let d = localStorage.getItem(DEV_KEY);
+  if (!d) {
+    d = ((crypto && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36))
+      .replace(/[^a-zA-Z0-9]/g, '');
+    try { localStorage.setItem(DEV_KEY, d); } catch (e) {}
+  }
+  return d;
+}
+function subActive() { return !!(SUB && SUB.code && SUB.until && SUB.until > Date.now()); }
+// Пока биллинг выключен, AI открыт всем: платный режим — это subActive(), доступ — aiUnlocked().
+function aiUnlocked() { return !BILLING_ON || subActive(); }
+function subSave(s) {
+  SUB = s;
+  try { s ? localStorage.setItem(SUB_KEY, JSON.stringify(s)) : localStorage.removeItem(SUB_KEY); } catch (e) {}
+  subRender();
+}
+function billFetch(path, body) {
+  return fetch(AI_URL + '/billing/' + path, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-HP-Key': AI_KEY},
+    body: JSON.stringify(body || {}),
+  }).then(r => r.json().catch(() => ({})).then(j => {
+    if (!r.ok) { const e = new Error('bill'); e.http = r.status; e.code = j && j.error; throw e; }
+    return j;
+  }));
+}
+function subDate(ms) {
+  try { return new Date(ms).toLocaleDateString(LANG === 'he' ? 'he-IL' : (LANG === 'en' ? 'en-GB' : 'ru-RU')); }
+  catch (e) { return ''; }
+}
+// Оплата: уводим на Stripe Checkout. Карту вводят у Stripe — приложение её не видит.
+function subBuy(plan, btn) {
+  const old = btn.textContent;
+  btn.disabled = true; btn.textContent = t('sub.wait');
+  billFetch('checkout', { plan: plan, lang: LANG, dev: devId() })
+    .then(d => { if (!d.url) throw 0; location.href = d.url; })
+    .catch(e => {
+      btn.disabled = false; btn.textContent = old;
+      subMsg(e && e.code === 'billing_off' ? t('sub.err.off') : t('sub.err.pay'), true);
+    });
+}
+function subMsg(text, warn) {
+  const box = document.getElementById('subMsg');
+  if (!box) return;
+  box.className = 'note' + (warn ? ' warn' : '');
+  box.textContent = text;
+  box.style.display = 'block';
+}
+// Возврат из Checkout: сессия → код доступа. Вебхук может опоздать, поэтому спрашиваем Stripe прямо.
+function subClaim(sessionId) {
+  document.getElementById('premModal').style.display = 'flex';
+  subMsg(t('sub.claiming'));
+  return billFetch('claim', { session_id: sessionId })
+    .then(d => {
+      subSave({ code: d.code, until: d.until, plan: d.plan, email: d.email || '', checked: Date.now() });
+      subMsg(tf('sub.thanks', {d: subDate(d.until)}));
+    })
+    .catch(e => subMsg(e && e.code === 'not_paid' ? t('sub.err.notpaid') : t('sub.err.claim'), true));
+}
+function subApplyCode(raw, silent) {
+  const code = String(raw || '').trim();
+  if (!code) return Promise.resolve(false);
+  return billFetch('status', { code: code })
+    .then(d => {
+      if (!d.active) { if (!silent) subMsg(t('sub.err.expired'), true); return false; }
+      subSave({ code: code.toUpperCase(), until: d.until, plan: d.plan, email: d.email || '',
+                cancel: !!d.cancel_at_period_end, checked: Date.now() });
+      if (!silent) subMsg(tf('sub.restored', {d: subDate(d.until)}));
+      return true;
+    })
+    .catch(e => {
+      if (!silent) subMsg(e && (e.code === 'unknown_code' || e.code === 'bad_code') ? t('sub.err.badcode') : t('sub.err.pay'), true);
+      return false;
+    });
+}
+// Раз в 12 часов сверяемся с сервером: продление, отмена, неудачное списание.
+function subRefresh() {
+  if (!SUB || !SUB.code) return;
+  if (SUB.checked && Date.now() - SUB.checked < 12 * 3600e3 && SUB.until > Date.now() + 3 * 86400e3) return;
+  billFetch('status', { code: SUB.code }).then(d => {
+    const next = {}; for (const k in SUB) next[k] = SUB[k];
+    next.until = d.until; next.plan = d.plan; next.cancel = !!d.cancel_at_period_end; next.checked = Date.now();
+    subSave(next);
+  }).catch(() => {});
+}
+function subPortal(btn) {
+  if (!SUB || !SUB.code) return;
+  const old = btn.textContent;
+  btn.disabled = true; btn.textContent = t('sub.wait');
+  billFetch('portal', { code: SUB.code, lang: LANG })
+    .then(d => { if (!d.url) throw 0; location.href = d.url; })
+    .catch(() => { btn.disabled = false; btn.textContent = old; subMsg(t('sub.err.pay'), true); });
+}
+function subRestoreByMail(btn) {
+  const el = document.getElementById('subEmail');
+  const email = ((el && el.value) || '').trim();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { subMsg(t('sub.err.mail'), true); return; }
+  btn.disabled = true;
+  billFetch('restore', { email: email })
+    .then(() => subMsg(t('sub.mail.sent')))
+    .catch(e => subMsg(e && e.code === 'contact_support' ? t('sub.err.support') : t('sub.err.pay'), true))
+    .then(() => { btn.disabled = false; });
+}
+function subEnterCode() {
+  const el = document.getElementById('subCode');
+  subApplyCode(el ? el.value : '');
+}
+function subCopyCode(btn) {
+  if (!SUB || !SUB.code) return;
+  const done = () => { const o = btn.textContent; btn.textContent = t('sub.copied'); setTimeout(() => { btn.textContent = o; }, 1500); };
+  if (navigator.clipboard) navigator.clipboard.writeText(SUB.code).then(done, () => {});
+  else {
+    const ta = document.createElement('textarea'); ta.value = SUB.code; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    ta.remove();
+  }
+}
+// Перерисовка блоков подписки в модалке и в настройках.
+function subRender() {
+  const on = subActive();
+  document.querySelectorAll('.sub-on').forEach(el => { el.style.display = on ? '' : 'none'; });
+  document.querySelectorAll('.sub-off').forEach(el => { el.style.display = on ? 'none' : ''; });
+  // ценники, оплата и юр. блок про автосписания появляются только вместе с включённым биллингом
+  document.querySelectorAll('.bill-only').forEach(el => { if (!BILLING_ON) el.style.display = 'none'; });
+  document.querySelectorAll('.free-only').forEach(el => { el.style.display = BILLING_ON ? 'none' : ''; });
+  const text = !BILLING_ON ? t('sub.free.status')
+    : (on ? tf(SUB.cancel ? 'sub.status.ending' : 'sub.status.on', {d: subDate(SUB.until)}) : t('sub.status.off'));
+  ['subStatus', 'subStatusSet'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  });
+  const code = document.getElementById('subMyCode');
+  if (code) code.textContent = on ? SUB.code : '';
+  if (!BILLING_ON) {
+    // пока денег не берём, окно рассказывает о возможностях, а не о тарифе
+    const price = document.getElementById('premPrice');
+    if (price) price.textContent = t('sub.free.price');
+    const h = document.querySelector('#premModal h2');
+    if (h) h.textContent = t('prem.free.title');
+    const s = document.querySelector('#premModal .sub');
+    if (s) s.textContent = t('prem.free.sub');
+    document.querySelectorAll('[data-i18n="prem.btn.short"]').forEach(el => { el.textContent = t('prem.free.btn'); });
+  }
+}
+function subOpen(reason) { // paywall: воркер ответил 402 либо кончилась бесплатная проба
+  const m = document.getElementById('premModal');
+  if (m) m.style.display = 'flex';
+  if (reason) subMsg(t(reason === 'paid_only' ? 'sub.gate.paid' : 'sub.gate.free'), true);
+}
+
+/* ======= Каталог специалистов и связь с аудиторией (v1.22) =======
+   Пока приложение бесплатное, деньги обещают дать не подписки, а размещение адвокатов
+   и бухгалтеров. Каталог лежит в partners.json рядом с приложением: чтобы добавить партнёра,
+   правится только этот файл. Платные карточки помечаются как реклама — иначе это вводит
+   человека в заблуждение ровно там, где он ищет защиты. */
+const FORM_URL = 'https://formspree.io/f/xnjyekar'; // общая форма проектов, различаем полем project
+function sendForm(project, data, btn, msgId, okKey) {
+  const box = document.getElementById(msgId);
+  const old = btn.textContent;
+  const show = (text, warn) => {
+    if (!box) return;
+    box.className = 'note' + (warn ? ' warn' : '');
+    box.textContent = text; box.style.display = 'block';
+  };
+  btn.disabled = true; btn.textContent = t('sub.wait');
+  const payload = { project: project, lang: LANG };
+  for (const k in data) payload[k] = data[k];
+  fetch(FORM_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify(payload),
+  }).then(r => {
+    btn.disabled = false; btn.textContent = old;
+    if (!r.ok) throw 0;
+    show(t(okKey));
+    btn.style.display = 'none';
+  }).catch(() => {
+    btn.disabled = false; btn.textContent = old;
+    show(t('keep.err'), true);
+  });
+}
+/* Анонимные счётчики: имя события и обезличенный id устройства, ничего больше.
+   Ответ не ждём и ошибки глотаем — статистика не должна мешать человеку работать. */
+function statHit(ev) {
+  try {
+    // id устройства кладём в тело, а не в заголовок: лишние заголовки требуют preflight,
+    // а он падает на воркерах, которые о них не знают (см. тот же урок в aiFetch)
+    fetch(AI_URL + '/stat', {
+      method: 'POST', keepalive: true,
+      headers: {'Content-Type': 'application/json', 'X-HP-Key': AI_KEY},
+      body: JSON.stringify({ ev: ev, lang: LANG, dev: devId() }),
+    }).catch(() => {});
+  } catch (e) {}
+}
+function statOpenOnce() { // запуск считаем раз в сутки, иначе цифра превращается в шум
+  const k = 'heshbon_stat_open';
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem(k) === today) return;
+  try { localStorage.setItem(k, today); } catch (e) {}
+  statHit('open');
+}
+let PARTNERS = null;
+function ptLoad() {
+  if (PARTNERS) return Promise.resolve(PARTNERS);
+  return fetch('partners.json', {cache: 'no-cache'})
+    .then(r => r.json())
+    .then(d => { PARTNERS = Array.isArray(d.items) ? d.items : []; ptRender(); return PARTNERS; })
+    .catch(() => { PARTNERS = []; ptRender(); return PARTNERS; });
+}
+function ptRender() {
+  const list = document.getElementById('ptList'), empty = document.getElementById('ptEmpty');
+  if (!list || !empty) return;
+  const items = PARTNERS || [];
+  empty.style.display = items.length ? 'none' : 'block';
+  list.innerHTML = items.map(p => {
+    const kind = t('pt.kind.' + (p.kind === 'accountant' ? 'acc' : (p.kind === 'lawyer' ? 'lawyer' : 'other')));
+    const where = p.city && p.city !== 'all' ? escT(p.city) : t('pt.city.all');
+    const href = /^(tel:|mailto:|https:)/.test(p.contact || '') ? p.contact : '#';
+    return '<div class="viol dk" style="margin-top:8px">'
+      + (p.promoted ? '<div class="note">' + t('pt.ad') + '</div>' : '')
+      + '<b>' + escT(p.name || '') + '</b><br>' + kind + ' · ' + where
+      + (p.langs ? ' · ' + escT(p.langs) : '')
+      + (p.text ? '<br>' + escT(p.text) : '')
+      + '<br><a class="ai-chip" href="' + escT(href) + '" target="_blank" rel="noopener nofollow"'
+      + ' onclick="statHit(\'pt_click\')">' + t('pt.contact') + '</a></div>';
+  }).join('');
+}
+function ptJoin(btn) {
+  const name = (document.getElementById('ptName').value || '').trim();
+  const contact = (document.getElementById('ptContact').value || '').trim();
+  if (name.length < 2 || contact.length < 5) {
+    const box = document.getElementById('ptJoinMsg');
+    box.className = 'note warn'; box.textContent = t('pt.join.err'); box.style.display = 'block';
+    return;
+  }
+  sendForm('heshbon-partner', {
+    name: name, contact: contact, kind: segVal('ptKind'),
+    city: (document.getElementById('ptCity').value || '').trim(),
+  }, btn, 'ptJoinMsg', 'pt.join.ok');
+  statHit('pt_join');
+}
+function keepJoin(btn) {
+  const contact = (document.getElementById('keepContact').value || '').trim();
+  const box = document.getElementById('keepMsg');
+  const bad = (key) => { box.className = 'note warn'; box.textContent = t(key); box.style.display = 'block'; };
+  const isMail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact);
+  const isPhone = /^[+\d][\d\s-]{7,}$/.test(contact);
+  if (!isMail && !isPhone) return bad('keep.err.contact');
+  if (!document.getElementById('keepAgree').checked) return bad('keep.err.agree');
+  sendForm('heshbon-app-leads', { contact: contact, kind: isMail ? 'email' : 'phone' }, btn, 'keepMsg', 'keep.ok');
+  statHit('lead');
+}
 // v1.18 (жалоба 10.08 «пишет „нет сети“, хотя сеть есть»): единый запрос к воркеру с таймаутом
 // и РАЗЛИЧИМЫМИ ошибками — ответ сервера с кодом, обрыв по времени и настоящий сетевой сбой.
 function aiFetch(body, ms) {
   const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
   const timer = ctrl ? setTimeout(() => ctrl.abort(), ms || 60000) : 0;
-  const opt = { method: 'POST', headers: {'Content-Type': 'application/json', 'X-HP-Key': AI_KEY}, body: JSON.stringify(body) };
+  // X-HP-Lic — код подписки, X-HP-Dev — анонимный id устройства для бесплатной пробы (v1.22).
+  // Пока платности нет, оба заголовка не нужны: без них запрос совместим и со старым воркером,
+  // который не знает этих полей и отбил бы preflight, положив вообще все AI-функции.
+  const headers = {'Content-Type': 'application/json', 'X-HP-Key': AI_KEY};
+  if (BILLING_ON) {
+    headers['X-HP-Dev'] = devId();
+    if (SUB && SUB.code) headers['X-HP-Lic'] = SUB.code;
+  }
+  const opt = { method: 'POST', headers: headers, body: JSON.stringify(body) };
   if (ctrl) opt.signal = ctrl.signal;
   return fetch(AI_URL, opt).then(r => {
     if (timer) clearTimeout(timer);
     if (!r.ok) return r.json().catch(() => ({})).then(j => {
       const e = new Error('http'); e.http = r.status;
-      e.code = j && j.error;        // 'upstream' | 'too_big' | 'no_answer'
+      e.code = j && j.error;        // 'upstream' | 'too_big' | 'no_answer' | 'subscription_required'
       e.up = j && j.code;           // код самого Anthropic: 429/529 = перегрузка
+      e.reason = j && j.reason;     // для 402: 'free_used' | 'paid_only' | 'ip_cap'
       throw e;
     });
     return r.json();
@@ -2798,6 +3151,8 @@ function aiFetch(body, ms) {
 function aiErrText(e) {
   if (e && e.name === 'AbortError') return t('ai.err.timeout');
   if (e && e.http) {
+    // 402 от воркера (v1.22): бесплатная проба кончилась или режим только по подписке
+    if (e.code === 'subscription_required') { subOpen(e.reason); return t(e.reason === 'paid_only' ? 'sub.gate.paid' : 'sub.gate.free'); }
     if (e.code === 'too_big') return t('ai.err.big');
     // 429/500/529 у Anthropic = перегрузка; воркер уже сделал 3 попытки — просим повторить позже
     if (e.code === 'upstream' && [429, 500, 502, 503, 529].includes(+e.up)) return t('ai.err.busy');
@@ -2822,7 +3177,7 @@ function aiStatus() {
 function aiOnline(btn) {
   const q = btn.dataset.q, targetId = btn.dataset.target;
   const used = +localStorage.getItem(aiQuotaKey()) || 0;
-  if (used >= AI_DAILY) {
+  if (!subActive() && used >= AI_DAILY) {   // у подписчика дневного потолка нет (v1.22)
     const n = document.createElement('div'); n.className = 'note warn';
     n.textContent = tf('ai.online.limit', {n: AI_DAILY});
     btn.replaceWith(n); return;
@@ -2832,6 +3187,7 @@ function aiOnline(btn) {
     .then(d => {
       if (!d.answer) throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
+      statHit('qa');
       const div = document.createElement('div');
       div.className = 'viol dk';
       div.innerHTML = '<b>' + t('ai.online.tag') + '</b>' +
@@ -2904,8 +3260,9 @@ function aiContract() {
   if (ctPages.length && ctPages.reduce((s, p) => s + p.b64.length, 0) > 8000000) {
     target.style.display = 'block'; target.textContent = t('ct.toobig'); return;
   }
+  if (!aiUnlocked()) { subOpen('paid_only'); return; }   // при включённом биллинге договор — по подписке
   const used = +localStorage.getItem(aiQuotaKey()) || 0;
-  if (used >= AI_DAILY) { target.style.display = 'block'; target.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
+  if (!subActive() && used >= AI_DAILY) { target.style.display = 'block'; target.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
   const btn = document.getElementById('ctBtn');
   btn.disabled = true; btn.textContent = t('ai.online.wait');
   const req = { mode: 'contract', lang: LANG, status: aiStatus() };
@@ -2917,6 +3274,7 @@ function aiContract() {
     .then(d => {
       if (!d.answer) throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
+      statHit('contract');
       target.style.display = 'block';
       target.innerHTML = '<b>' + t('ai.online.tag') + '</b><br>' +
         d.answer.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -2932,7 +3290,9 @@ function aiContract() {
 // ======= Скан тлуша (β): фото/PDF → воркер (mode=tlush) → строки + анализ =======
 // Распознанные цифры остаются в localStorage — следующий скан сравнивается с ними.
 const TL_KEY = 'heshbon_tlush';
-const TL_FREE = 2; // бесплатных сканов в месяц; дальше — Premium
+// Сканов в месяц без подписки. Пока приложение бесплатное — лимит щадящий (расход на модель),
+// с включением биллинга ужимается до 1 и ровно столько же считает воркер.
+const TL_FREE = BILLING_ON ? 1 : 3;
 const escT = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const fmt2 = n => new Intl.NumberFormat(t('locale'), {maximumFractionDigits: 2}).format(+n) + ' ₪';
 function tlMonthKey() { return 'heshbon_tlush_m_' + new Date().toISOString().slice(0, 7); }
@@ -3016,15 +3376,16 @@ function tlErr(msg) {
 function tlushScan() {
   if (!tlSel) return;
   const ans = document.getElementById('tlAns'), btn = document.getElementById('tlBtn');
+  const paid = aiUnlocked();
   const mUsed = +localStorage.getItem(tlMonthKey()) || 0;
-  if (mUsed >= TL_FREE) { // месячный лимит → питч Premium (fake-door до биллинга)
+  if (!paid && mUsed >= TL_FREE) { // бесплатная проба за месяц исчерпана → предложение подписки
     ans.style.display = 'block';
     ans.innerHTML = escT(tf('tlush.limit', {n: TL_FREE}))
-      + '<br><button class="btn ghost" style="margin-top:9px;padding:9px" onclick="document.getElementById(\'premModal\').style.display=\'flex\'">' + t('tlush.prem') + '</button>';
+      + '<br><button class="btn ghost" style="margin-top:9px;padding:9px" onclick="subOpen()">' + t('tlush.prem') + '</button>';
     return;
   }
   const used = +localStorage.getItem(aiQuotaKey()) || 0; // общий дневной лимит с онлайн-AI
-  if (used >= AI_DAILY) { ans.style.display = 'block'; ans.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
+  if (!paid && used >= AI_DAILY) { ans.style.display = 'block'; ans.textContent = tf('ai.online.limit', {n: AI_DAILY}); return; }
   btn.disabled = true; btn.textContent = t('tlush.wait');
   const st = tlStore();
   aiFetch({ mode: 'tlush', img: tlSel.b64, media: tlSel.media,
@@ -3035,6 +3396,7 @@ function tlushScan() {
       if (!d.data || typeof d.data.analysis !== 'string') throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); localStorage.setItem(tlMonthKey(), mUsed + 1); } catch (e) {}
       btn.disabled = false; btn.textContent = t('tlush.btn');
+      statHit('tlush');
       tlRender(d.data);
       tlSave(d.data);
     })
@@ -3770,6 +4132,20 @@ if (empSubSaved === 'tb') {
 }
 fetchRates();
 document.getElementById('empGross').addEventListener('input', saveProf);
+
+// v1.22: возврат из Stripe Checkout (?checkout=cs_...), ссылка с кодом из письма (?lic=...),
+// возврат из Customer Portal (?portal=back). Адрес сразу чистим — код в истории браузера не нужен.
+(function subInit() {
+  const p = new URLSearchParams(location.search);
+  const cs = p.get('checkout'), lic = p.get('lic'), portal = p.get('portal');
+  if (cs || lic || portal) history.replaceState(null, '', location.pathname + location.hash);
+  if (cs && cs !== 'cancel') subClaim(cs);
+  else if (lic) { subApplyCode(lic); document.getElementById('premModal').style.display = 'flex'; }
+  else subRefresh();
+  subRender();
+})();
+ptLoad();       // каталог специалистов: пустой файл = карточка честно говорит, что партнёров пока нет
+statOpenOnce(); // анонимный счётчик запусков
 </script>
 <div id="printArea"></div>
 </body>

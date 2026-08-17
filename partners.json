@@ -1,0 +1,5 @@
+{
+  "updated": "2026-08-17",
+  "note": "Каталог специалистов Хешбон+. Пустой items = карточка показывает честное «партнёров пока нет» и приглашение разместиться. Поля: id, kind (lawyer|accountant|other), name, city (или 'all'), langs, contact (tel:/mailto:/https:), text, promoted (true = платное размещение, помечается как реклама).",
+  "items": []
+}

@@ -36,7 +36,7 @@ Last updated / Последнее обновление / עדכון אחרון: 
 <p>Настоящая Политика конфиденциальности описывает, как приложение «Хешбон+» (далее — «Приложение») обращается с вашей информацией.</p>
 
 <h3>1. Сбор и использование информации</h3>
-<p>Приложение предназначено для информационных расчётов трудовых выплат. <b>По умолчанию все расчёты выполняются локально на вашем устройстве.</b> В Приложении нет аналитики, рекламных SDK и трекеров, регистрация и аккаунт не требуются.</p>
+<p>Приложение предназначено для информационных расчётов трудовых выплат. <b>По умолчанию все расчёты выполняются локально на вашем устройстве.</b> Регистрация и аккаунт не требуются. Рекламных SDK и сторонних трекеров (Google Analytics, Meta Pixel и подобных) в Приложении нет.</p>
 <p>Три функции работают через интернет, и только по вашему явному действию:</p>
 <ul>
   <li><b>Вопрос онлайн-AI</b> — при нажатии «Уточнить у онлайн-AI» на наш сервер (Cloudflare Workers) и далее в Anthropic Claude API передаются текст вашего вопроса, язык интерфейса и выбранный статус работника.</li>
@@ -44,7 +44,14 @@ Last updated / Последнее обновление / עדכון אחרון: 
   <li><b>Проверка трудового договора</b> — текст или фотографии страниц договора передаются тем же путём для анализа.</li>
 </ul>
 <p>Эти данные используются <b>исключительно для формирования ответа в момент запроса</b>. Мы не сохраняем ваши вопросы, фотографии и документы на своём сервере, не формируем профили пользователей, не продаём и не передаём эти данные третьим лицам для рекламы. Anthropic обрабатывает запрос как обработчик данных на условиях своего API.</p>
-<p>Отдельно Приложение при запуске скачивает публичный файл актуальных ставок (<code>rates.json</code>) с нашего сайта. Это обычная загрузка файла, никакие ваши данные при этом не отправляются.</p>
+<p>Отдельно Приложение при запуске скачивает публичные файлы: актуальные ставки (<code>rates.json</code>) и каталог специалистов (<code>partners.json</code>). Это обычная загрузка файлов, никакие ваши данные при этом не отправляются.</p>
+
+<p>С версии 1.22 добавились ещё три вещи — рассказываем прямо:</p>
+<ul>
+  <li><b>Анонимные счётчики.</b> Мы считаем, сколько раз открыли Приложение, разобрали тлуш, спросили ИИ или проверили договор. Передаются только название события, язык интерфейса и случайный номер устройства, который создаётся в самом Приложении и ни с чем не связан — ни с именем, ни с телефоном, ни с содержимым ваших документов. Эти цифры нужны, чтобы понимать, чем пользуются, и чтобы показывать масштаб потенциальным партнёрам. Сторонних систем аналитики мы для этого не используем — счётчики живут на нашем сервере.</li>
+  <li><b>Подписка на напоминания.</b> Если вы сами оставите почту или телефон в блоке «Оставайтесь на связи», контакт уйдёт через сервис форм Formspree и будет использоваться только для напоминаний и новостей Хешбон+. Мы не продаём и не передаём его рекламодателям. Отписка — письмом на <a href="mailto:hello@heshbonplus.com">hello@heshbonplus.com</a>, после чего контакт удаляется.</li>
+  <li><b>Каталог специалистов.</b> Карточки адвокатов и бухгалтеров могут быть платным размещением — такие помечены словом «Реклама». Мы не передаём специалистам ваши данные: пока вы сами не напишете и не позвоните, они о вас ничего не знают. Переход по ссылке уводит на сайт партнёра, где действует его собственная политика.</li>
+</ul>
 
 <h3>2. Хранение данных</h3>
 <p>Введённые вами параметры не передаются третьим лицам. Для вашего удобства часть настроек сохраняется <b>в локальной памяти устройства</b> и остаётся там до удаления Приложения или очистки его данных:</p>
@@ -78,7 +85,7 @@ Last updated / Последнее обновление / עדכון אחרון: 
 <p>This Privacy Policy explains how the «Heshbon+» application (the «App») handles your information.</p>
 
 <h3>1. Collection and use of information</h3>
-<p>The App is intended for informational calculations of employment payments. <b>By default all calculations run locally on your device.</b> The App contains no analytics, no advertising SDKs and no trackers; no registration or account is required.</p>
+<p>The App is intended for informational calculations of employment payments. <b>By default all calculations run locally on your device.</b> No registration or account is required. The App contains no advertising SDKs and no third-party trackers (Google Analytics, Meta Pixel and the like).</p>
 <p>Three features use the internet, and only when you explicitly trigger them:</p>
 <ul>
   <li><b>Online AI question</b> — when you tap «Ask the online AI», the text of your question, the interface language and the selected worker status are sent to our server (Cloudflare Workers) and on to the Anthropic Claude API.</li>
@@ -86,7 +93,14 @@ Last updated / Последнее обновление / עדכון אחרון: 
   <li><b>Employment contract check</b> — the text or the photographed pages of the contract are transmitted the same way for analysis.</li>
 </ul>
 <p>This data is used <b>solely to produce the answer at the moment of the request</b>. We do not store your questions, photos or documents on our server, do not build user profiles, and do not sell or share this data with third parties for advertising. Anthropic processes the request as a data processor under its API terms.</p>
-<p>Separately, on launch the App downloads a public rates file (<code>rates.json</code>) from our website. This is a plain file download; none of your data is sent.</p>
+<p>Separately, on launch the App downloads public files from our website: the current rates (<code>rates.json</code>) and the specialists directory (<code>partners.json</code>). These are plain file downloads; none of your data is sent.</p>
+
+<p>Version 1.22 added three more things, stated plainly:</p>
+<ul>
+  <li><b>Anonymous counters.</b> We count how often the App is opened, a payslip is analysed, the AI is asked a question or a contract is checked. Only the event name, the interface language and a random device number — generated inside the App and linked to nothing: not your name, not your phone, not the contents of your documents — are sent. These figures show us what people actually use and let us demonstrate scale to potential partners. No third-party analytics service is involved; the counters live on our own server.</li>
+  <li><b>Reminder subscription.</b> If you choose to leave an email or phone number in the “Stay in touch” block, the contact is sent through the Formspree form service and used only for Heshbon+ reminders and news. We do not sell it or pass it to advertisers. To unsubscribe, write to <a href="mailto:hello@heshbonplus.com">hello@heshbonplus.com</a> and the contact is deleted.</li>
+  <li><b>Specialists directory.</b> Cards of lawyers and accountants may be paid placements — those are labelled “Ad”. We pass no data of yours to the specialists: until you write or call them yourself, they know nothing about you. Following a link takes you to the partner's own site, where their own policy applies.</li>
+</ul>
 
 <h3>2. Data storage</h3>
 <p>The parameters you enter are not shared with third parties. For your convenience some settings are stored <b>in your device’s local storage</b> and remain there until you uninstall the App or clear its data:</p>
@@ -121,7 +135,7 @@ Last updated / Последнее обновление / עדכון אחרון: 
 <p>מדיניות פרטיות זו מסבירה כיצד אפליקציית «חשבון+» (להלן «האפליקציה») מטפלת במידע שלך.</p>
 
 <h3>1. איסוף המידע והשימוש בו</h3>
-<p>האפליקציה נועדה לחישובים אינפורמטיביים של תשלומי עבודה. <b>כברירת מחדל כל החישובים מתבצעים מקומית במכשיר שלך.</b> אין באפליקציה אנליטיקה, אין SDK פרסומי ואין עוקבים; אין צורך בהרשמה או בחשבון.</p>
+<p>האפליקציה נועדה לחישובים אינפורמטיביים של תשלומי עבודה. <b>כברירת מחדל כל החישובים מתבצעים מקומית במכשיר שלך.</b> אין צורך בהרשמה או בחשבון. אין באפליקציה SDK פרסומי ואין עוקבים של צד שלישי (Google Analytics, Meta Pixel וכדומה).</p>
 <p>שלוש פונקציות פועלות דרך האינטרנט, ורק בפעולה מפורשת שלך:</p>
 <ul>
   <li><b>שאלה ל־AI המקוון</b> — בלחיצה על «לשאול את ה־AI המקוון» נשלחים לשרת שלנו (Cloudflare Workers) ומשם ל־Anthropic Claude API טקסט השאלה, שפת הממשק וסטטוס העובד שנבחר.</li>
@@ -129,7 +143,14 @@ Last updated / Последнее обновление / עדכון אחרון: 
   <li><b>בדיקת חוזה עבודה</b> — הטקסט או צילומי דפי החוזה נשלחים באותה הדרך לצורך ניתוח.</li>
 </ul>
 <p>המידע הזה משמש <b>אך ורק להפקת התשובה ברגע הבקשה</b>. איננו שומרים את השאלות, התמונות והמסמכים שלך בשרת שלנו, איננו בונים פרופילי משתמשים ואיננו מוכרים או משתפים מידע זה עם צדדים שלישיים לצורכי פרסום. Anthropic מעבדת את הבקשה כמעבד מידע בהתאם לתנאי ה־API שלה.</p>
-<p>בנפרד, בהפעלה האפליקציה מורידה קובץ ציבורי של שיעורים מעודכנים (<code>rates.json</code>) מהאתר שלנו. זו הורדת קובץ רגילה, ולא נשלח בה מידע שלך.</p>
+<p>בנפרד, בהפעלה האפליקציה מורידה מהאתר שלנו קבצים ציבוריים: שיעורים מעודכנים (<code>rates.json</code>) ומדריך אנשי המקצוע (<code>partners.json</code>). זו הורדת קבצים רגילה, ולא נשלח בה מידע שלך.</p>
+
+<p>בגרסה 1.22 נוספו עוד שלושה דברים, ואנחנו אומרים אותם בגלוי:</p>
+<ul>
+  <li><b>מונים אנונימיים.</b> אנחנו סופרים כמה פעמים נפתחה האפליקציה, נותח תלוש, נשאלה שאלה ל-AI או נבדק חוזה. נשלחים רק שם האירוע, שפת הממשק ומספר מכשיר אקראי שנוצר בתוך האפליקציה ואינו מקושר לדבר — לא לשם, לא לטלפון ולא לתוכן המסמכים שלך. הנתונים האלה עוזרים לנו להבין במה משתמשים ולהציג היקף לשותפים פוטנציאליים. איננו משתמשים לשם כך בשירותי אנליטיקה חיצוניים — המונים נמצאים בשרת שלנו.</li>
+  <li><b>הרשמה לתזכורות.</b> אם תשאירו מיוזמתכם מייל או טלפון בחלק «נשארים בקשר», הפרטים יישלחו דרך שירות הטפסים Formspree וישמשו רק לתזכורות ולעדכונים של חשבון+. איננו מוכרים אותם ואיננו מעבירים אותם למפרסמים. להסרה — כתבו ל-<a href="mailto:hello@heshbonplus.com">hello@heshbonplus.com</a> והפרטים יימחקו.</li>
+  <li><b>מדריך אנשי המקצוע.</b> כרטיסים של עורכי דין ורואי חשבון עשויים להיות מודעות בתשלום — אלה מסומנים במילה «פרסומת». איננו מעבירים לאנשי המקצוע מידע עליכם: כל עוד לא פניתם אליהם בעצמכם, הם אינם יודעים עליכם דבר. לחיצה על הקישור מעבירה לאתר של השותף, שם חלה מדיניות הפרטיות שלו.</li>
+</ul>
 
 <h3>2. שמירת נתונים</h3>
 <p>הנתונים שאתה מזין אינם מועברים לצדדים שלישיים. לנוחותך חלק מההגדרות נשמרות <b>בזיכרון המקומי של המכשיר</b> ונשארות שם עד להסרת האפליקציה או לניקוי הנתונים שלה:</p>
