@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- © 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved. Proprietary — see LICENSE and terms.html. -->
 <html lang="ru">
 <head>
@@ -203,6 +203,16 @@
   .acc summary::after { content: "+"; font-size: 18px; color: var(--muted); font-weight: 400; }
   .acc[open] summary::after { content: "–"; }
   .acc .body { padding: 0 14px 13px; font-size: 13.5px; line-height: 1.55; color: var(--text); }
+  /* сравнительная таблица «закон vs цав архава» внутри аккордеонов и справок */
+  .cmp { width: 100%; border-collapse: collapse; margin: 8px 0 10px; font-size: 12px; direction: ltr; unicode-bidi: isolate; table-layout: fixed; }
+  .cmp th, .cmp td { border-bottom: 1px solid var(--border); padding: 6px 4px; text-align: start; vertical-align: top; overflow-wrap: break-word; hyphens: manual; }
+  .cmp th { font-weight: 700; color: var(--muted); font-size: 11px; }
+  .cmp td:not(:first-child), .cmp th:not(:first-child) { text-align: center; }
+  .cmp th:first-child, .cmp td:first-child { width: 24%; }
+  .cmp td:last-child { font-size: 11.5px; color: var(--muted); }
+  .cmp td.hi { color: var(--green); font-weight: 700; }
+  .cmp tr:last-child td { border-bottom: none; }
+  [dir="rtl"] .cmp { direction: rtl; }
   .acc .body p { margin-bottom: 8px; }
   .acc .body ul { padding-inline-start: 18px; margin-bottom: 8px; }
   .acc .body li { margin-bottom: 4px; }
@@ -1340,7 +1350,7 @@
 
 </div>
 
-<script src="i18n.js?v=1220"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1230"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1362,7 +1372,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.22.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.23.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1410,6 +1420,16 @@ let NI_EMP = [.0427, .1217];// работник-резидент: БЛ+брию�
 let NI_B1  = [.0004, .0087];// иностранный работник/2(а)5 (без мас бриют; ставки нерезидента)
 let NI_SELF = [.0610, .18]; // ацмаи 2026
 let PENSION_EMP = .06, PENSION_ER = .065, PITZUIM = .06, NI_ER = [.0451, .076]; // пицуим: мин. 6%, полное 8.33%
+// Отраслевые пенсионные ставки по цав архава (сверено 29.07.2026, כל-זכות + workrights):
+// клининг — с 01.07.2015 работник 7% / работодатель 7,5% / пицуим 8,33%, с первого дня работы.
+// Охрана: источники расходятся (7/7,5/8,33 vs 6/6,5) — НЕ подменяем, показываем общие + подсказку в справочнике.
+const SECTOR_PENSION = { cleaning: { emp: .07, er: .075, pitz: .0833 } };
+function sectorPension() {
+  const ind = document.getElementById('profIndustry') ? document.getElementById('profIndustry').value : '';
+  const s = SECTOR_PENSION[ind];
+  return s ? { sector: ind, ...s } : { sector: '', emp: PENSION_EMP, er: PENSION_ER, pitz: PITZUIM };
+}
+const pctS = x => (Math.round(x * 10000) / 100).toString().replace('.', ',') + '%'; // 0.0833 -> «8,33%»
 // Работающие пенсионеры (кользхут, 07.08.2026, 2 страницы; совпадает с FACTS воркера):
 // получает кицбат зикна — взносы работника 0 (в тлуше законно 0), работодатель 0.61/2.12%;
 // достиг пенс. возраста БЕЗ кицбы — пониженные по возрасту (62–67 / 67–70; для 70+ без кицбы
@@ -1647,7 +1667,8 @@ function calcEmp() {
   const tax = incomeTax(taxable, pts);
   const ret = retireeState(); // работающий пенсионер: пониженные/нулевые взносы БЛ+бриют
   const ni = natIns(taxable, empNiRates());
-  const pen = hasPen ? gross * PENSION_EMP : 0;
+  const sp = sectorPension(); // отраслевые ставки (клининг: 7 / 7,5 / 8,33 с первого дня — цав архава, сверено 29.07.2026)
+  const pen = hasPen ? gross * sp.emp : 0;
   const hishEmp = hish ? gross * 0.025 : 0;
   const net = taxable - tax - ni - pen - hishEmp;
 
@@ -1658,11 +1679,12 @@ function calcEmp() {
     row(tf('brk.tax', {pts}), '−' + fmt(tax), 'neg') +
     // у получателя кицбат зикна строка показывается с нулём — это законный ноль, не пропуск
     row(foreign ? t('brk.niForeign') : ret.on ? t(ret.kitzba ? 'brk.ni.kitzba' : 'brk.ni.ret') : t('brk.ni'), '−' + fmt(ni), 'neg') +
-    (hasPen ? row(t('brk.pension'), '−' + fmt(pen), 'neg') : '') +
+    (hasPen ? row(t('brk.pension') + ' ' + pctS(sp.emp), '−' + fmt(pen), 'neg') : '') +
     (hish ? row(t('brk.hish'), '−' + fmt(hishEmp), 'neg') : '');
   document.getElementById('empEmployer').innerHTML =
-    row(t('employer.pens'), '+' + fmt(gross * PENSION_ER), 'pos') +
-    row(t('employer.pitz'), '+' + fmt(gross * PITZUIM), 'pos') +
+    row(t('employer.pens') + ' ' + pctS(sp.er), '+' + fmt(gross * sp.er), 'pos') +
+    row(t('employer.pitz') + ' ' + pctS(sp.pitz) + (sp.sector ? '' : ' ' + t('employer.pitz.min')), '+' + fmt(gross * sp.pitz), 'pos') +
+    (sp.sector ? '<div class="note" style="margin-top:6px">' + t('sector.pens.note.' + sp.sector) + '</div>' : '') +
     (hish ? row(t('employer.hish'), '+' + fmt(gross * 0.075), 'pos') : '') +
     row(t('employer.ni'), '+' + fmt(natIns(taxable, erNiRates())), 'pos') +
     (st === 's25' ? '<div class="note warn" style="margin-top:8px">' + t('employer.s25note') + '</div>' : '');
@@ -2659,12 +2681,15 @@ const QUIZ = [
   {id:'tlush'}, {id:'minw'}, {id:'ot'}, {id:'pens', s25:true}, {id:'nesiot'},
   {id:'vac'}, {id:'hav'}, {id:'sick'},
   {id:'pass', who:'foreign'}, {id:'ins', who:'foreign'}, {id:'dep', who:'b1'},
+  {id:'clpens', who:'cleaning'}, {id:'clhish', who:'cleaning'}, // отраслевые: клининг по цав архава
 ];
 let quizAns = {};
 function quizItems() {
   const st = segVal('empStatus');
   const foreign = st === 'b1' || st === 's25';
-  return QUIZ.filter(q => !q.who || (q.who === 'foreign' && foreign) || (q.who === 'b1' && st === 'b1'));
+  const ind = document.getElementById('profIndustry').value;
+  return QUIZ.filter(q => !q.who || (q.who === 'foreign' && foreign) || (q.who === 'b1' && st === 'b1')
+                        || (q.who === 'cleaning' && ind === 'cleaning'));
 }
 function quizBad(q) {
   // пенсионер, принятый после 67 с пенсией: отсутствие пенсионных строк может быть законным —
