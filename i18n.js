@@ -3,6 +3,11 @@
 const I18N = {
 // ================================================================== RU
 ru: {
+"ai.err.nocredit":"Онлайн-AI временно недоступен по техническим причинам на нашей стороне (не из-за вашего фото). Мы уже уведомлены и восстанавливаем. Калькуляторы, чекап, табель и справочник работают офлайн — попробуйте скан позже.",
+"tlush.retry.tips":"Как снять, чтобы прочиталось: положите тлуш на стол, снимайте ровно сверху при дневном свете, весь лист в кадре, без пальцев и теней; текст должен идти горизонтально (кнопки поворота — под фото). Старые «матричные» бланки гос. сектора читаются, но им нужен резкий снимок. Ещё надёжнее — PDF из личного кабинета работодателя.",
+"tlush.weak":"Распознано мало строк — обычно виноват снимок: тлуш лежит боком, тень, мелко или залом на цифрах. Поверните кнопками выше или переснимите: ровно сверху, при дневном свете, весь лист в кадре, цифры крупно.",
+"tlush.heic":"Это фото в формате HEIC — телефон так снимает по умолчанию, а приложение его прочитать не может. Откройте фото в галерее и «Поделиться → Хешбон+» либо переключите камеру на «Наиболее совместимый» (JPEG), либо сделайте скриншот тлуша.",
+"tlush.rotate.hint":"Текст должен читаться горизонтально — если тлуш лежит боком, поверните.",
 "sector.pens.hint.cleaning":"Отрасль «клининг»: это ставки по цав архава — выше общих 6% / 12,5% и с первого дня работы. Если в тлуше стоят 6% и 6,5% — вам недоплачивают.",
 "employer.pitz.min":"(минимум; при полном покрытии ст.14 — 8,33%)",
 "sector.pens.note.cleaning":"Отрасль «клининг»: пенсия посчитана по цав архава — 7% ваша, 7,5% работодатель, пицуим 8,33%, с первого дня. Если в тлуше цифры ниже — это недоплата, см. чекап.",
@@ -748,6 +753,11 @@ ru: {
 },
 // ================================================================== EN
 en: {
+"ai.err.nocredit":"The online AI is temporarily unavailable for technical reasons on our side (not because of your photo). We have been notified and are restoring it. Calculators, checkup, timesheet and guides work offline — try the scan again later.",
+"tlush.retry.tips":"How to shoot so it reads: lay the payslip on a table, shoot straight from above in daylight, whole sheet in frame, no fingers or shadows; the text must run horizontally (rotate buttons under the photo). Old dot-matrix public-sector forms do read, but need a sharp shot. Even better — the PDF from your employer’s portal.",
+"tlush.weak":"Few lines were recognised — usually the photo is the reason: the payslip is sideways, shadowed, small or creased over the numbers. Rotate with the buttons above or reshoot: straight from above, in daylight, the whole sheet in frame, numbers large.",
+"tlush.heic":"This photo is HEIC — the phone shoots that way by default and the app cannot read it. Open the photo in the gallery and «Share → Heshbon+», or switch the camera to «Most compatible» (JPEG), or take a screenshot of the payslip.",
+"tlush.rotate.hint":"The text should run horizontally — if the payslip is sideways, rotate it.",
 "sector.pens.hint.cleaning":"Industry «cleaning»: these are the extension-order rates — above the general 6% / 12.5% and from day one. If the payslip shows 6% and 6.5%, you are underpaid.",
 "employer.pitz.min":"(minimum; full s.14 coverage — 8.33%)",
 "sector.pens.note.cleaning":"Industry «cleaning»: pension is calculated per the extension order — 7% yours, 7.5% employer, 8.33% severance, from day one. Lower figures on the payslip mean underpayment — see the checkup.",
@@ -1493,6 +1503,11 @@ en: {
 },
 // ================================================================== HE
 he: {
+"ai.err.nocredit":"ה־AI המקוון אינו זמין זמנית מסיבות טכניות אצלנו (לא בגלל התמונה שלכם). כבר קיבלנו התראה ומשחזרים. המחשבונים, הצ׳ק־אפ, דוח הנוכחות והמדריכים עובדים אופליין — נסו את הסריקה שוב מאוחר יותר.",
+"tlush.retry.tips":"איך לצלם כדי שייקרא: הניחו את התלוש על שולחן, צלמו ישר מלמעלה באור יום, כל הדף בפריים, בלי אצבעות וצללים; הטקסט חייב לרוץ אופקית (כפתורי סיבוב מתחת לתמונה). טפסים ישנים «מטריציוניים» של המגזר הציבורי נקראים, אבל צריכים צילום חד. עוד יותר אמין — PDF מהפורטל של המעסיק.",
+"tlush.weak":"זוהו מעט שורות — בדרך כלל התמונה אשמה: התלוש על הצד, צל, קטן מדי או קפל על המספרים. סובבו בכפתורים למעלה או צלמו שוב: ישר מלמעלה, באור יום, כל הדף בפריים, המספרים גדולים.",
+"tlush.heic":"התמונה בפורמט HEIC — כך הטלפון מצלם כברירת מחדל, והאפליקציה לא יכולה לקרוא אותו. פתחו את התמונה בגלריה ו«שתף → חשבון+», או העבירו את המצלמה ל«תאימות מרבית» (JPEG), או צלמו מסך של התלוש.",
+"tlush.rotate.hint":"הטקסט צריך להיקרא אופקית — אם התלוש שוכב על הצד, סובבו אותו.",
 "sector.pens.hint.cleaning":"ענף «ניקיון»: אלה שיעורי צו ההרחבה — מעל 6% / 12.5% הכלליים ומהיום הראשון. אם בתלוש מופיעים 6% ו־6.5% — משלמים לכם פחות מהמגיע.",
 "employer.pitz.min":"(מינימום; בכיסוי מלא לפי סעיף 14 — 8.33%)",
 "sector.pens.note.cleaning":"ענף «ניקיון»: הפנסיה חושבה לפי צו ההרחבה — 7% שלכם, 7.5% מעסיק, 8.33% פיצויים, מהיום הראשון. מספרים נמוכים יותר בתלוש = תת־תשלום, ראו את הצ׳ק־אפ.",

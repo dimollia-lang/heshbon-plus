@@ -1350,7 +1350,7 @@
 
 </div>
 
-<script src="i18n.js?v=1231"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1240"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1372,7 +1372,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.23.1'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.24.0'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -3189,6 +3189,7 @@ function aiErrText(e) {
     // 402 от воркера (v1.22): бесплатная проба кончилась или режим только по подписке
     if (e.code === 'subscription_required') { subOpen(e.reason); return t(e.reason === 'paid_only' ? 'sub.gate.paid' : 'sub.gate.free'); }
     if (e.code === 'too_big') return t('ai.err.big');
+    if (e.code === 'no_credit') return t('ai.err.nocredit'); // баланс API исчерпан — не вина фото и не «перегрузка»
     // 429/500/529 у Anthropic = перегрузка; воркер уже сделал 3 попытки — просим повторить позже
     if (e.code === 'upstream' && [429, 500, 502, 503, 529].includes(+e.up)) return t('ai.err.busy');
     if (e.code === 'no_answer') return t('ai.err.busy');
@@ -3379,30 +3380,81 @@ document.getElementById('tlFile').addEventListener('change', function () {
     fr.readAsDataURL(f);
     return;
   }
-  // фото: жмём канвасом до 1568px по длинной стороне — больше модель всё равно ужмёт
-  const fr = new FileReader();
-  fr.onerror = () => tlErr(t('tlush.badfile'));
-  fr.onload = () => {
-    const img = new Image();
-    img.onerror = () => tlErr(t('tlush.badfile')); // HEIC и прочая экзотика не декодируется
-    img.onload = () => {
-      const MAX = 1568, k = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
-      const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
-      const c = document.createElement('canvas'); c.width = w; c.height = h;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); // прозрачный PNG → белый фон
-      ctx.drawImage(img, 0, 0, w, h);
-      let q = 0.85, du = c.toDataURL('image/jpeg', q);
-      while (du.length > 2800000 && q > 0.4) { q -= 0.15; du = c.toDataURL('image/jpeg', q); }
-      tlSel = { b64: du.slice(du.indexOf(',') + 1), media: 'image/jpeg' };
-      prev.style.display = 'block';
-      prev.innerHTML = '<img src="' + du + '" alt="" style="max-width:100%;max-height:220px;border-radius:10px;border:1px solid var(--border)">';
-      document.getElementById('tlBtn').style.display = '';
-    };
-    img.src = fr.result;
-  };
-  fr.readAsDataURL(f);
+  // фото: декодируем с учётом EXIF-ориентации (телефон снимает «боком», canvas раньше
+  // терял флаг поворота — модель получала текст вертикально), нормализуем контраст
+  // серых матричных сканов, даём кнопки поворота. Инцидент 17.08.2026: гос. тлуш 12/2022,
+  // снятый горизонтально, «не разбирался».
+  if (/heic|heif/i.test(f.type) || /\.hei[cf]$/i.test(f.name || '')) { tlErr(t('tlush.heic')); return; }
+  tlDecode(f).then(src => { tlSrc = src; tlRot = 0; tlRender0(); })
+             .catch(() => tlErr(t('tlush.badfile')));
 });
+let tlSrc = null, tlRot = 0; // исходный кадр (canvas) и текущий поворот в градусах
+function tlDecode(f) {
+  // createImageBitmap с imageOrientation:'from-image' применяет EXIF-поворот сам (Chrome/WebView 81+);
+  // при недоступности — обычный Image (EXIF тогда игнорируется, но кнопки поворота спасут).
+  const viaBitmap = ('createImageBitmap' in window)
+    ? createImageBitmap(f, { imageOrientation: 'from-image' }).catch(() => null)
+    : Promise.resolve(null);
+  return viaBitmap.then(bm => {
+    if (bm) return bm;
+    return new Promise((res, rej) => {
+      const fr = new FileReader();
+      fr.onerror = rej;
+      fr.onload = () => { const img = new Image(); img.onerror = rej; img.onload = () => res(img); img.src = fr.result; };
+      fr.readAsDataURL(f);
+    });
+  }).then(im => {
+    const iw = im.naturalWidth || im.width, ih = im.naturalHeight || im.height;
+    const MAX = 1568, k = Math.min(1, MAX / Math.max(iw, ih));
+    const w = Math.max(1, Math.round(iw * k)), h = Math.max(1, Math.round(ih * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(im, 0, 0, w, h);
+    if (im.close) im.close();
+    tlAutoContrast(ctx, w, h);
+    return c;
+  });
+}
+// Автоконтраст: серая бумага/матричная печать/тень от телефона → растягиваем яркость по
+// 1-му и 99-му перцентилю. Не трогаем уже контрастные картинки (скриншоты, чистые сканы).
+function tlAutoContrast(ctx, w, h) {
+  const d = ctx.getImageData(0, 0, w, h), p = d.data, hist = new Uint32Array(256);
+  for (let i = 0; i < p.length; i += 4) hist[(p[i] * 299 + p[i + 1] * 587 + p[i + 2] * 114) / 1000 | 0]++;
+  const total = w * h; let lo = 0, hi = 255, acc = 0;
+  for (let i = 0; i < 256; i++) { acc += hist[i]; if (acc >= total * 0.01) { lo = i; break; } }
+  acc = 0;
+  for (let i = 255; i >= 0; i--) { acc += hist[i]; if (acc >= total * 0.01) { hi = i; break; } }
+  if (hi - lo > 200 || hi - lo < 25) return; // уже контрастно / почти пустой кадр
+  const k = 255 / (hi - lo);
+  for (let i = 0; i < p.length; i += 4) {
+    p[i] = Math.max(0, Math.min(255, (p[i] - lo) * k));
+    p[i + 1] = Math.max(0, Math.min(255, (p[i + 1] - lo) * k));
+    p[i + 2] = Math.max(0, Math.min(255, (p[i + 2] - lo) * k));
+  }
+  ctx.putImageData(d, 0, 0);
+}
+function tlRotate(deg) { tlRot = (tlRot + deg + 360) % 360; tlRender0(); }
+function tlRender0() {
+  if (!tlSrc) return;
+  const s = tlSrc, swap = tlRot === 90 || tlRot === 270;
+  const c = document.createElement('canvas');
+  c.width = swap ? s.height : s.width; c.height = swap ? s.width : s.height;
+  const ctx = c.getContext('2d');
+  ctx.translate(c.width / 2, c.height / 2); ctx.rotate(tlRot * Math.PI / 180);
+  ctx.drawImage(s, -s.width / 2, -s.height / 2);
+  let q = 0.85, du = c.toDataURL('image/jpeg', q);
+  while (du.length > 2800000 && q > 0.4) { q -= 0.15; du = c.toDataURL('image/jpeg', q); }
+  tlSel = { b64: du.slice(du.indexOf(',') + 1), media: 'image/jpeg' };
+  const prev = document.getElementById('tlPrev');
+  prev.style.display = 'block';
+  prev.innerHTML = '<img src="' + du + '" alt="" style="max-width:100%;max-height:220px;border-radius:10px;border:1px solid var(--border)">' +
+    '<div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">' +
+    '<button type="button" class="btn ghost" style="flex:0 0 auto;padding:6px 12px" onclick="tlRotate(-90)">↺ 90°</button>' +
+    '<button type="button" class="btn ghost" style="flex:0 0 auto;padding:6px 12px" onclick="tlRotate(90)">↻ 90°</button>' +
+    '<span class="hint" style="margin:0">' + t('tlush.rotate.hint') + '</span></div>';
+  document.getElementById('tlBtn').style.display = '';
+}
 function tlErr(msg) {
   const p = document.getElementById('tlPrev');
   p.style.display = 'block'; p.textContent = msg;
@@ -3426,7 +3478,7 @@ function tlushScan() {
   aiFetch({ mode: 'tlush', img: tlSel.b64, media: tlSel.media,
       prev: st.last ? st.last.f : null, lang: LANG, status: aiStatus(), // пенсионерские токены — сверка не требует БЛ/пенсию там, где их законно нет
       sector: profIndustry.value !== 'general' ? profIndustry.value : null, // отраслевая сверка (цав архава)
-      tenure: +profTenure.value || null }, 120000)
+      tenure: +profTenure.value || null }, 180000) // повёрнутый/плотный скан у sonnet идёт до ~90 с — 120 с было впритык
     .then(d => {
       if (!d.data || typeof d.data.analysis !== 'string') throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); localStorage.setItem(tlMonthKey(), mUsed + 1); } catch (e) {}
@@ -3437,7 +3489,9 @@ function tlushScan() {
     })
     .catch(e => {
       btn.disabled = false; btn.textContent = t('tlush.btn');
-      ans.style.display = 'block'; ans.textContent = aiErrText(e);
+      ans.style.display = 'block';
+      // при таймауте/сбое подсказываем, ЧТО сделать с фото — раньше был только общий «попробуйте ещё раз»
+      ans.innerHTML = escT(aiErrText(e)) + '<div class="note" style="margin-top:8px">' + t('tlush.retry.tips') + '</div>';
     });
 }
 
@@ -3462,7 +3516,12 @@ function tlRender(d) {
     if (rows) rows = '<div style="margin:10px 0 2px;font-weight:650">' + t('tlush.found') + '</div>' + rows;
   }
   ans.style.display = 'block';
+  // мало распознанных полей на настоящем тлуше = плохое фото (поворот/тень/мелко) — подсказываем переснять
+  const filled = TL_FIELDS.filter(p => d[p[0]] !== null && d[p[0]] !== undefined && d[p[0]] !== '').length;
+  const weak = d.is_tlush && filled < 6;
   ans.innerHTML = '<b>' + t('tlush.tag') + '</b><br>' + escT(d.analysis).replace(/\n/g, '<br>') + rows
+    + (weak ? '<div class="note warn" style="margin-top:8px">' + t('tlush.weak') + '</div>' : '')
+    + (!d.is_tlush ? '<div class="note" style="margin-top:8px">' + t('tlush.retry.tips') + '</div>' : '')
     + (d.is_tlush && d.month ? '<div class="note" style="margin-top:8px">' + t('tlush.saved') + '</div>' : '');
 }
 function tlSave(d) {
