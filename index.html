@@ -1350,7 +1350,7 @@
 
 </div>
 
-<script src="i18n.js?v=1240"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1241"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
@@ -1372,7 +1372,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.24.0'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.24.1'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -3190,6 +3190,7 @@ function aiErrText(e) {
     if (e.code === 'subscription_required') { subOpen(e.reason); return t(e.reason === 'paid_only' ? 'sub.gate.paid' : 'sub.gate.free'); }
     if (e.code === 'too_big') return t('ai.err.big');
     if (e.code === 'no_credit') return t('ai.err.nocredit'); // баланс API исчерпан — не вина фото и не «перегрузка»
+    if (e.code === 'cap_reached') return t('ai.err.cap');    // дневной потолок расходов воркера — до полуночи UTC
     // 429/500/529 у Anthropic = перегрузка; воркер уже сделал 3 попытки — просим повторить позже
     if (e.code === 'upstream' && [429, 500, 502, 503, 529].includes(+e.up)) return t('ai.err.busy');
     if (e.code === 'no_answer') return t('ai.err.busy');
