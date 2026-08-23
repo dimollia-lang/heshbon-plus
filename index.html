@@ -1910,7 +1910,9 @@ function whCalc() {
   const night = document.getElementById('whNight').checked;
   const eve = document.getElementById('whEve').checked;
 
-  const dayNorm = (night || eve) ? 7 : (days5 ? 8.6 : 8);
+  // Канун субботы/праздника: при 6-дневке короткий день 7 ч, при 5-дневке — 7 ч 36 мин
+  // (неделя 42 = 4 × 8:36 + 7:36). Ночная смена — 7 ч в обоих графиках.
+  const dayNorm = night ? 7 : eve ? (days5 ? 7.6 : 7) : (days5 ? 8.6 : 8);
   const breakAfter = manual ? 6 : (days5 ? 9 : 8);
   const brMin = whBreakVal();                          // длительность перерыва — настройка (внутренние правила)
   const paidBr = document.getElementById('whPaidBr').checked;
@@ -1921,7 +1923,18 @@ function whCalc() {
   const ot125 = Math.min(2, ot), ot150 = Math.max(0, ot - 2);
   const rate = Math.max(0, +document.getElementById('otRate').value || 0);
   const extra = rate * (0.25 * ot125 + 0.5 * ot150);   // доплата СВЕРХ обычной ставки
-  const weekPaid = paidHours * per, weekOt = ot * per;
+  // Сверхурочные считаются ДВАЖДЫ: по дню (сверх нормы дня) и по неделе (сверх 42 ч).
+  // Часы сверх 42 в неделю — сверхурочные, даже если дневная норма не превышалась
+  // (проверено 23.08.2026 по workrights.co.il, liatfaigel-law.co.il, ygoldlaw.co.il;
+  // повод — замечание бухгалтера под постом в FB). Недельные считаем по 125%: это
+  // «первые» сверхурочные часы своих дней.
+  const weekPaid = paidHours * per, weekOtDay = ot * per;
+  const weekRegular = (paidHours - ot) * per;                 // часы в пределах дневной нормы
+  const weekOtExtra = Math.max(0, weekRegular - WEEK_NORM);   // они же сверх недельной нормы
+  // деление 125/150 — как в табеле (tbWeeklyOT), чтобы два блока не расходились
+  const w125 = Math.min(2, weekOtExtra), w150 = Math.max(0, weekOtExtra - 2);
+  const weekOt = weekOtDay + weekOtExtra;
+  const weekExtraPay = rate * (0.25 * w125 + 0.5 * w150);     // доплата за недельную переработку
 
   const h = tbHrs; // «8 ч 36 мин», не «8,6»
   let out = '<div style="margin-top:12px">';
@@ -1936,7 +1949,12 @@ function whCalc() {
   out += row(t('wh.o.ot'), ot ? h(ot125) + ' × 125% + ' + h(ot150) + ' × 150%' : t('wh.o.none'), ot ? 'neg' : '');
   if (ot && rate) out += row(t('wh.o.extra'), '+' + fmt(extra), 'pos');
   out += row(t('wh.o.weekly'), h(weekPaid) + (weekPaid > WEEK_NORM ? ' (+' + h(weekPaid - WEEK_NORM) + ')' : ''), weekPaid > WEEK_NORM ? 'neg' : 'pos');
+  if (weekOtExtra) {
+    out += row(t('wh.o.weekot'), h(w125) + ' × 125%' + (w150 ? ' + ' + h(w150) + ' × 150%' : '') +
+               (rate ? ' · +' + fmt(weekExtraPay) : ''), 'neg');
+  }
   out += '</div>';
+  if (weekOtExtra) out += '<div class="note" style="margin-top:8px">' + t('wh.o.weekot.hint') + '</div>';
 
   const warn = [];
   if (shift > DAY_CAP) warn.push(tf('wh.w.day', {c: DAY_CAP}));
