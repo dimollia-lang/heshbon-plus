@@ -565,6 +565,11 @@
       <!-- v1.17 (фидбек Марины 10.08): пенсия-галочка живёт в профиле рядом с иштальмутом -->
       <label class="check"><input type="checkbox" id="empPension" checked> <span data-i18n="emp.chk.pension"></span> <button type="button" class="qmark" data-note="pensHintNote">?</button></label>
       <div class="note qnote" id="pensHintNote" data-i18n-html="emp.chk.pension.hint"></div>
+      <!-- v1.25.2 (замечание Alex Kiss 02.09.2026, FB batyam.ad): 6% работника — законный МИНИМУМ,
+           по письменной просьбе работник вправе поднять СВОЮ часть до 7% (часть работодателя не меняется).
+           Раньше ставку нельзя было указать — нетто врало тем, у кого в тлуше 7%. -->
+      <label class="check" id="empPen7Row"><input type="checkbox" id="empPen7"> <span data-i18n="emp.chk.pen7"></span> <button type="button" class="qmark" data-note="pen7HintNote">?</button></label>
+      <div class="note qnote" id="pen7HintNote" data-i18n-html="emp.chk.pen7.hint"></div>
       </details>
 
       <!-- v1.17: брутто и нетто — единый стиль «подпись слева, сумма справа», брутто красным -->
@@ -1372,7 +1377,7 @@ function plural(n, key) {
   return f[2] || f[1] || f[0];
 }
 const pluralN = (n, key) => n + ' ' + plural(n, key); // «3 пункта», «1 нарушение»
-const APP_VERSION = '1.25.1'; // бампать вместе с versionCode в манифесте
+const APP_VERSION = '1.25.2'; // бампать вместе с versionCode в манифесте
 
 function applyI18n() {
   document.documentElement.lang = LANG;
@@ -1677,6 +1682,11 @@ function calcEmp() {
   const ret = retireeState(); // работающий пенсионер: пониженные/нулевые взносы БЛ+бриют
   const ni = natIns(taxable, empNiRates());
   const sp = sectorPension(); // отраслевые ставки (клининг: 7 / 7,5 / 8,33 с первого дня — цав архава, сверено 29.07.2026)
+  // повышенная ставка работника: до 7% по его просьбе (кользхут «הגדלת הפרשות העובד», pension.co.il, Альтшулер Шахам — сверено 03.09.2026)
+  const pen7 = document.getElementById('empPen7').checked;
+  if (pen7) sp.emp = Math.max(sp.emp, .07);
+  document.getElementById('empPen7Row').style.display = hasPen ? '' : 'none';
+  document.getElementById('pen7HintNote').style.display = hasPen ? '' : 'none';
   renderPensionLabels(sp);    // подпись галочки и справка «?» показывают ставки ЭТОЙ отрасли, а не общие 6% / 12,5%
   const pen = hasPen ? gross * sp.emp : 0;
   const hishEmp = hish ? gross * 0.025 : 0;
@@ -1716,7 +1726,7 @@ function saveProf() {
       k45: profKids45.value, k617: profKids617.value, k18: profKids18.value, kDis: profKidsDis.value,
       kcust: profKidsCustody.checked ? 1 : 0,
       kdef: profKidsDefer.checked ? 1 : 0, kdefg: profKidsDeferGot.checked ? 1 : 0,
-      nm: profName.value, ex: profExtraPts.value, exq: exSave('prof'), hish: profHish.checked,
+      nm: profName.value, ex: profExtraPts.value, exq: exSave('prof'), hish: profHish.checked, p7: empPen7.checked ? 1 : 0,
       // работающий пенсионер (v1.14)
       ret: empRetiree.checked ? 1 : 0, rk: segVal('retKitzba'), ra: segVal('retAge'), rn: retNewJob.checked ? 1 : 0
     }));
@@ -1757,6 +1767,7 @@ function loadProf() {
     if (p.ex != null) profExtraPts.value = p.ex;
     exLoad('prof', p.exq);
     if (p.hish != null) profHish.checked = !!p.hish;
+    if (p.p7 != null) empPen7.checked = !!p.p7;   // v1.25.2: повышенная ставка работника 7%
     // работающий пенсионер (v1.14)
     if (p.ret != null) empRetiree.checked = !!p.ret;
     if (p.rk) setSegVal('retKitzba', p.rk);
@@ -1810,7 +1821,7 @@ document.getElementById('empRetiree').addEventListener('change', () => { updRetU
 segInit('retKitzba', () => { updRetUI(); calcEmp(); saveProf(); });
 segInit('retAge', () => { updRetUI(); calcEmp(); saveProf(); });
 document.getElementById('retNewJob').addEventListener('change', () => { updRetUI(); calcEmp(); saveProf(); });
-['empGross','empPoints','empPension'].forEach(id => document.getElementById(id).addEventListener('input', () => {
+['empGross','empPoints','empPension','empPen7'].forEach(id => document.getElementById(id).addEventListener('input', () => {
   if (id === 'empPoints') ptsManual = true;
   if (id === 'empGross') { syncOtRate(); calcOT(); return; } // calcOT сам вызовет calcEmp
   calcEmp();
