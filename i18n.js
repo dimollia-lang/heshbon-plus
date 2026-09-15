@@ -3,6 +3,7 @@
 const I18N = {
 // ================================================================== RU
 ru: {
+"self.ni.nr":"* Битуах Леуми для самозанятого-нерезидента (2(а)5 / Б1) взят по льготной ставке ветви материнства (0,37% / 0,94%), а не по полной ставке резидента — поэтому сумма к откладыванию намного меньше. Это ориентировочно; точную сумму уточните в Битуах Леуми. Государственная пенсия по этому статусу не начисляется — откладывайте на пенсию сами.",
 "ai.err.cap":"На сегодня лимит разборов документов исчерпан — это общий дневной лимит сервиса, не ваш личный. Сканирование снова заработает после полуночи (по Гринвичу — около 02:00–03:00 по Израилю). Вопросы к онлайн-AI, калькуляторы и справочник работают.",
 "ai.err.nocredit":"Онлайн-AI временно недоступен по техническим причинам на нашей стороне (не из-за вашего фото). Мы уже уведомлены и восстанавливаем. Калькуляторы, чекап, табель и справочник работают офлайн — попробуйте скан позже.",
 "tlush.retry.tips":"Как снять, чтобы прочиталось: положите тлуш на стол, снимайте ровно сверху при дневном свете, весь лист в кадре, без пальцев и теней; текст должен идти горизонтально (кнопки поворота — под фото). Старые «матричные» бланки гос. сектора читаются, но им нужен резкий снимок. Ещё надёжнее — PDF из личного кабинета работодателя.",
@@ -756,6 +757,7 @@ ru: {
 },
 // ================================================================== EN
 en: {
+"self.ni.nr":"* National Insurance for a non-resident self-employed person (2(a)5 / B1) is taken at the reduced maternity-branch rate (0.37% / 0.94%), not the full resident rate — so the amount to set aside is much lower. This is approximate; confirm the exact figure with Bituach Leumi. No state pension accrues under this status — save for retirement yourself.",
 "ai.err.cap":"Today’s document-analysis limit is used up — it is a service-wide daily limit, not your personal one. Scanning resumes after midnight UTC (around 02:00–03:00 Israel time). Online-AI questions, calculators and guides keep working.",
 "ai.err.nocredit":"The online AI is temporarily unavailable for technical reasons on our side (not because of your photo). We have been notified and are restoring it. Calculators, checkup, timesheet and guides work offline — try the scan again later.",
 "tlush.retry.tips":"How to shoot so it reads: lay the payslip on a table, shoot straight from above in daylight, whole sheet in frame, no fingers or shadows; the text must run horizontally (rotate buttons under the photo). Old dot-matrix public-sector forms do read, but need a sharp shot. Even better — the PDF from your employer’s portal.",
@@ -1509,6 +1511,7 @@ en: {
 },
 // ================================================================== HE
 he: {
+"self.ni.nr":"* ביטוח לאומי לעצמאי תושב חוץ (2(א)5 / ב/1) חושב לפי השיעור המופחת של ענף אמהות (0.37% / 0.94%), ולא לפי השיעור המלא של תושב — לכן הסכום שיש להפריש נמוך בהרבה. זו הערכה; בררו את הסכום המדויק בביטוח לאומי. קצבת זקנה אינה נצברת בסטטוס זה — חסכו לפנסיה בעצמכם.",
 "ai.err.cap":"מכסת ניתוח המסמכים להיום נוצלה — זו מכסה יומית כללית של השירות, לא אישית שלכם. הסריקה תחזור לעבוד אחרי חצות UTC (בערך 02:00–03:00 שעון ישראל). שאלות ל־AI המקוון, המחשבונים והמדריכים עובדים.",
 "ai.err.nocredit":"ה־AI המקוון אינו זמין זמנית מסיבות טכניות אצלנו (לא בגלל התמונה שלכם). כבר קיבלנו התראה ומשחזרים. המחשבונים, הצ׳ק־אפ, דוח הנוכחות והמדריכים עובדים אופליין — נסו את הסריקה שוב מאוחר יותר.",
 "tlush.retry.tips":"איך לצלם כדי שייקרא: הניחו את התלוש על שולחן, צלמו ישר מלמעלה באור יום, כל הדף בפריים, בלי אצבעות וצללים; הטקסט חייב לרוץ אופקית (כפתורי סיבוב מתחת לתמונה). טפסים ישנים «מטריציוניים» של המגזר הציבורי נקראים, אבל צריכים צילום חד. עוד יותר אמין — PDF מהפורטל של המעסיק.",
