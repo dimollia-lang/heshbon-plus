@@ -72,9 +72,10 @@ footer a{color:var(--muted)}
     var email = document.getElementById('email').value.trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { document.getElementById('err').style.display = 'block'; return; }
     b.disabled = true;
-    fetch('https://formspree.io/f/xnjyekar', {
-      method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-      body: JSON.stringify({project: 'heshbon-testers', email: email, src: location.search.slice(1, 40)})
+    // заявки хранит наш воркер (а не Formspree) — оттуда почты переносятся в список тестеров Play
+    fetch('https://heshbon-ai.heshbon.workers.dev/testers', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, src: location.search.slice(1, 40)})
     }).then(function (r) {
       if (!r.ok) throw 0;
       document.getElementById('ok').style.display = 'block'; document.getElementById('err').style.display = 'none';
