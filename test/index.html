@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тестеры Хешбон+ для Google Play</title>
+<meta name="description" content="Помогите выпустить Хешбон+ в Google Play: нужно 12 тестеров на 14 дней. Бесплатно, 2 минуты.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://heshbonplus.com/test/">
+<style>
+:root{--bg:#f2f5fa;--card:#fff;--text:#1a2333;--muted:#64748b;--accent:#1a56db;--border:#e2e8f0;--ok:#15803d}
+@media (prefers-color-scheme:dark){:root{--bg:#0e131d;--card:#171f2e;--text:#e6ecf5;--muted:#8b98ab;--accent:#6c9bff;--border:#26314a;--ok:#4ade80}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;justify-content:center}
+.wrap{width:100%;max-width:480px;padding:32px 18px 48px}
+h1{font-size:1.45rem;margin-bottom:8px}
+.sub{color:var(--muted);margin-bottom:20px;font-size:.98rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin:14px 0}
+ol{padding-inline-start:20px}
+li{margin:6px 0}
+label{display:block;font-weight:600;margin:4px 0 6px}
+input{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}
+button{width:100%;margin-top:12px;font:inherit;font-weight:700;padding:14px;border:0;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer}
+button:disabled{opacity:.6}
+.note{color:var(--muted);font-size:.88rem;margin-top:8px}
+.ok{color:var(--ok);font-weight:600;margin-top:10px;display:none}
+.err{color:#dc2626;margin-top:10px;display:none}
+a{color:var(--accent)}
+footer{margin-top:26px;text-align:center;color:var(--muted);font-size:.82rem}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Помогите выпустить Хешбон+ в Google Play</h1>
+<p class="sub">Google пускает новое приложение в магазин только после закрытого теста: 12 человек держат его на телефоне 14 дней подряд. Это бесплатно и занимает 2 минуты.</p>
+
+<div class="card">
+<b>Что нужно</b>
+<ol>
+<li>Телефон на Android и аккаунт Gmail (тот, что в Google Play на телефоне).</li>
+<li>Оставить почту ниже — добавим вас в список тестеров.</li>
+<li>Мы пришлём ссылку: нажать «Стать тестировщиком» и установить из Google Play.</li>
+<li>Не удалять приложение 14 дней и хотя бы пару раз его открыть.</li>
+</ol>
+<p class="note">Если у вас уже стоит Хешбон+ из Telegram или с сайта — сначала удалите его: версия из магазина подписана по-другому и поверх не встанет.</p>
+</div>
+
+<div class="card">
+<form id="f">
+<label for="email">Ваш Gmail</label>
+<input id="email" name="email" type="email" required placeholder="name@gmail.com" autocomplete="email">
+<button type="submit" id="b">Хочу тестировать</button>
+<p class="ok" id="ok">Готово! Добавим вас в течение суток и пришлём ссылку на эту почту.</p>
+<p class="err" id="err">Не отправилось — проверьте почту и попробуйте ещё раз.</p>
+<p class="note">Почта нужна только для доступа к тесту в Google Play и одного письма со ссылкой. Не передаём третьим лицам, после теста удаляем — <a href="/delete-data.html">подробнее</a>.</p>
+</form>
+</div>
+
+<div class="card">
+<b>Уже в списке?</b>
+<p class="note" style="margin-top:4px">Ссылка на установку: <a href="https://play.google.com/apps/testing/plus.heshbon.app">play.google.com/apps/testing/plus.heshbon.app</a> — откройте с телефона под тем же Gmail.</p>
+</div>
+
+<footer>© 2026 Хешбон+ · <a href="/">приложение</a> · <a href="/privacy.html">конфиденциальность</a></footer>
+</div>
+<script>
+(function () {
+  var f = document.getElementById('f'), b = document.getElementById('b');
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('email').value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { document.getElementById('err').style.display = 'block'; return; }
+    b.disabled = true;
+    fetch('https://formspree.io/f/xnjyekar', {
+      method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify({project: 'heshbon-testers', email: email, src: location.search.slice(1, 40)})
+    }).then(function (r) {
+      if (!r.ok) throw 0;
+      document.getElementById('ok').style.display = 'block'; document.getElementById('err').style.display = 'none';
+      f.querySelector('input').disabled = true; b.style.display = 'none';
+    }).catch(function () { b.disabled = false; document.getElementById('err').style.display = 'block'; });
+  });
+})();
+</script>
+</body>
+</html>
