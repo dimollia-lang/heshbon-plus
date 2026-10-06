@@ -2420,6 +2420,7 @@ function tbPrint() {
   document.getElementById('printArea').innerHTML = html;
   const N = window.HeshbonNative;
   if (N && N.printPage) { try { N.printPage('Heshbon ' + mon); return; } catch (e) {} }
+  if (iosPrint('Heshbon ' + mon)) return;
   window.print();
 }
 document.getElementById('tbMonth').addEventListener('change', tbRender);
@@ -2528,7 +2529,17 @@ function ltPrint() {
     '<div class="he" style="white-space:pre-wrap;font-size:13px">' + escT(ltCurrent) + '</div>';
   const N = window.HeshbonNative;
   if (N && N.printPage) { try { N.printPage('Heshbon letter'); return; } catch (e) {} }
+  if (iosPrint('Heshbon letter')) return;
   window.print();
+}
+// iPhone-приложение (Capacitor): window.print() в WKWebView молчит — печатаем системным окном iOS
+// через плагин HeshbonPrint (heshbon-native/plugins/heshbon-print). На сайте и в APK не срабатывает.
+function iosPrint(title) {
+  const C = window.Capacitor;
+  if (!C || !C.isNativePlatform || !C.isNativePlatform() || C.getPlatform() !== 'ios') return false;
+  const P = (C.Plugins && C.Plugins.HeshbonPrint) || (C.registerPlugin && C.registerPlugin('HeshbonPrint'));
+  if (!P || !P.print) return false;
+  try { P.print({ title: title }).catch(function () {}); return true; } catch (e) { return false; }
 }
 
 // ======= Сверка табеля с тлушем =======
