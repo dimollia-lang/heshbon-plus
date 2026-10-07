@@ -192,6 +192,10 @@
     background: var(--bg); border-radius: 9px; padding: 9px 11px; margin-top: 10px;
   }
   .note b { color: var(--text); }
+  /* Требование Google Play (отказ 07.10.2026, «обманные утверждения»): заметное заявление, что приложение
+     неофициальное, и ссылки на государственные источники — на первом экране каждой вкладки и в футере. */
+  .note.gov-note { margin: 0 0 14px; font-size: 12.5px; border: 1px solid var(--border, rgba(128,128,128,.35)); }
+  .note.gov-note a { font-weight: 600; }
   .note.warn { background: var(--amber-soft); color: var(--amber); }
 
   .acc { border: 1px solid var(--border); border-radius: 11px; margin-bottom: 8px; overflow: hidden; background: var(--card); }
@@ -401,6 +405,7 @@
   <section class="page active" id="page-emp">
     <div class="page-title" data-i18n="emp.title"></div>
     <p class="page-desc" data-i18n="emp.desc"></p>
+    <div class="note gov-note" data-i18n-html="gov.note"></div>
 
     <div class="note warn" id="visaBanner" style="display:none;margin-bottom:12px;font-size:12.5px"></div>
 
@@ -973,6 +978,7 @@
   <section class="page" id="page-self">
     <div class="page-title" data-i18n="self.title"></div>
     <p class="page-desc" data-i18n="self.desc"></p>
+    <div class="note gov-note" data-i18n-html="gov.note"></div>
 
     <div class="card">
       <h3 data-i18n="self.save.h"></h3>
@@ -1257,6 +1263,7 @@
   </main>
 
   <footer class="disclaimer" data-i18n-html="disclaimer"></footer>
+  <div class="disclaimer" id="govSources" style="padding-top:0" data-i18n-html="gov.sources"></div>
   <div class="disclaimer" id="ratesInfo" style="padding-top:0"></div>
   <div class="disclaimer" id="copyright" style="padding-top:0">© 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved · <a href="/prava/">Справочник прав</a> · <a href="https://heshbonplus.com/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a> · <a href="https://heshbonplus.com/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a></div>
 
@@ -1355,7 +1362,7 @@
 
 </div>
 
-<script src="i18n.js?v=1253"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
+<script src="i18n.js?v=1263"></script><!-- версию бампать при правке словаря: иначе браузер и WebView отдают старый кеш -->
 <script>
 // В APK страница грузится с file:// — включаем нативные отступы под статус-бар
 if (location.protocol === 'file:') document.body.classList.add('native');
