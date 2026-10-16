@@ -405,6 +405,8 @@
   <section class="page active" id="page-emp">
     <div class="page-title" data-i18n="emp.title"></div>
     <p class="page-desc" data-i18n="emp.desc"></p>
+  <!-- 16.10.2026: приложение вышло в App Store — баннер только для iPhone/iPad в браузере, не внутри приложения -->
+  <a id="iosAppBanner" class="note" href="https://apps.apple.com/app/id6819820387" target="_blank" rel="noopener" style="display:none;margin:0 0 12px;text-decoration:none;font-weight:600">📱 Хешбон+ теперь в App Store — установить на iPhone →</a>
     <div class="note gov-note" data-i18n-html="gov.note"></div>
 
     <div class="note warn" id="visaBanner" style="display:none;margin-bottom:12px;font-size:12.5px"></div>
@@ -1265,7 +1267,7 @@
   <footer class="disclaimer" data-i18n-html="disclaimer"></footer>
   <div class="disclaimer" id="govSources" style="padding-top:0" data-i18n-html="gov.sources"></div>
   <div class="disclaimer" id="ratesInfo" style="padding-top:0"></div>
-  <div class="disclaimer" id="copyright" style="padding-top:0">© 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved · <a href="/prava/">Справочник прав</a> · <a href="https://heshbonplus.com/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a> · <a href="https://heshbonplus.com/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a></div>
+  <div class="disclaimer" id="copyright" style="padding-top:0">© 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved · <a href="https://apps.apple.com/app/id6819820387" target="_blank" rel="noopener">App Store (iPhone)</a> · <a href="/prava/">Справочник прав</a> · <a href="https://heshbonplus.com/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a> · <a href="https://heshbonplus.com/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a></div>
 
   <!-- Google Play (отказы 07–08.10.2026, «обманные утверждения»): при первом запуске — ясное и заметное заявление
        о неофициальном статусе и ссылки на государственные первоисточники. Показывается, пока не нажата «Понятно». -->
@@ -4309,6 +4311,8 @@ document.getElementById('empGross').addEventListener('input', saveProf);
 })();
 ptLoad();       // каталог специалистов: пустой файл = карточка честно говорит, что партнёров пока нет
 statOpenOnce(); // анонимный счётчик запусков
+(function () { try { const C = window.Capacitor; const native = (C && C.isNativePlatform && C.isNativePlatform()) || window.HeshbonNative;
+  if (!native && /iPhone|iPad|iPod/.test(navigator.userAgent)) document.getElementById('iosAppBanner').style.display = 'block'; } catch (e) {} })();
 // Заявление о неофициальном статусе при первом запуске (требование Google Play, 10.2026)
 function govAck() { try { localStorage.setItem('heshbon_gov_ack', '1'); } catch (e) {} document.getElementById('govModal').style.display = 'none'; }
 (function () { let ack = null; try { ack = localStorage.getItem('heshbon_gov_ack'); } catch (e) {}
