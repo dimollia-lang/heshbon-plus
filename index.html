@@ -83,6 +83,9 @@
     background: var(--card);
     border-bottom: 1px solid var(--border);
     padding: 12px 14px 10px;
+    /* iPhone (Capacitor, viewport-fit=cover): шапка под чёлкой/часами была некликабельной (18.10) —
+       отступ на безопасную зону; в обычном браузере env() = 0 */
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
     display: flex; align-items: center; gap: 7px;
   }
   /* В APK (file://) WebView на Android 15 рисует под статус-баром:
