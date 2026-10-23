@@ -3285,7 +3285,11 @@ function aiOnline(btn) {
     btn.replaceWith(n); return;
   }
   btn.disabled = true; btn.textContent = t('ai.online.wait');
-  aiFetch({ q, lang: LANG, status: aiStatus() })
+  // 23.10 (фидбек тестера «ИИ не видит загруженный тлуш»): последний скан за 60 дней + отрасль/стаж идут с вопросом
+  const tl = tlStore().last, tlOk = tl && tl.f && Date.now() - (tl.ts || 0) < 60 * 864e5;
+  aiFetch({ q, lang: LANG, status: aiStatus(),
+      tlush: tlOk ? { month: tl.month, f: tl.f, a: tl.a || null } : null,
+      sector: profIndustry.value !== 'general' ? profIndustry.value : null, tenure: +profTenure.value || null })
     .then(d => {
       if (!d.answer) throw 0;
       try { localStorage.setItem(aiQuotaKey(), used + 1); } catch (e) {}
@@ -3599,7 +3603,8 @@ function tlSave(d) {
   st.hist[d.month] = { ts: Date.now(), f };
   const keys = Object.keys(st.hist); // держим максимум 14 месяцев
   if (keys.length > 14) keys.sort((a, b) => st.hist[a].ts - st.hist[b].ts).slice(0, keys.length - 14).forEach(k => delete st.hist[k]);
-  st.last = { month: d.month, ts: Date.now(), f };
+  // 23.10 (фидбек тестера): кратко сохраняем и вывод разбора — онлайн-AI получает его вместе с полями
+  st.last = { month: d.month, ts: Date.now(), f, a: typeof d.analysis === 'string' ? d.analysis.slice(0, 1500) : null };
   try { localStorage.setItem(TL_KEY, JSON.stringify(st)); } catch (e) {}
 }
 
