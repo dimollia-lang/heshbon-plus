@@ -1272,6 +1272,9 @@
   <div class="disclaimer" id="govSources" style="padding-top:0" data-i18n-html="gov.sources"></div>
   <div class="disclaimer" id="ratesInfo" style="padding-top:0"></div>
   <div class="disclaimer" id="copyright" style="padding-top:0">© 2026 Heshbon+ · Хешбон+ · חשבון+. All rights reserved · <a href="https://apps.apple.com/app/id6819820387" target="_blank" rel="noopener">App Store (iPhone)</a> · <a href="/prava/">Справочник прав</a> · <a href="https://heshbonplus.com/terms.html" target="_blank" rel="noopener" data-i18n="set.terms"></a> · <a href="https://heshbonplus.com/privacy.html" target="_blank" rel="noopener" data-i18n="set.privacy"></a></div>
+  <!--PRAVA-LINKS-START-->
+  <div class="disclaimer" id="pravaLinks" style="padding-top:0">Справочник прав работника: <a href="https://heshbonplus.com/prava/pitzuim/">Пицуим при увольнении</a> · <a href="https://heshbonplus.com/prava/otpusk/">Отпуск и отпускные</a> · <a href="https://heshbonplus.com/prava/bolnichnyy/">Больничные и болезнь ребёнка</a> · <a href="https://heshbonplus.com/prava/sverhurochnye/">Сверхурочные и рабочие часы</a> · <a href="https://heshbonplus.com/prava/tlush/">Как читать тлуш</a> · <a href="https://heshbonplus.com/prava/netto-kalkulyator/">Сколько придёт на счёт</a> · <a href="https://heshbonplus.com/prava/havraa/">Дмей авраа</a> · <a href="https://heshbonplus.com/prava/nesiot/">Оплата проезда</a> · <a href="https://heshbonplus.com/prava/minimalnaya-zarplata/">Минимальная зарплата</a> · <a href="https://heshbonplus.com/prava/uvolnenie-shimua/">Увольнение: шимуа и предупреждение</a> · <a href="https://heshbonplus.com/prava/avtala/">Пособие по безработице</a> · <a href="https://heshbonplus.com/prava/dmei-chag/">Оплата праздничных дней</a> · <a href="https://heshbonplus.com/prava/pensiya/">Пенсионные отчисления</a> · <a href="https://heshbonplus.com/prava/nekudot-zikuy/">Некудот зикуй</a> · <a href="https://heshbonplus.com/prava/dmei-leda/">Дмей леда и отпуск по родам</a> · <a href="https://heshbonplus.com/prava/teunat-avoda/">Травма на работе</a> · <a href="https://heshbonplus.com/prava/miluim/">Милуим</a> · <a href="https://heshbonplus.com/prava/vozvrat-naloga/">Возврат налога</a> · <a href="https://heshbonplus.com/prava/kak-zabrat-pitzuim/">Как забрать пицуим из фонда</a></div>
+  <!--PRAVA-LINKS-END-->
 
   <!-- Google Play (отказы 07–08.10.2026, «обманные утверждения»): при первом запуске — ясное и заметное заявление
        о неофициальном статусе и ссылки на государственные первоисточники. Показывается, пока не нажата «Понятно». -->
@@ -4321,7 +4324,9 @@ document.getElementById('empGross').addEventListener('input', saveProf);
 ptLoad();       // каталог специалистов: пустой файл = карточка честно говорит, что партнёров пока нет
 statOpenOnce(); // анонимный счётчик запусков
 (function () { try { const C = window.Capacitor; const native = (C && C.isNativePlatform && C.isNativePlatform()) || window.HeshbonNative;
-  if (!native && /iPhone|iPad|iPod/.test(navigator.userAgent)) document.getElementById('iosAppBanner').style.display = 'block'; } catch (e) {} })();
+  if (!native && /iPhone|iPad|iPod/.test(navigator.userAgent)) document.getElementById('iosAppBanner').style.display = 'block';
+  // ссылки на справочник /prava/ нужны сайту (вес для поиска), в магазинном приложении их прячем
+  if (native) { const pl = document.getElementById('pravaLinks'); if (pl) pl.style.display = 'none'; } } catch (e) {} })();
 // Заявление о неофициальном статусе при первом запуске (требование Google Play, 10.2026)
 function govAck() { try { localStorage.setItem('heshbon_gov_ack', '1'); } catch (e) {} document.getElementById('govModal').style.display = 'none'; }
 (function () { let ack = null; try { ack = localStorage.getItem('heshbon_gov_ack'); } catch (e) {}

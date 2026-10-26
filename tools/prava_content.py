@@ -5,7 +5,7 @@
 """
 import io, os, sys, datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_prava import ROOT, SITE, UPDATED, BOT, rates, page, NAV, CSS
+from build_prava import ROOT, SITE, UPDATED, BOT, rates, page, NAV, CSS, RU_MONTH
 
 MIN_MONTH = ("%.2f" % rates["min_month"]).replace(".", ",")
 MIN_HOUR = ("%.1f" % rates["min_hour"]).replace(".", ",")
@@ -1576,10 +1576,34 @@ def write(path, text):
     io.open(full, "w", encoding="utf-8", newline="\n").write(text)
     print("written:", path)
 
+LASTMOD = os.path.join(ROOT, "tools", "prava_lastmod.json")
+UPD_MARK = "@@UPDATED@@"
+
+def ru_date(iso):
+    d = datetime.date.fromisoformat(iso)
+    return "%d %s %d" % (d.day, RU_MONTH[d.month-1], d.year)
+
+def stamp(state, key, html):
+    """дата последнего НАСТОЯЩЕГО изменения страницы: хэш без даты проверки в подвале"""
+    import hashlib
+    h = hashlib.sha1(html.encode("utf-8")).hexdigest()
+    old = state.get(key)
+    if not old or old["hash"] != h:
+        state[key] = {"hash": h, "date": datetime.date.today().isoformat()}
+    return state[key]["date"]
+
+def related_html(cur):
+    links = "\n".join('<li><a href="/prava/%s/">%s</a></li>' % (p["slug"], p["tile"][0]) for p in PAGES if p["slug"] != cur)
+    return '<h2>Ещё в справочнике</h2>\n<ul class="rel">\n%s\n</ul>' % links
+
 def build():
+    import json
+    state = json.load(io.open(LASTMOD, encoding="utf-8")) if os.path.exists(LASTMOD) else {}
     for p in PAGES:
-        html = page(p["slug"], p["title"], p["desc"], p["h1"], p["lead"], p["body"], p["faq"], p["crumb"])
-        write("prava/%s/index.html" % p["slug"], html)
+        html = page(p["slug"], p["title"], p["desc"], p["h1"], p["lead"], p["body"], p["faq"], p["crumb"],
+                    related=related_html(p["slug"]), updated=UPD_MARK)
+        d = stamp(state, p["slug"], html)
+        write("prava/%s/index.html" % p["slug"], html.replace(UPD_MARK, ru_date(d)))
 
     tiles = "\n".join(
         '<a class="tile" href="/prava/%s/"><b>%s</b><span>%s</span></a>' % (p["slug"], p["tile"][0], p["tile"][1])
@@ -1596,18 +1620,42 @@ def build():
     hub = page("", "Права работника в Израиле: короткий справочник — Хешбон+",
                "Права работника в Израиле простыми словами: пицуим, отпуск, больничные, сверхурочные. Цифры 2026 года и то, как проверить их в своём тлуше.",
                "Права работника в Израиле", "Короткий справочник по деньгам: что положено по закону и как увидеть это в расчётном листке.",
-               hub_body, [], "")
-    write("prava/index.html", hub)
+               hub_body, [], "", updated=UPD_MARK)
+    hub_date = stamp(state, "_hub", hub)
+    write("prava/index.html", hub.replace(UPD_MARK, ru_date(hub_date)))
 
+    # главная: прямые ссылки на все статьи справочника (самая сильная страница сайта передаёт им вес)
+    home_path = os.path.join(ROOT, "index.html")
+    home = io.open(home_path, encoding="utf-8").read()
+    A, B = "<!--PRAVA-LINKS-START-->", "<!--PRAVA-LINKS-END-->"
+    block = (A + '\n  <div class="disclaimer" id="pravaLinks" style="padding-top:0">Справочник прав работника: '
+             + " · ".join('<a href="https://heshbonplus.com/prava/%s/">%s</a>' % (p["slug"], p["tile"][0]) for p in PAGES)
+             + '</div>\n  ' + B)
+    if A in home:
+        home = home[:home.index(A)] + block + home[home.index(B) + len(B):]
+    else:
+        anchor = '<div class="disclaimer" id="copyright"'
+        k = home.index(anchor)
+        k = home.index("</div>", k) + len("</div>")
+        home = home[:k] + "\n  " + block + home[k:]
+    io.open(home_path, "w", encoding="utf-8", newline="\n").write(home)
+    home_date = stamp(state, "_home", home)
+    print("written: index.html (ссылки на справочник)")
+
+    lm = {"/": home_date, "/prava/": hub_date}
+    lm.update({"/prava/%s/" % p["slug"]: state[p["slug"]]["date"] for p in PAGES})
     urls = [("/", "1.0"), ("/prava/", "0.9")] + [("/prava/%s/" % p["slug"], "0.8") for p in PAGES] + \
            [("/terms.html", "0.3"), ("/privacy.html", "0.3")]
-    today = datetime.date.today().isoformat()
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for u, pr in urls:
-        sm += "  <url><loc>%s%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>\n" % (SITE, u, today, pr)
+        d = lm.get(u)
+        sm += ("  <url><loc>%s%s</loc>%s<priority>%s</priority></url>\n"
+               % (SITE, u, "<lastmod>%s</lastmod>" % d if d else "", pr))
     sm += "</urlset>\n"
     write("sitemap.xml", sm)
     write("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % SITE)
+    io.open(LASTMOD, "w", encoding="utf-8").write(json.dumps(state, ensure_ascii=False, indent=1))
+
 
 if __name__ == "__main__":
     build()

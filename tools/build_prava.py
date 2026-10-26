@@ -84,7 +84,7 @@ def crumbs_jsonld(slug, name):
     return json.dumps({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items},
                       ensure_ascii=False)
 
-def page(slug, title, desc, h1, lead, body, faq, crumb):
+def page(slug, title, desc, h1, lead, body, faq, crumb, related="", updated=None):
     url = SITE + "/prava/" + (slug + "/" if slug else "")
     bc = ('<div class="bc"><a href="/">Главная</a> · <a href="/prava/">Права работника</a>'
           + (" · " + crumb if slug else "") + "</div>")
@@ -97,7 +97,7 @@ def page(slug, title, desc, h1, lead, body, faq, crumb):
            '<a class="cta" href="' + BOT + '" rel="nofollow">Разобрать тлуш в боте</a>'
            '<a class="cta alt" href="/">Открыть калькуляторы</a></div>')
     tail = ('<footer><div class="wrap" style="padding:0">'
-            '<p>Данные проверены ' + UPDATED + ' года. Ставки берём из официальных источников и обновляем в приложении.</p>'
+            '<p>Данные проверены ' + (updated or UPDATED) + ' года. Ставки берём из официальных источников и обновляем в приложении.</p>'
             '<p>Материал образовательный и не является юридической консультацией. Спорные случаи решает суд по труду, '
             'по личной ситуации обращайтесь к адвокату по трудовому праву.</p>'
             '<p>© 2026 Хешбон+ · <a href="/">heshbonplus.com</a> · <a href="/prava/">Справочник прав</a></p>'
@@ -131,10 +131,11 @@ def page(slug, title, desc, h1, lead, body, faq, crumb):
 {body}
 {cta}
 {faq}
+{related}
 </main>
 </div>
 {tail}
 </body>
 </html>
 """.format(title=title, desc=desc, url=url, site=SITE, scripts=scripts, css=CSS, nav=NAV,
-           bc=bc, h1=h1, lead=lead, body=body, cta=cta, faq=faq_html, tail=tail)
+           bc=bc, h1=h1, lead=lead, body=body, cta=cta, faq=faq_html, related=related, tail=tail)
