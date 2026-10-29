@@ -1,90 +1,94 @@
 {
  "pitzuim": {
-  "hash": "ff7d26c8c4218ff27a6f03862c2b244fcd9c8204",
-  "date": "2026-10-27"
+  "hash": "d7da6a40d99dfcdeed716702610a4e4e665171d7",
+  "date": "2026-10-29"
  },
  "otpusk": {
-  "hash": "a98db3a6514cfc070486ed22535887f625e2c674",
-  "date": "2026-10-27"
+  "hash": "f20a4132d8ba56064996f424445615980f2e6e16",
+  "date": "2026-10-29"
  },
  "bolnichnyy": {
-  "hash": "f8f304a24b37dbbdf56f628dbf78cb90f002aeda",
-  "date": "2026-10-27"
+  "hash": "75bd09f3c00f4a2f14461e2e2989ac619a57dc5f",
+  "date": "2026-10-29"
  },
  "sverhurochnye": {
-  "hash": "526cc504fdda345a5f02dcd18bcb73d68860c242",
-  "date": "2026-10-27"
+  "hash": "f4c5e8fa67c49be365e7d3c85faf2e62b3ad718b",
+  "date": "2026-10-29"
  },
  "tlush": {
-  "hash": "9b71f770880cba2636d8716bf3d31969be858b90",
-  "date": "2026-10-27"
+  "hash": "bf1aa5ad9adca4894705b96acc6a9b585462cdbd",
+  "date": "2026-10-29"
  },
  "netto-kalkulyator": {
-  "hash": "57b06f480bbbfeeb9051d2743d34cda8a09a7597",
-  "date": "2026-10-27"
+  "hash": "dd763ff535d5805a0d7101f07d13ccf83d2f49fc",
+  "date": "2026-10-29"
  },
  "havraa": {
-  "hash": "ff6ce5c8618dde006ea689cc16b86527c6ddf2b6",
-  "date": "2026-10-27"
+  "hash": "75c85e356daad8cad546bcb1c5185167be4c1c9c",
+  "date": "2026-10-29"
  },
  "nesiot": {
-  "hash": "15236328f9bc30283ba89a67444a659629d4a4fb",
-  "date": "2026-10-27"
+  "hash": "4bd5d09ded34bc1f4a65085f6e25f9928ef6364e",
+  "date": "2026-10-29"
  },
  "minimalnaya-zarplata": {
-  "hash": "513ec68f7dcd2ea281da2c050c9c5f0a66ac5062",
-  "date": "2026-10-27"
+  "hash": "b91bead744613cfdecce2a63b2404628e8c3c688",
+  "date": "2026-10-29"
  },
  "uvolnenie-shimua": {
-  "hash": "6ba157869d935f1402cdcebed2457a4334a9b727",
-  "date": "2026-10-27"
+  "hash": "d2575ba50f475301f391011d6864cf0adcc74a11",
+  "date": "2026-10-29"
  },
  "avtala": {
-  "hash": "d98c59fed7a258f268cab133d879d2bacc9d1761",
-  "date": "2026-10-27"
+  "hash": "53c9db08d5890e9095278910cb40ebd4828fe93e",
+  "date": "2026-10-29"
  },
  "dmei-chag": {
-  "hash": "1d4f4485d03ada0f0f93df8a96ea2d7e2e643bfa",
-  "date": "2026-10-27"
+  "hash": "6534b7a37a3670e2fb757751cea98a9c309a6159",
+  "date": "2026-10-29"
  },
  "pensiya": {
-  "hash": "67feaf1746962c4c809daa4a16eb5b89622cbe25",
-  "date": "2026-10-27"
+  "hash": "aa4c2f4253d06eb8de1bab70e2fb918689e4ca21",
+  "date": "2026-10-29"
  },
  "nekudot-zikuy": {
-  "hash": "e21d377f8e4731722e59c4e4c63c2cf9c2bef26f",
-  "date": "2026-10-27"
+  "hash": "30f8f3de8c50213d51ca522a323e1deef7087abc",
+  "date": "2026-10-29"
  },
  "dmei-leda": {
-  "hash": "4fea8a4ae0f9cc3ab9d1dd92e9ec7d82672ebe4b",
-  "date": "2026-10-27"
+  "hash": "076c5e7650217baed19365b088dfc82668349697",
+  "date": "2026-10-29"
  },
  "teunat-avoda": {
-  "hash": "7fc822a1ea1678da226026cb6254729b41494de3",
-  "date": "2026-10-27"
+  "hash": "24c69728595877221aa89b5e752b97c67f2a661e",
+  "date": "2026-10-29"
  },
  "miluim": {
-  "hash": "a0307ad3abdcf51ab0705cb1134aab12fb69fc27",
-  "date": "2026-10-27"
+  "hash": "42a79c1a15982eb48a1c9d8d128c397f6a37b6a4",
+  "date": "2026-10-29"
  },
  "vozvrat-naloga": {
-  "hash": "a89e3cc1c8c2a67ad69fdf68ffec930e3ec64d0c",
-  "date": "2026-10-27"
+  "hash": "0b13bd95f1953006f7f85af7260050af6419846c",
+  "date": "2026-10-29"
  },
  "kak-zabrat-pitzuim": {
-  "hash": "a89302e5c41829dad90bbcb729cb6adfc09a9d01",
-  "date": "2026-10-27"
+  "hash": "90cd01fc52f93696ea757cae075f3053233f9ca3",
+  "date": "2026-10-29"
  },
  "_hub": {
-  "hash": "a3eaba0571ff34cd81b9c00068eaf8d5aba29e27",
-  "date": "2026-10-27"
+  "hash": "fe0a521c4905be6c8fbf644f2bf20c76913bcd8c",
+  "date": "2026-10-29"
  },
  "_home": {
-  "hash": "13aea8a6becfe0b0af20747bb891ffa2009aff3d",
-  "date": "2026-10-27"
+  "hash": "8553f85fc92d77908946d9343673628a8e480ecc",
+  "date": "2026-10-29"
  },
  "rabota-v-shabbat": {
-  "hash": "bc7abb5ac8c5d44b3df33d675a70390e9288f9dc",
-  "date": "2026-10-27"
+  "hash": "99ebf231b0b220b27714fad1473f7713b4270423",
+  "date": "2026-10-29"
+ },
+ "nochnaya-smena": {
+  "hash": "530aa7928c34043ee2f2e7393509077979a71478",
+  "date": "2026-10-29"
  }
 }
