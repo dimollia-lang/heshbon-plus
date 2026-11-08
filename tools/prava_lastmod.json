@@ -1,106 +1,110 @@
 {
  "pitzuim": {
-  "hash": "ffcdbf6e4faf8dbb7d9076487f9b9d0bbde1b621",
-  "date": "2026-11-05"
+  "hash": "d8a461b2258f0a7ba240ca59ad9c8bfe02b73342",
+  "date": "2026-11-08"
  },
  "otpusk": {
-  "hash": "56b748551cbbc6f76adc6a7ce217890ebbbbda1d",
-  "date": "2026-11-05"
+  "hash": "2a65f7dd2ec0e25d7674be2fc380d8b2681bd48a",
+  "date": "2026-11-08"
  },
  "bolnichnyy": {
-  "hash": "d8a6d14aec6148a0697400e1a5d717c635e91916",
-  "date": "2026-11-05"
+  "hash": "44f686d17f23c97b27016cd33a32cca23604e8bf",
+  "date": "2026-11-08"
  },
  "sverhurochnye": {
-  "hash": "cbe28b35745afd2e7e59424f2d0988e8baae1cf7",
-  "date": "2026-11-05"
+  "hash": "44724e747dcb82a4b7e734dfc836a7b2650f3473",
+  "date": "2026-11-08"
  },
  "tlush": {
-  "hash": "ee409c6baf655c876e643533c2719e50f0850b85",
-  "date": "2026-11-05"
+  "hash": "a56053b60453b4a23765a8a7a8037083f162aa8e",
+  "date": "2026-11-08"
  },
  "netto-kalkulyator": {
-  "hash": "dd6f8dc1c17e92a188464c60f7cd1379cdece882",
-  "date": "2026-11-05"
+  "hash": "d1e45a55cbc40e328da6de2201da5ab39733c77c",
+  "date": "2026-11-08"
  },
  "havraa": {
-  "hash": "70f42fe44267759032fa8e55be4254460ca3fe7a",
-  "date": "2026-11-05"
+  "hash": "19397cc8358d0876a1b4df24077dc024bd89f06f",
+  "date": "2026-11-08"
  },
  "nesiot": {
-  "hash": "79e2e253deb023d3f48491ed9b2bd7ff5ea00ead",
-  "date": "2026-11-05"
+  "hash": "6c9061d36a5e6f168d93b8e59da7d266269019d6",
+  "date": "2026-11-08"
  },
  "minimalnaya-zarplata": {
-  "hash": "b44488cbbe4189a45c82b9700e9f79e7a1786635",
-  "date": "2026-11-05"
+  "hash": "74ffbb9ac188459746077c717b78ac8b85b269b9",
+  "date": "2026-11-08"
  },
  "uvolnenie-shimua": {
-  "hash": "e7669302fc5eb7e3a911db3d3dbae131bb158e23",
-  "date": "2026-11-05"
+  "hash": "061dcad995ba9752b45f442bf68c5cb8da2c4cdf",
+  "date": "2026-11-08"
  },
  "avtala": {
-  "hash": "49358d56580ef1db6013c39157926f22918e7af7",
-  "date": "2026-11-05"
+  "hash": "d0f7cbd1bbf8aa27d3a62f46865db7a77960971d",
+  "date": "2026-11-08"
  },
  "dmei-chag": {
-  "hash": "6cb5fdafba5799f352908b9713dff0a1763bbfe1",
-  "date": "2026-11-05"
+  "hash": "93d7a8e01daf5fb1b3bb24d1abf0e631716646ec",
+  "date": "2026-11-08"
  },
  "pensiya": {
-  "hash": "a20d95e4128b8b8168d49768598b0ce1809d551e",
-  "date": "2026-11-05"
+  "hash": "d02c8636b31f94685b5a26706b5ac2ece6211ada",
+  "date": "2026-11-08"
  },
  "nekudot-zikuy": {
-  "hash": "309b7ed2492b2c107fd4816d64174fc862078c9d",
-  "date": "2026-11-05"
+  "hash": "eb163e4f357daa7c23050df5ab9a5837afa1211a",
+  "date": "2026-11-08"
  },
  "dmei-leda": {
-  "hash": "25d578d79d5a0354a8cb9d040f9d429064f9cc2f",
-  "date": "2026-11-05"
+  "hash": "4988d71ec4dae0a72126e4d50715a92b3027a022",
+  "date": "2026-11-08"
  },
  "teunat-avoda": {
-  "hash": "6e24bee917cf06370c78ce3b32f8bb10a968c262",
-  "date": "2026-11-05"
+  "hash": "8b3739fa30ef9c7d18c7ae740cba22c4e48d4a53",
+  "date": "2026-11-08"
  },
  "miluim": {
-  "hash": "2f8e26df27fb410326363995e0910c6934090333",
-  "date": "2026-11-05"
+  "hash": "8dc7d69eaa27a7f30d721c4c7a4e36ac3fdf4c9d",
+  "date": "2026-11-08"
  },
  "vozvrat-naloga": {
-  "hash": "3e67acf521bad56c834679c3d550f0c721d5612c",
-  "date": "2026-11-05"
+  "hash": "810137c92a906c61c4e5b459a3fc4be8000a936e",
+  "date": "2026-11-08"
  },
  "kak-zabrat-pitzuim": {
-  "hash": "155fc12e44ebbbeb9c7198c8b4a1ebe0a793cd28",
-  "date": "2026-11-05"
+  "hash": "fbae8ebea9f9169793abe13419b5fe286a3b492e",
+  "date": "2026-11-08"
  },
  "_hub": {
-  "hash": "42ee4d5be491ea1a5e71ca247d082a94a4ef7e68",
-  "date": "2026-11-05"
+  "hash": "6cf1981713e4ce57bfeb436c071ba160a86fa5a8",
+  "date": "2026-11-08"
  },
  "_home": {
-  "hash": "6984f2b78bf2edfe7c23163bdc1ae2cb61fafc19",
-  "date": "2026-11-05"
+  "hash": "9a79f8e659c60c0e2d80472b00f618f2464ba685",
+  "date": "2026-11-08"
  },
  "rabota-v-shabbat": {
-  "hash": "b8efcf6c9620fa9fb1b64ee531dc86d43c8a0cb5",
-  "date": "2026-11-05"
+  "hash": "d442d75e1e84ca3c2031cd627936d91724c97ac0",
+  "date": "2026-11-08"
  },
  "nochnaya-smena": {
-  "hash": "d89a305d01b2a5a59e3ddc6af10f39747da7e2cf",
-  "date": "2026-11-05"
+  "hash": "0bdb983b9c0089787431a4dd2d02ba80b7e02fdc",
+  "date": "2026-11-08"
  },
  "zaderzhka-zarplaty": {
-  "hash": "1676bf4df10458a5fd3523d99b51f0306f2ea952",
-  "date": "2026-11-05"
+  "hash": "b29b37fca54af9031344e27e042b04f94f8977aa",
+  "date": "2026-11-08"
  },
  "uderzhaniya": {
-  "hash": "42e8145b30b8187a49b5030307025592214bf225",
-  "date": "2026-11-05"
+  "hash": "0ce792450f1d62b8c916b0f056f7db362fb5791a",
+  "date": "2026-11-08"
  },
  "keren-hishtalmut": {
-  "hash": "d484339c5aa886ec7f8084784cf758f627315864",
-  "date": "2026-11-05"
+  "hash": "4cafcc157def85f2cecf23da3c5576e16d55cf68",
+  "date": "2026-11-08"
+ },
+ "maanak-avoda": {
+  "hash": "c13f67f55b7460cd85b2f083a0760a5ea48042d9",
+  "date": "2026-11-08"
  }
 }
