@@ -411,6 +411,8 @@
     <p class="page-desc" data-i18n="emp.desc"></p>
   <!-- 16.10.2026: приложение вышло в App Store — баннер только для iPhone/iPad в браузере, не внутри приложения -->
   <a id="iosAppBanner" class="note" href="https://apps.apple.com/app/id6819820387" target="_blank" rel="noopener" style="display:none;margin:0 0 12px;text-decoration:none;font-weight:600">📱 Хешбон+ теперь в App Store — установить на iPhone →</a>
+  <!-- 16.11.2026: приложение вышло в Google Play — баннер только для Android в браузере, не внутри приложения -->
+  <a id="androidAppBanner" class="note" href="https://play.google.com/store/apps/details?id=plus.heshbon.app" target="_blank" rel="noopener" style="display:none;margin:0 0 12px;text-decoration:none;font-weight:600">🤖 Хешбон+ теперь в Google Play — установить на Android →</a>
     <div class="note gov-note" data-i18n-html="gov.note"></div>
 
     <div class="note warn" id="visaBanner" style="display:none;margin-bottom:12px;font-size:12.5px"></div>
@@ -4325,6 +4327,7 @@ ptLoad();       // каталог специалистов: пустой фай�
 statOpenOnce(); // анонимный счётчик запусков
 (function () { try { const C = window.Capacitor; const native = (C && C.isNativePlatform && C.isNativePlatform()) || window.HeshbonNative;
   if (!native && /iPhone|iPad|iPod/.test(navigator.userAgent)) document.getElementById('iosAppBanner').style.display = 'block';
+  if (!native && /Android/.test(navigator.userAgent)) document.getElementById('androidAppBanner').style.display = 'block';
   // ссылки на справочник /prava/ нужны сайту (вес для поиска), в магазинном приложении их прячем
   if (native) { const pl = document.getElementById('pravaLinks'); if (pl) pl.style.display = 'none'; } } catch (e) {} })();
 // Заявление о неофициальном статусе при первом запуске (требование Google Play, 10.2026)

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тестеры Хешбон+ для Google Play</title>
-<meta name="description" content="Помогите выпустить Хешбон+ в Google Play: нужно 12 тестеров на 14 дней. Бесплатно, 2 минуты.">
+<title>Хешбон+ вышел в Google Play</title>
+<meta name="description" content="Тест закончен — Хешбон+ теперь в Google Play для всех. Спасибо тестерам!">
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://heshbonplus.com/test/">
 <style>
@@ -32,57 +32,14 @@ footer a{color:var(--muted)}
 </head>
 <body>
 <div class="wrap">
-<h1>Помогите выпустить Хешбон+ в Google Play</h1>
-<p class="sub">Google пускает новое приложение в магазин только после закрытого теста: 12 человек держат его на телефоне 14 дней подряд. Это бесплатно и занимает 2 минуты.</p>
-
+<h1>Хешбон+ вышел в Google Play 🎉</h1>
+<p class="sub">Закрытый тест закончен — приложение теперь доступно всем. Спасибо каждому, кто тестировал и писал нам замечания!</p>
 <div class="card">
-<b>Что нужно</b>
-<ol>
-<li>Телефон на Android и аккаунт Gmail (тот, что в Google Play на телефоне).</li>
-<li>Оставить почту ниже — добавим вас в список тестеров.</li>
-<li>Мы пришлём ссылку: нажать «Стать тестировщиком» и установить из Google Play.</li>
-<li>Не удалять приложение 14 дней и хотя бы пару раз его открыть.</li>
-</ol>
-<p class="note">Если у вас уже стоит Хешбон+ из Telegram или с сайта — сначала удалите его: версия из магазина подписана по-другому и поверх не встанет.</p>
+<a href="https://play.google.com/store/apps/details?id=plus.heshbon.app" style="display:block;text-align:center;font-weight:700;padding:14px;border-radius:12px;background:var(--accent);color:#fff;text-decoration:none">Установить из Google Play</a>
+<p class="note">Тестировали версию из закрытого теста? Ничего делать не нужно — обновления придут из магазина сами. Ставили файл из Telegram или с сайта — удалите его и установите из Google Play: версия из магазина подписана по-другому.</p>
+<p class="note">На iPhone — <a href="https://apps.apple.com/app/id6819820387">App Store</a>.</p>
 </div>
-
-<div class="card">
-<form id="f">
-<label for="email">Ваш Gmail</label>
-<input id="email" name="email" type="email" required placeholder="name@gmail.com" autocomplete="email">
-<button type="submit" id="b">Хочу тестировать</button>
-<p class="ok" id="ok">Готово! Добавим вас в течение суток и пришлём ссылку на эту почту.</p>
-<p class="err" id="err">Не отправилось — проверьте почту и попробуйте ещё раз.</p>
-<p class="note">Почта нужна только для доступа к тесту в Google Play и одного письма со ссылкой. Не передаём третьим лицам, после теста удаляем — <a href="/delete-data.html">подробнее</a>.</p>
-</form>
-</div>
-
-<div class="card">
-<b>Уже в списке?</b>
-<p class="note" style="margin-top:4px">Ссылка на установку: <a href="https://play.google.com/apps/testing/plus.heshbon.app">play.google.com/apps/testing/plus.heshbon.app</a> — откройте с телефона под тем же Gmail.</p>
-</div>
-
 <footer>© 2026 Хешбон+ · <a href="/">приложение</a> · <a href="/privacy.html">конфиденциальность</a></footer>
 </div>
-<script>
-(function () {
-  var f = document.getElementById('f'), b = document.getElementById('b');
-  f.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var email = document.getElementById('email').value.trim();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { document.getElementById('err').style.display = 'block'; return; }
-    b.disabled = true;
-    // заявки хранит наш воркер (а не Formspree) — оттуда почты переносятся в список тестеров Play
-    fetch('https://heshbon-ai.heshbon.workers.dev/testers', {
-      method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email: email, src: location.search.slice(1, 40)})
-    }).then(function (r) {
-      if (!r.ok) throw 0;
-      document.getElementById('ok').style.display = 'block'; document.getElementById('err').style.display = 'none';
-      f.querySelector('input').disabled = true; b.style.display = 'none';
-    }).catch(function () { b.disabled = false; document.getElementById('err').style.display = 'block'; });
-  });
-})();
-</script>
 </body>
 </html>
