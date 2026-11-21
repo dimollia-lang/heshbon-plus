@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хешбон+ — скачать приложение</title>
+<meta name="description" content="Хешбон+ — проверка тлуша, зарплата нетто и права работника в Израиле. App Store и Google Play.">
+<link rel="canonical" href="https://heshbonplus.com/app/">
+<meta property="og:title" content="Хешбон+ — скачать приложение">
+<meta property="og:description" content="Проверка тлуша по фото, зарплата нетто, права работника. На русском, иврите и английском.">
+<meta property="og:image" content="https://heshbonplus.com/app/icon.png">
+<style>
+:root{--bg:#0f1730;--card:#18223f;--tx:#f2f5fb;--mu:#a9b3c9;--ac:#4f8cff}
+@media (prefers-color-scheme: light){:root{--bg:#f4f6fb;--card:#fff;--tx:#0f1730;--mu:#5a6480}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:16px}
+.c{background:var(--card);border-radius:20px;padding:28px 22px;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.18)}
+img{width:84px;height:84px;border-radius:20px}h1{font-size:24px;margin:12px 0 6px}p{color:var(--mu);margin:0 0 18px}
+a.b{display:block;padding:14px;border-radius:14px;background:var(--ac);color:#fff;text-decoration:none;font-weight:600;margin:10px 0}
+a.b.alt{background:transparent;border:2px solid var(--ac);color:var(--tx)}
+.he{direction:rtl;font-size:15px;color:var(--mu);margin-top:18px}small{display:block;color:var(--mu);margin-top:14px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="c">
+  <img src="/app/icon.png" alt="Хешбон+" onerror="this.style.display='none'">
+  <h1>Хешбон+</h1>
+  <p>Проверка тлуша по фото, зарплата нетто и ваши права работника в Израиле</p>
+  <a class="b" id="ios" href="https://apps.apple.com/app/id6819820387">📱 App Store (iPhone)</a>
+  <a class="b" id="and" href="https://play.google.com/store/apps/details?id=plus.heshbon.app">🤖 Google Play (Android)</a>
+  <a class="b alt" href="/">Открыть в браузере</a>
+  <div class="he">חשבון+ — בדיקת תלוש שכר, נטו וזכויות עובדים. להורדה: App Store · Google Play</div>
+  <small>Частное неофициальное приложение, не связано с госорганами. Без регистрации.</small>
+</div>
+<script>
+(function(){
+  var u = navigator.userAgent || '';
+  var q = location.search.indexOf('stay') >= 0;
+  if (q) return;
+  if (/iPhone|iPad|iPod/i.test(u)) location.replace(document.getElementById('ios').href);
+  else if (/Android/i.test(u)) location.replace(document.getElementById('and').href);
+})();
+</script>
+</body>
+</html>
